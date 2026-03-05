@@ -1,4 +1,6 @@
 import { Command } from "commander";
+import { registerAccountCommands } from "./commands/account.js";
+import { registerLedgerCommands } from "./commands/ledger.js";
 import { loadConfig } from "./lib/config.js";
 import type { GlobalOptions } from "./lib/types.js";
 import { EXIT_CODES } from "./lib/types.js";
@@ -26,6 +28,9 @@ const program = new Command()
 	.option("--json", "Output as JSON", false)
 	.option("-q, --quiet", "Suppress non-essential output", false)
 	.option("-y, --yes", "Skip confirmation prompts", false);
+
+registerAccountCommands(program);
+registerLedgerCommands(program);
 
 export function getGlobalOptions(): GlobalOptions {
 	return program.opts() as GlobalOptions;
