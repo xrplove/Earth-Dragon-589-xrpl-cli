@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { Transaction } from "xrpl";
+import { PaymentFlags, type Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
@@ -10,10 +10,6 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-
-const TF_PARTIAL_PAYMENT = 0x00020000;
-const TF_NO_RIPPLE_DIRECT = 0x00010000;
-const TF_LIMIT_QUALITY = 0x00040000;
 
 interface SendOpts extends TxOptions {
 	to: string;
@@ -52,9 +48,9 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	if (opts.invoiceId) tx.InvoiceID = opts.invoiceId;
 
 	let flags = 0;
-	if (opts.partial) flags |= TF_PARTIAL_PAYMENT;
-	if (opts.noDirect) flags |= TF_NO_RIPPLE_DIRECT;
-	if (opts.limitQuality) flags |= TF_LIMIT_QUALITY;
+	if (opts.partial) flags |= PaymentFlags.tfPartialPayment;
+	if (opts.noDirect) flags |= PaymentFlags.tfNoRippleDirect;
+	if (opts.limitQuality) flags |= PaymentFlags.tfLimitQuality;
 	if (flags) tx.Flags = flags;
 
 	const wallet = loadWalletForTx(opts, globalOpts);

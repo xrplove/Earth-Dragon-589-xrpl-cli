@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { Transaction } from "xrpl";
+import { type Transaction, TrustSetFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -9,14 +9,6 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-
-const TF_SET_NO_RIPPLE = 0x00020000;
-const TF_CLEAR_NO_RIPPLE = 0x00040000;
-const TF_SET_FREEZE = 0x00100000;
-const TF_CLEAR_FREEZE = 0x00200000;
-const TF_SET_DEEP_FREEZE = 0x01000000;
-const TF_CLEAR_DEEP_FREEZE = 0x02000000;
-const TF_SET_AUTH = 0x00010000;
 
 interface TrustSetOpts extends TxOptions {
 	limit: string;
@@ -52,13 +44,13 @@ async function setTrustLine(
 	if (opts.qualityOut != null) tx.QualityOut = opts.qualityOut;
 
 	let flags = 0;
-	if (opts.noRipple) flags |= TF_SET_NO_RIPPLE;
-	if (opts.clearNoRipple) flags |= TF_CLEAR_NO_RIPPLE;
-	if (opts.freeze) flags |= TF_SET_FREEZE;
-	if (opts.clearFreeze) flags |= TF_CLEAR_FREEZE;
-	if (opts.deepFreeze) flags |= TF_SET_DEEP_FREEZE;
-	if (opts.clearDeepFreeze) flags |= TF_CLEAR_DEEP_FREEZE;
-	if (opts.auth) flags |= TF_SET_AUTH;
+	if (opts.noRipple) flags |= TrustSetFlags.tfSetNoRipple;
+	if (opts.clearNoRipple) flags |= TrustSetFlags.tfClearNoRipple;
+	if (opts.freeze) flags |= TrustSetFlags.tfSetFreeze;
+	if (opts.clearFreeze) flags |= TrustSetFlags.tfClearFreeze;
+	if (opts.deepFreeze) flags |= TrustSetFlags.tfSetDeepFreeze;
+	if (opts.clearDeepFreeze) flags |= TrustSetFlags.tfClearDeepFreeze;
+	if (opts.auth) flags |= TrustSetFlags.tfSetfAuth;
 	if (flags) tx.Flags = flags;
 
 	const wallet = loadWalletForTx(opts, globalOpts);
