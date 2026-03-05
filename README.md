@@ -8,7 +8,7 @@ xrpl --help
 
 `xrpl` is a CLI tool for querying, transacting, and managing accounts on the XRP Ledger. It wraps [xrpl.js](https://js.xrpl.org/) and exposes the full breadth of XRPL functionality through a flat, composable command interface — inspired by Foundry's [`cast`](https://www.getfoundry.sh/reference/cast/cast) for EVM chains.
 
-> [!WARNING]
+> [!IMPORTANT]
 > This project was vibe-coded and has **not** been audited. It is under active development — expect breaking changes. Use at your own risk, especially when signing transactions or handling seeds/keys. Always verify transactions before submitting to mainnet.
 
 ## Contents
