@@ -1,0 +1,42 @@
+{
+	"name": "xrpl-cli",
+	"version": "0.0.1",
+	"description": "A Swiss Army knife for interacting with the XRP Ledger from the command line",
+	"type": "module",
+	"bin": {
+		"xrpl": "./dist/index.js"
+	},
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsx src/index.ts",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"keywords": [
+		"xrpl",
+		"xrp",
+		"ripple",
+		"cli",
+		"blockchain"
+	],
+	"license": "MIT",
+	"engines": {
+		"node": ">=20"
+	},
+	"dependencies": {
+		"commander": "^14.0.3",
+		"smol-toml": "^1.6.0",
+		"xrpl": "^4.6.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.5",
+		"@types/node": "^25.3.3",
+		"tsup": "^8.5.1",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.18"
+	}
+}
