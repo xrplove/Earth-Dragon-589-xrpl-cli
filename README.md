@@ -1833,6 +1833,9 @@ Features that aren't planned for the initial release but worth exploring later:
 - **`wallet sign-message` / `verify-message`** — sign and verify arbitrary data (not transactions). Useful for off-chain proof-of-ownership.
 - **Persistent wallet store** (`wallet import`, `wallet list`, `wallet remove`) — encrypted local keystore as an alternative to `--seed` / `XRPL_SEED` env var for frequent use.
 - **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
+- **AI agent compatibility** — make the CLI easy for AI agents to use:
+  - **`SKILL.md`** — a machine-readable reference file that LLM-based coding agents can ingest to learn the CLI's commands, options, and patterns without documentation search.
+  - **MCP server** — expose commands as an [MCP](https://modelcontextprotocol.io/) server so agents can query the ledger, build transactions, and manage accounts via structured tool calls. The `--json` flag already makes output agent-friendly; MCP would add schema discovery and tool-call semantics.
 
 ## License
 
