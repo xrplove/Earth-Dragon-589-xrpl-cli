@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -48,8 +48,16 @@ export function registerFeatureCommand(program: Command) {
 		.alias("amendments")
 		.description("List protocol amendments/features and their status")
 		.argument("[amendment]", "Amendment name or hex ID to look up")
-		.option("--enabled", "Show only enabled features", false)
-		.option("--pending", "Show only pending features", false)
+		.addOption(
+			new Option("--enabled", "Show only enabled features").conflicts(
+				"pending",
+			),
+		)
+		.addOption(
+			new Option("--pending", "Show only pending features").conflicts(
+				"enabled",
+			),
+		)
 		.action(
 			(
 				amendment: string | undefined,

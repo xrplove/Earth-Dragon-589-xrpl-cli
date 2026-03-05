@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { isoTimeToRippleTime, rippleTimeToISOTime } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -30,8 +30,18 @@ export function registerRippleTime(program: Command) {
 	program
 		.command("ripple-time")
 		.description("Convert between XRPL epoch and ISO 8601 timestamps")
-		.option("--to-iso <timestamp>", "Ripple epoch timestamp to ISO 8601")
-		.option("--to-ripple <iso>", "ISO 8601 string to Ripple epoch timestamp")
+		.addOption(
+			new Option(
+				"--to-iso <timestamp>",
+				"Ripple epoch timestamp to ISO 8601",
+			).conflicts("toRipple"),
+		)
+		.addOption(
+			new Option(
+				"--to-ripple <iso>",
+				"ISO 8601 string to Ripple epoch timestamp",
+			).conflicts("toIso"),
+		)
 		.action((opts: { toIso?: string; toRipple?: string }) =>
 			convertRippleTime(opts, program.opts() as GlobalOptions),
 		);

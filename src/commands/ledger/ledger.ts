@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import type { LedgerRequest } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
@@ -33,8 +33,16 @@ export function registerLedgerCommand(program: Command) {
 	program
 		.command("ledger")
 		.description("Get information about a ledger")
-		.option("--index <index>", "Ledger index or shortcut", "validated")
-		.option("--hash <hash>", "Ledger hash (64-char hex)")
+		.addOption(
+			new Option("--index <index>", "Ledger index or shortcut")
+				.default("validated")
+				.conflicts("hash"),
+		)
+		.addOption(
+			new Option("--hash <hash>", "Ledger hash (64-char hex)").conflicts(
+				"index",
+			),
+		)
 		.option("--transactions", "Include transaction hashes", false)
 		.option("--expand", "Expand transactions to full JSON", false)
 		.action((opts: LedgerOpts) =>

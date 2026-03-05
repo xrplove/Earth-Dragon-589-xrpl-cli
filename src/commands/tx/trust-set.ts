@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { type TrustSet, TrustSetFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
@@ -70,12 +70,32 @@ export function registerTrustSetCommand(program: Command) {
 		.option("--limit <limit>", "Trust line limit", "0")
 		.option("--quality-in <n>", "Incoming quality ratio", Number)
 		.option("--quality-out <n>", "Outgoing quality ratio", Number)
-		.option("--no-ripple", "Set No Ripple flag", false)
-		.option("--clear-no-ripple", "Clear No Ripple flag", false)
-		.option("--freeze", "Freeze this trust line", false)
-		.option("--clear-freeze", "Unfreeze this trust line", false)
-		.option("--deep-freeze", "Deep-freeze this trust line", false)
-		.option("--clear-deep-freeze", "Clear deep-freeze", false)
+		.addOption(
+			new Option("--no-ripple", "Set No Ripple flag").conflicts("clearNoRipple"),
+		)
+		.addOption(
+			new Option("--clear-no-ripple", "Clear No Ripple flag").conflicts(
+				"noRipple",
+			),
+		)
+		.addOption(
+			new Option("--freeze", "Freeze this trust line").conflicts("clearFreeze"),
+		)
+		.addOption(
+			new Option("--clear-freeze", "Unfreeze this trust line").conflicts(
+				"freeze",
+			),
+		)
+		.addOption(
+			new Option("--deep-freeze", "Deep-freeze this trust line").conflicts(
+				"clearDeepFreeze",
+			),
+		)
+		.addOption(
+			new Option("--clear-deep-freeze", "Clear deep-freeze").conflicts(
+				"deepFreeze",
+			),
+		)
 		.option("--auth", "Authorize counterparty to hold currency", false);
 	withTxOptions(cmd).action(
 		(currency: string, issuer: string, opts: TrustSetOpts) =>

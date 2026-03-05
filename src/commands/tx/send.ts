@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { PaymentFlags, type Payment } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
@@ -81,9 +81,11 @@ export function registerSendCommand(program: Command) {
 			"--send-max <amount> <token>",
 			"Max source amount for cross-currency",
 		)
-		.option(
-			"--deliver-min <amount> <token>",
-			"Min delivered amount (requires --partial)",
+		.addOption(
+			new Option(
+				"--deliver-min <amount> <token>",
+				"Min delivered amount",
+			).implies({ partial: true }),
 		)
 		.option("--paths <json>", "Payment paths as JSON array")
 		.option("--invoice-id <hex>", "256-bit invoice ID (64-char hex)")

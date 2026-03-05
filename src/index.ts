@@ -26,15 +26,28 @@ const program = new Command()
 	.addOption(
 		new Option("-n, --network <network>", "Network to connect to")
 			.choices(["mainnet", "testnet", "devnet"])
-			.default(config.network ?? process.env.XRPL_NETWORK ?? "mainnet"),
+			.default(config.network ?? "mainnet")
+			.env("XRPL_NETWORK"),
 	)
-	.option(
-		"--rpc-url <url>",
-		"Custom WebSocket RPC URL (overrides --network)",
-		config.rpc_url ?? process.env.XRPL_RPC_URL,
+	.addOption(
+		new Option(
+			"--rpc-url <url>",
+			"Custom WebSocket RPC URL (overrides --network)",
+		)
+			.default(config.rpc_url)
+			.env("XRPL_RPC_URL"),
 	)
-	.option("-s, --seed <seed>", "Wallet seed for signing")
-	.option("--keyfile <path>", "Path to a JSON keyfile containing the seed")
+	.addOption(
+		new Option("-s, --seed <seed>", "Wallet seed for signing")
+			.env("XRPL_SEED")
+			.conflicts("keyfile"),
+	)
+	.addOption(
+		new Option(
+			"--keyfile <path>",
+			"Path to a JSON keyfile containing the seed",
+		).conflicts("seed"),
+	)
 	.option("--json", "Output as JSON", false)
 	.option("-q, --quiet", "Suppress non-essential output", false)
 	.option("-y, --yes", "Skip confirmation prompts", false);

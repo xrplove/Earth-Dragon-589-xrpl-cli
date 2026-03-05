@@ -3,7 +3,7 @@ import { Wallet } from "xrpl";
 import type { GlobalOptions } from "./types.js";
 
 export function loadWallet(opts: GlobalOptions): Wallet {
-	const seed = opts.seed ?? process.env.XRPL_SEED ?? readSeedFromKeyfile(opts);
+	const seed = opts.seed ?? readSeedFromKeyfile(opts);
 
 	if (!seed) {
 		throw new Error(
