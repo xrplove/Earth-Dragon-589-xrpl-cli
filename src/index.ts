@@ -1,7 +1,10 @@
 import { Command } from "commander";
 import { registerAccountCommands } from "./commands/account.js";
 import { registerLedgerCommands } from "./commands/ledger.js";
+import { registerSendCommand } from "./commands/send.js";
 import { registerSigningCommands } from "./commands/signing.js";
+import { registerTrustSetCommand } from "./commands/trust-set.js";
+import { registerUtilityCommands } from "./commands/utility.js";
 import { registerWalletCommands } from "./commands/wallet.js";
 import { loadConfig } from "./lib/config.js";
 import { EXIT_CODES } from "./lib/types.js";
@@ -34,6 +37,9 @@ registerAccountCommands(program);
 registerLedgerCommands(program);
 registerWalletCommands(program);
 registerSigningCommands(program);
+registerSendCommand(program);
+registerTrustSetCommand(program);
+registerUtilityCommands(program);
 
 async function main() {
 	try {
