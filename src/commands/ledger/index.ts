@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { registerFeatureCommand } from "./amendments.js";
+import { registerFeatureCommand } from "./features.js";
 import { registerFeeCommand } from "./fee.js";
 import { registerLedgerCommand } from "./ledger.js";
 import { registerLedgerIndexCommand } from "./ledger-index.js";
