@@ -8,7 +8,10 @@ $ xrpl --help
 
 `xrpl` is a CLI tool for querying, transacting, and managing accounts on the XRP Ledger. It wraps [xrpl.js](https://js.xrpl.org/) and exposes the full breadth of XRPL functionality through a flat, composable command interface — inspired by Foundry's [`cast`](https://www.getfoundry.sh/reference/cast/cast) for EVM chains.
 
-## Install
+> [!WARNING]
+> This project was vibe-coded and has **not** been audited. It is under active development — expect breaking changes. Use at your own risk, especially when signing transactions or handling seeds/keys. Always verify transactions before submitting to mainnet.
+
+## Installation
 
 ```bash
 npm install -g xrpl-cli
@@ -16,7 +19,9 @@ npm install -g xrpl-cli
 
 Requires Node.js v20+.
 
-## Quick Start
+## Usage
+
+### Quick Start
 
 ```bash
 # Check an account's XRP balance
@@ -35,7 +40,7 @@ xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 10 --token XRP
 xrpl wallet generate
 ```
 
-## Global Options
+### Global Options
 
 These options apply to all commands that interact with the network:
 
@@ -49,7 +54,7 @@ These options apply to all commands that interact with the network:
 --yes, -y               Skip confirmation prompts
 ```
 
-### RPC URL
+#### RPC URL
 
 `--rpc-url` accepts a WebSocket URL (`wss://` or `ws://`). xrpl.js uses WebSocket for all communication with `rippled` servers.
 
@@ -61,7 +66,7 @@ When `--rpc-url` is not specified, the default RPC URL is determined by `--netwo
 | `testnet` | `wss://s.altnet.rippletest.net:51233`             |
 | `devnet`  | `wss://s.devnet.rippletest.net:51233`             |
 
-## Token Notation
+### Token Notation
 
 The XRPL has three kinds of fungible tokens: native XRP, IOU trust line tokens, and Multi-Purpose Tokens (MPTs). Throughout `xrpl`, tokens are specified using a unified `--token` flag with the following notation:
 
@@ -69,11 +74,16 @@ The XRPL has three kinds of fungible tokens: native XRP, IOU trust line tokens, 
 |------|---------------------------------------|------------------------------------------------------|
 | XRP  | `XRP`                                 | `--token XRP`                                        |
 | IOU  | `<currency>.<issuer>`                 | `--token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`     |
-| IOU  | `<currency-hex>.<issuer>` (non-standard) | `--token 0158415500000000C1F76FF6ECB0BAC600000000.rIssuer` |
+| IOU  | `<name>.<issuer>` (non-standard)      | `--token NONST.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`   |
+| IOU  | `<hex>.<issuer>` (raw hex)            | `--token 0158415500000000C1F76FF6ECB0BAC600000000.rIssuer` |
 | MPT  | `mpt:<issuance-id>`                   | `--token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578` |
 
 - **XRP**: amounts are specified in XRP (not drops) — the CLI converts internally.
-- **IOU**: standard currency codes are 3 characters. Non-standard (hex) currency codes are 40 hex characters. The issuer is always an r-address.
+- **IOU**: currency codes can be specified as:
+  - Standard 3-character codes (e.g. `USD`, `EUR`, `BTC`)
+  - Non-standard ASCII names up to 20 characters (e.g. `NONST`, `MyToken`) — automatically hex-encoded and right-padded to 40 characters
+  - Raw 40-character hex codes for full control
+  The issuer is always an r-address.
 - **MPT**: Multi-Purpose Tokens are identified by their 48-character hex issuance ID. The `mpt:` prefix distinguishes them from IOUs.
 
 For commands that only accept XRP (e.g. `escrow-create`), the `--token` flag is not needed.
@@ -1571,7 +1581,9 @@ xrpl completions <bash|zsh|fish>
 |--------|------|---------|-------------|
 | `<bash\|zsh\|fish>` | `string` | required | Shell to generate completions for |
 
-## Environment Variables
+## Configuration
+
+### Environment Variables
 
 | Variable       | Description                                      |
 |----------------|--------------------------------------------------|
@@ -1579,7 +1591,7 @@ xrpl completions <bash|zsh|fish>
 | `XRPL_NETWORK` | Default network (`mainnet`, `testnet`, `devnet`) |
 | `XRPL_RPC_URL` | Default WebSocket RPC URL                        |
 
-## Configuration File
+### Configuration File
 
 `xrpl` reads configuration from the first file found (in order):
 
@@ -1602,7 +1614,7 @@ xrpl balance myaccount
 xrpl send --to gateway --amount 10 --token XRP
 ```
 
-## Exit Codes
+### Exit Codes
 
 | Code | Meaning                                              |
 |------|------------------------------------------------------|
@@ -1612,6 +1624,25 @@ xrpl send --to gateway --amount 10 --token XRP
 | 3    | Network / connection error                           |
 | 4    | Transaction rejected (e.g. `tec*` result codes)      |
 | 5    | Transaction expired (past `LastLedgerSequence`)       |
+
+### Shell Completions
+
+Generate shell completion scripts for tab-completing commands and options:
+
+```bash
+# Bash
+xrpl completions bash > ~/.local/share/bash-completion/completions/xrpl
+# or: xrpl completions bash >> ~/.bashrc
+
+# Zsh
+xrpl completions zsh > ~/.zfunc/_xrpl
+# Make sure ~/.zfunc is in your fpath (add to ~/.zshrc: fpath=(~/.zfunc $fpath))
+
+# Fish
+xrpl completions fish > ~/.config/fish/completions/xrpl.fish
+```
+
+Restart your shell or source the file for completions to take effect.
 
 ## Amendments
 
@@ -1696,7 +1727,90 @@ xrpl rpc vault_info '{"vault_id": "..."}'
 xrpl rpc server_state
 ```
 
-## Development Plan
+## Development
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v20+
+- [pnpm](https://pnpm.io/) (recommended) or npm
+
+### Setup
+
+```bash
+git clone https://github.com/k4m4/xrpl-cli.git
+cd xrpl-cli
+pnpm install
+```
+
+### Building
+
+```bash
+pnpm build          # Build with tsup (ESM, node20 target)
+pnpm dev -- <args>  # Run from source via tsx (e.g. pnpm dev -- balance rAddr)
+pnpm lint           # Check with Biome (linting + formatting)
+pnpm lint:fix       # Auto-fix lint and formatting issues
+pnpm format         # Format with Biome
+```
+
+### Testing
+
+```bash
+pnpm test           # Run unit tests (vitest)
+pnpm test:watch     # Run unit tests in watch mode
+pnpm test:e2e       # Run E2E tests against testnet (requires network access)
+```
+
+Unit tests cover token parsing, memo encoding, wallet generation, transaction building, multisign logic, and input validation. E2E tests run against the XRPL testnet and require network access.
+
+### Project Structure
+
+```
+src/
+├── index.ts              # Entry point, registers all commands
+├── commands/
+│   ├── account/          # Account queries and management
+│   ├── amm/              # AMM commands
+│   ├── channel/          # Payment channel commands
+│   ├── check/            # Check commands
+│   ├── dex/              # DEX / order book commands
+│   ├── escrow/           # Escrow commands
+│   ├── ledger/           # Ledger queries, features, subscribe
+│   ├── mpt/              # Multi-Purpose Token commands
+│   ├── nft/              # NFT commands
+│   ├── signing/          # Sign, submit, multisign commands
+│   ├── tx/               # Send, trust-set, clawback, build
+│   ├── utility/          # Conversion helpers, completions
+│   └── wallet/           # Wallet generate, fund, from-seed
+└── lib/
+    ├── client.ts         # XRPL WebSocket client lifecycle
+    ├── config.ts         # Config file + alias resolution
+    ├── memo.ts           # Memo parser
+    ├── schemas.ts        # Zod schemas for input validation
+    ├── tokens.ts         # Token notation parser
+    ├── tx.ts             # Shared transaction helpers
+    ├── validate.ts       # Composable validation helpers
+    └── wallet.ts         # Wallet loading from seed/keyfile
+test/
+├── *.test.ts             # Unit tests
+└── e2e/                  # E2E tests (testnet)
+```
+
+### Code Style
+
+- [Biome](https://biomejs.dev/) for linting and formatting
+- Tabs for indentation, double quotes
+- ESM-only (`"type": "module"`)
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repo and create a feature branch
+2. Make your changes and add tests where appropriate
+3. Ensure `pnpm lint` and `pnpm test` pass
+4. Open a pull request
+
+## Roadmap
 
 ### Phase 0: Scaffolding
 
@@ -1869,7 +1983,7 @@ Higher-level DeFi and NFT features.
 - Tests verify both the transaction submission and the resulting ledger state
 - CI budget: keep total e2e suite under 5 minutes by parallelizing account creation
 
-## Future Ideas
+### Future Ideas
 
 Features that aren't planned for the initial release but worth exploring later:
 
