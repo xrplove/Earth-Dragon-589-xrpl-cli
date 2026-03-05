@@ -16,7 +16,7 @@ for (const [name, value] of Object.entries(AccountSetAsfFlags)) {
 	}
 }
 
-function parseAsfFlag(value: string): number {
+export function parseAsfFlag(value: string): number {
 	const num = Number(value);
 	if (Number.isInteger(num) && num > 0) return num;
 	const flag = ASF_FLAGS[value];

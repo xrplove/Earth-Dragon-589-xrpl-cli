@@ -17,7 +17,7 @@ interface DepositPreauthOpts extends TxOptions {
 	unauthorizeCredentials?: string[];
 }
 
-function parseCredentials(entries: string[]): AuthorizeCredential[] {
+export function parseCredentials(entries: string[]): AuthorizeCredential[] {
 	return entries.map((entry) => {
 		const colonIdx = entry.lastIndexOf(":");
 		if (colonIdx === -1) {
