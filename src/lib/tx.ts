@@ -1,3 +1,4 @@
+import * as readline from "node:readline";
 import type { Command } from "commander";
 import type {
 	Client,
@@ -101,7 +102,14 @@ export async function submitOrPrepare(
 		);
 	}
 
-	info("Signing and submitting transaction...", globalOpts);
+	if (!globalOpts.yes) {
+		info(`\n${JSON.stringify(autofilled, null, 2)}\n`, globalOpts);
+		const confirmed = await confirm("Submit this transaction?");
+		if (!confirmed) {
+			process.exit(0);
+		}
+	}
+
 	const response = await client.submitAndWait(autofilled, { wallet });
 	const meta = response.result.meta;
 	const resultCode =
@@ -120,6 +128,19 @@ export async function submitOrPrepare(
 
 export function outputResult(outcome: TxOutcome, globalOpts: GlobalOptions) {
 	output(outcome.mode === "prepared" ? outcome.tx : outcome.result, globalOpts);
+}
+
+function confirm(question: string): Promise<boolean> {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stderr,
+	});
+	return new Promise((resolve) => {
+		rl.question(`${question} (y/N) `, (answer) => {
+			rl.close();
+			resolve(answer.trim().toLowerCase() === "y");
+		});
+	});
 }
 
 export function loadWalletForTx(
