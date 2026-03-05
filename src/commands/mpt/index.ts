@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { registerMptAuthorize } from "./mpt-authorize.js";
-import { registerMptCreate } from "./mpt-create.js";
-import { registerMptDestroy } from "./mpt-destroy.js";
-import { registerMptSet } from "./mpt-set.js";
+import { registerMptAuthorize } from "./authorize.js";
+import { registerMptCreate } from "./create.js";
+import { registerMptDestroy } from "./destroy.js";
+import { registerMptSet } from "./set.js";
 
 export function registerMptCommands(program: Command) {
 	registerMptCreate(program);

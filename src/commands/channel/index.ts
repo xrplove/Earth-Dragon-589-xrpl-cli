@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { registerChannelClaim } from "./channel-claim.js";
-import { registerChannelCreate } from "./channel-create.js";
-import { registerChannelFund } from "./channel-fund.js";
-import { registerChannelVerify } from "./channel-verify.js";
+import { registerChannelClaim } from "./claim.js";
+import { registerChannelCreate } from "./create.js";
+import { registerChannelFund } from "./fund.js";
+import { registerChannelVerify } from "./verify.js";
 
 export function registerChannelCommands(program: Command) {
 	registerChannelCreate(program);

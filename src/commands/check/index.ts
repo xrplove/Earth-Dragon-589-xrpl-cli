@@ -1,7 +1,7 @@
 import type { Command } from "commander";
-import { registerCheckCancel } from "./check-cancel.js";
-import { registerCheckCash } from "./check-cash.js";
-import { registerCheckCreate } from "./check-create.js";
+import { registerCheckCancel } from "./cancel.js";
+import { registerCheckCash } from "./cash.js";
+import { registerCheckCreate } from "./create.js";
 
 export function registerCheckCommands(program: Command) {
 	registerCheckCreate(program);

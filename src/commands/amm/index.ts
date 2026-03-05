@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { registerAmmBid } from "./amm-bid.js";
-import { registerAmmCreate } from "./amm-create.js";
-import { registerAmmDeposit } from "./amm-deposit.js";
-import { registerAmmInfo } from "./amm-info.js";
-import { registerAmmVote } from "./amm-vote.js";
-import { registerAmmWithdraw } from "./amm-withdraw.js";
+import { registerAmmBid } from "./bid.js";
+import { registerAmmCreate } from "./create.js";
+import { registerAmmDeposit } from "./deposit.js";
+import { registerAmmInfo } from "./info.js";
+import { registerAmmVote } from "./vote.js";
+import { registerAmmWithdraw } from "./withdraw.js";
 
 export function registerAmmCommands(program: Command) {
 	registerAmmInfo(program);
