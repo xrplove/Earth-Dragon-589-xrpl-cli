@@ -1757,10 +1757,24 @@ pnpm format         # Format with Biome
 ```bash
 pnpm test           # Run unit tests (vitest)
 pnpm test:watch     # Run unit tests in watch mode
+pnpm test:coverage  # Run unit tests with coverage report
 pnpm test:e2e       # Run E2E tests against testnet (requires network access)
 ```
 
-Unit tests cover token parsing, memo encoding, wallet generation, transaction building, multisign logic, and input validation. E2E tests run against the XRPL testnet and require network access.
+**Unit tests** (fast, no network, run on every commit):
+- Token notation parsing (XRP, IOU with standard/hex currency codes, MPT)
+- Memo encoding (UTF-8, `hex:` prefix, mixed, edge cases)
+- Fee calculation for multi-signing
+- Config file and alias resolution
+- Transaction JSON construction for each command
+- Response formatting (human-readable vs `--json`)
+
+**E2E tests** (against testnet/devnet, run on PR/nightly):
+- Each E2E test funds fresh accounts via faucet to avoid interference
+- Tests are grouped by feature and can run in parallel (each uses its own accounts)
+- Devnet is used for amendment-gated features (MPTs, AMMs if needed)
+- Tests verify both the transaction submission and the resulting ledger state
+- CI budget: keep total e2e suite under 5 minutes by parallelizing account creation
 
 ### Project Structure
 
@@ -1811,179 +1825,6 @@ Contributions are welcome! Please:
 4. Open a pull request
 
 ## Roadmap
-
-### Phase 0: Scaffolding
-
-Project setup, zero commands. Everything else builds on this.
-
-- [x] Init TypeScript project (`tsconfig.json`, `package.json` with `bin` entry, ESLint, Prettier)
-- [x] CLI framework setup ([Commander.js](https://github.com/tj/commander.js) or [yargs](https://yargs.js.org/))
-- [x] Global options parsing (`--network`, `--rpc-url`, `--seed`, `--keyfile`, `--json`, `--quiet`, `--yes`)
-- [x] XRPL client wrapper: connect/disconnect lifecycle, default RPC URLs per network
-- [x] Wallet loading from `--seed`, `--keyfile`, `XRPL_SEED` env var
-- [x] Config file loader (`~/.xrplrc` TOML parsing, alias resolution)
-- [x] Token notation parser: `XRP` → drops, `CUR.rIssuer` → `{currency, issuer, value}`, `mpt:<id>` → `{mpt_issuance_id, value}`
-- [x] Memo parser: UTF-8 auto hex-encoding, `hex:` prefix passthrough
-- [x] Shared transaction flags: `--prepare`, `--signers`, `--memo`, `--ticket`
-- [x] Output formatting: human-readable default, `--json` for structured output
-- [x] Exit code handling (0–5)
-- [x] **Unit tests**: token parser (all three types, edge cases for hex currency codes), memo parser (UTF-8, `hex:`, mixed, `0x`-prefixed data), config file parsing, alias resolution
-
-### Phase 1: Read-Only Core
-
-Queries that don't require a wallet. This lets you start using the tool immediately.
-
-- [x] `balance`
-- [x] `account-info` (+ `info` alias)
-- [x] `account-objects` (+ `objects` alias)
-- [x] `account-lines` (+ `lines` alias)
-- [x] `account-offers` (+ `offers` alias)
-- [x] `account-tx`
-- [x] `nonce`
-- [x] `tx`
-- [x] `ledger`
-- [x] `ledger-index`
-- [x] `fee`
-- [x] `server-info`
-- [x] `feature` (alias: `amendment`)
-- [x] `account-nfts` (+ `nfts` alias)
-- [x] `rpc` (the raw escape hatch — unblocks all queries immediately)
-- [x] `ping`
-- [x] **Unit tests**: response formatting, `--json` output shape, alias routing
-- [x] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `feature --enabled` returns non-empty list, `rpc server_info` round-trips correctly
-
-### Phase 2: Wallet & Signing
-
-Key management and the signing pipeline. Required before any transaction commands.
-
-- [x] `wallet generate`
-- [x] `wallet from-seed`
-- [x] `wallet from-entropy`
-- [x] `wallet fund` (testnet/devnet faucet)
-- [x] `sign` (sign tx JSON, output blob + hash)
-- [x] `submit` (submit raw blob)
-- [x] `build` (autofill + output unsigned JSON, `--signers` fee calculation)
-- [x] `decode-tx`
-- [x] **Unit tests**: wallet generation (both algorithms), seed derivation determinism, sign produces valid blob, `--signers` fee math
-- [x] **E2E tests**: `wallet generate` → `wallet fund` on testnet → `balance` shows funded amount. `build Payment` → `sign` → `submit` round-trip on testnet
-
-### Phase 3: Payments & Trust Lines
-
-The core transaction commands that most users need first.
-
-- [x] `send` (+ `pay`, `payment` aliases) — XRP, IOU, and MPT paths
-- [x] `send --prepare` / `--signers` for multisig preparation
-- [x] `send --memo` with full memo parser integration
-- [x] `trust-set` (+ `--prepare`)
-- [x] `xrp-to-drops`, `drops-to-xrp`
-- [x] `ripple-time`
-- [x] `address-info`
-- [x] `to-hex`, `from-hex`
-- [x] **Unit tests**: `send` builds correct Payment JSON for XRP/IOU/MPT, memo encoding, `--prepare` sets `SigningPubKey: ""` and correct fee
-- [x] **E2E tests**: fund two testnet accounts, `send` XRP between them, verify `balance` changed. `trust-set` + `send` IOU. `send --memo` and verify memos in `tx` output
-
-### Phase 4: Multi-Signing
-
-The full multi-signing pipeline.
-
-- [x] `signer-list-set`
-- [x] `signer-list-delete`
-- [x] `multisign`
-- [x] `multisign-combine`
-- [x] `multisign-submit`
-- [x] **Unit tests**: `multisign` adds correct `Signers` entry, `multisign-combine` merges and sorts by address, fee validation
-- [x] **E2E tests**: set up a 2-of-3 multisig on testnet, `send --prepare --signers 2` → `multisign` with two signers → `multisign-submit`, verify transaction succeeded
-
-### Phase 5: Account Management
-
-Account configuration commands.
-
-- [x] `account-set` (+ `--prepare`)
-- [x] `account-delete`
-- [x] `set-regular-key`
-- [x] `deposit-preauth`
-- [x] `ticket-create`
-- [x] `tickets`
-- [x] `account-channels` (+ `channels` alias)
-- [x] `account-currencies` (+ `currencies` alias)
-- [x] `gateway-balances`
-- [x] `noripple-check`
-- [x] `completions`
-- [x] **E2E tests**: `account-set --domain` → `account-info` shows domain. `ticket-create 5` → `tickets` lists them. `deposit-preauth --authorize` → `deposit-authorized` confirms
-
-### Phase 6: DEX
-
-Order book and offer commands.
-
-- [x] `offer-create` (+ `--prepare`, all flags: `--immediate-or-cancel`, `--fill-or-kill`, `--sell`)
-- [x] `offer-cancel`
-- [x] `book-offers`
-- [x] `deposit-authorized`
-- [x] `path-find`
-- [x] **E2E tests**: create a trust line + offer on testnet, `account-offers` shows it, `offer-cancel` removes it, `book-offers` returns order book
-
-### Phase 7: MPTs
-
-Multi-Purpose Token lifecycle.
-
-- [x] `mpt-create`
-- [x] `mpt-authorize`
-- [x] `mpt-set`
-- [x] `mpt-destroy`
-- [x] Verify `send` with `mpt:` token notation end-to-end
-- [x] **E2E tests** (devnet, since MPTokensV1 may not be on testnet): `mpt-create` → `mpt-authorize` → `send` MPT → `balance --token mpt:...` → `mpt-destroy`
-
-### Phase 8: Escrows, Payment Channels, Checks
-
-Less common but fully supported features.
-
-- [x] `escrow-create`, `escrow-finish`, `escrow-cancel`
-- [x] `channel-create`, `channel-fund`, `channel-claim`, `channel-verify`
-- [x] `check-create`, `check-cash`, `check-cancel`
-- [x] `ledger-data`, `ledger-entry`
-- [x] `server-state`
-- [x] `delegate-set`
-- [x] **E2E tests**: create escrow with `--finish-after` in the near future, wait, finish it. Create a check, cash it. Payment channel create + fund round-trip
-
-### Phase 9: NFTs & AMMs
-
-Higher-level DeFi and NFT features.
-
-- [x] `nft-mint`, `nft-burn`
-- [x] `nft-offer-create`, `nft-offer-accept`, `nft-offer-cancel`
-- [x] `nft-buy-offers`, `nft-sell-offers`
-- [x] `amm-info`, `amm-create`, `amm-deposit`, `amm-withdraw`, `amm-vote`, `amm-bid`
-- [x] `clawback`
-- [x] `subscribe`
-- [x] **E2E tests**: mint NFT → `account-nfts` lists it → create sell offer → accept → verify ownership transferred. AMM create → deposit → withdraw round-trip
-
-### Phase 10: Polish
-
-- [ ] `--help` text for every command with amendment requirements noted
-- [x] Shell completions (`bash`, `zsh`, `fish`)
-- [x] CI pipeline (lint, unit tests, e2e tests against testnet on every PR)
-- [x] npm publish setup
-- [ ] README examples verified against live testnet
-- [ ] Man page generation (optional)
-
-### Testing Strategy
-
-**Unit tests** (fast, no network, run on every commit):
-- Token notation parsing (XRP, IOU with standard/hex currency codes, MPT)
-- Memo encoding (UTF-8, `hex:` prefix, mixed, edge cases)
-- Fee calculation for multi-signing
-- Config file and alias resolution
-- Transaction JSON construction for each command
-- Response formatting (human-readable vs `--json`)
-
-**E2E tests** (against testnet/devnet, run on PR/nightly):
-- Each E2E test funds fresh accounts via faucet to avoid interference
-- Tests are grouped by feature and can run in parallel (each uses its own accounts)
-- Devnet is used for amendment-gated features (MPTs, AMMs if needed)
-- Tests verify both the transaction submission and the resulting ledger state
-- CI budget: keep total e2e suite under 5 minutes by parallelizing account creation
-
-### Future Ideas
 
 Features that aren't planned for the initial release but worth exploring later:
 
