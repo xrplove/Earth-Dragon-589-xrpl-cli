@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { registerAccountDelete } from "./account-delete.js";
 import { registerAccountSet } from "./account-set.js";
+import { registerDelegateSet } from "./delegate-set.js";
 import { registerBalance } from "./balance.js";
 import { registerAccountChannels } from "./channels.js";
 import { registerAccountCurrencies } from "./currencies.js";
@@ -37,4 +38,5 @@ export function registerAccountCommands(program: Command) {
 	registerDepositPreauth(program);
 	registerTicketCreate(program);
 	registerTickets(program);
+	registerDelegateSet(program);
 }

@@ -1848,13 +1848,13 @@ Multi-Purpose Token lifecycle.
 
 Less common but fully supported features.
 
-- [ ] `escrow-create`, `escrow-finish`, `escrow-cancel`
-- [ ] `channel-create`, `channel-fund`, `channel-claim`, `channel-verify`
-- [ ] `check-create`, `check-cash`, `check-cancel`
-- [ ] `ledger-data`, `ledger-entry`
-- [ ] `server-state`
-- [ ] `delegate-set`
-- [ ] **E2E tests**: create escrow with `--finish-after` in the near future, wait, finish it. Create a check, cash it. Payment channel create + fund round-trip
+- [x] `escrow-create`, `escrow-finish`, `escrow-cancel`
+- [x] `channel-create`, `channel-fund`, `channel-claim`, `channel-verify`
+- [x] `check-create`, `check-cash`, `check-cancel`
+- [x] `ledger-data`, `ledger-entry`
+- [x] `server-state`
+- [x] `delegate-set`
+- [x] **E2E tests**: create escrow with `--finish-after` in the near future, wait, finish it. Create a check, cash it. Payment channel create + fund round-trip
 
 ### Phase 9: NFTs & AMMs
 
