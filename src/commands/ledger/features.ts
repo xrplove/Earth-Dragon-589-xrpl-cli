@@ -45,7 +45,7 @@ async function fetchFeatures(
 export function registerFeatureCommand(program: Command) {
 	program
 		.command("feature")
-		.alias("amendments")
+		.alias("amendment")
 		.description("List protocol amendments/features and their status")
 		.argument("[amendment]", "Amendment name or hex ID to look up")
 		.addOption(

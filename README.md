@@ -316,36 +316,15 @@ xrpl ledger-data [--ledger-index <index>] [--limit <n>] [--type <type>] [--binar
 
 #### `ledger-entry`
 
-Get a single ledger entry by its ID or typed lookup. Wraps [`ledger_entry`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry).
+Get a single ledger entry by its index. Wraps [`ledger_entry`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry).
 
 ```
-xrpl ledger-entry <entry-id> [--binary] [--ledger-index <index>]
-xrpl ledger-entry --account-root <address>
-xrpl ledger-entry --offer <account:sequence>
-xrpl ledger-entry --directory <dir-id>
-xrpl ledger-entry --escrow <owner:sequence>
-xrpl ledger-entry --check <check-id>
-xrpl ledger-entry --payment-channel <channel-id>
-xrpl ledger-entry --ripple-state <account1:account2:currency>
-xrpl ledger-entry --ticket <owner:ticket-sequence>
-xrpl ledger-entry --mpt-issuance <issuance-id>
-xrpl ledger-entry --did <account>
+xrpl ledger-entry <index> [--ledger-index <index>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `<entry-id>` | `string` | — | Look up any ledger entry by its 64-character hex object ID |
-| `--account-root` | `address` | — | Look up an `AccountRoot` by address |
-| `--offer` | `string` | — | Look up an `Offer` as `<account>:<sequence>` |
-| `--directory` | `string` | — | Look up a `DirectoryNode` by hex ID or owner address |
-| `--escrow` | `string` | — | Look up an `Escrow` as `<owner>:<sequence>` |
-| `--check` | `string` | — | Look up a `Check` by hex object ID |
-| `--payment-channel` | `string` | — | Look up a `PayChannel` by hex object ID |
-| `--ripple-state` | `string` | — | Look up a trust line as `<account1>:<account2>:<currency>` |
-| `--ticket` | `string` | — | Look up a `Ticket` as `<owner>:<ticket-sequence>` |
-| `--mpt-issuance` | `string` | — | Look up an `MPTokenIssuance` by hex issuance ID |
-| `--did` | `string` | — | Look up a `DID` by account address |
-| `--binary` | `boolean` | `false` | Return the entry as a hex string instead of JSON |
+| `<index>` | `string` | required | 64-character hex ledger entry index |
 | `--ledger-index` | `string` | `"validated"` | Ledger version: integer, `validated`, `closed`, or `current` |
 
 #### `fee`
@@ -360,12 +339,12 @@ Get the connected server's status and info. Wraps [`server_info`](https://xrpl.o
 
 Get machine-readable server status. Wraps [`server_state`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/server-info-methods/server_state). Takes no options.
 
-#### `amendments`
+#### `feature` (alias: `amendment`)
 
 List protocol amendments and their status on the connected network. Wraps [`feature`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/server-info-methods/feature).
 
 ```
-xrpl amendments [<amendment>] [--enabled] [--pending]
+xrpl feature [<amendment>] [--enabled] [--pending]
 ```
 
 | Option | Type | Default | Description |
@@ -376,13 +355,13 @@ xrpl amendments [<amendment>] [--enabled] [--pending]
 
 ```bash
 # List all amendments and their status
-xrpl amendments
+xrpl feature
 
 # Check if MPTokensV1 is enabled on this network
-xrpl amendments MPTokensV1
+xrpl feature MPTokensV1
 
 # Show only enabled amendments
-xrpl amendments --enabled
+xrpl feature --enabled
 ```
 
 ### Transaction Commands
@@ -418,7 +397,7 @@ xrpl tx <hash> [--ctid]
 Sign, submit, and wait for a Payment transaction. Wraps [`Payment`](https://xrpl.org/docs/references/protocol/transactions/types/payment).
 
 ```
-xrpl send --to <destination> --amount <amount> --token <token> [--tag <destination-tag>] [--send-max <amount> <token>] [--deliver-min <amount> <token>] [--paths <json>] [--invoice-id <hex>] [--partial] [--no-direct] [--limit-quality] [--memo <memo>...] [--prepare [--signers <n>]]
+xrpl send --to <destination> --amount <amount> --token <token> [--tag <destination-tag>] [--send-max-amount <amount> --send-max-token <token>] [--deliver-min-amount <amount> --deliver-min-token <token>] [--paths <json>] [--invoice-id <hex>] [--partial] [--no-direct] [--limit-quality] [--memo <memo>...] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
@@ -427,8 +406,10 @@ xrpl send --to <destination> --amount <amount> --token <token> [--tag <destinati
 | `--amount` | `string` | required | Amount to send |
 | `--token` | `token` | required | Token to send: `XRP`, `<currency>.<issuer>`, or `mpt:<issuance-id>` |
 | `--tag` | `number` | — | Destination tag (for exchanges, hosted wallets, etc.) |
-| `--send-max` | `string` `token` | — | Max source amount for cross-currency payments (e.g. `--send-max 110 USD.rIssuer`) |
-| `--deliver-min` | `string` `token` | — | Minimum delivered amount for partial payments (requires `--partial`) |
+| `--send-max-amount` | `string` | — | Max source amount for cross-currency payments |
+| `--send-max-token` | `token` | — | Token for `--send-max-amount` |
+| `--deliver-min-amount` | `string` | — | Minimum delivered amount for partial payments (requires `--partial`) |
+| `--deliver-min-token` | `token` | — | Token for `--deliver-min-amount` |
 | `--paths` | `json` | — | Explicit payment paths as JSON array of path arrays |
 | `--invoice-id` | `string` | — | Arbitrary 256-bit (64-char hex) hash for referencing an invoice |
 | `--partial` | `boolean` | `false` | Allow partial payments (`tfPartialPayment`) |
@@ -464,10 +445,10 @@ xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 100 --token USD.rvYAf
 xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 50 --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
 
 # Cross-currency: send USD, pay up to 110 USD from source
-xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --send-max 110 USD.rIssuer
+xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --send-max-amount 110 --send-max-token USD.rIssuer
 
 # Partial payment with minimum
-xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --partial --deliver-min 90 USD.rIssuer
+xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --partial --deliver-min-amount 90 --deliver-min-token USD.rIssuer
 
 # Send with memos
 xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 1 --token XRP \
@@ -575,13 +556,13 @@ Commands for working with Multi-Purpose Tokens. Requires amendment: **MPTokensV1
 Create a new Multi-Purpose Token issuance. Wraps [`MPTokenIssuanceCreate`](https://xrpl.org/docs/references/protocol/transactions/types/mptokenissuancecreate).
 
 ```
-xrpl mpt-create [--max-amount <max>] [--scale <scale>] [--transfer-fee <fee>] [--can-transfer] [--can-lock] [--can-clawback] [--can-escrow] [--can-trade] [--require-auth] [--metadata <json>] [--prepare [--signers <n>]]
+xrpl mpt-create [--max-amount <max>] [--asset-scale <scale>] [--transfer-fee <fee>] [--can-transfer] [--can-lock] [--can-clawback] [--can-escrow] [--can-trade] [--require-auth] [--metadata <hex>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `--max-amount` | `string` | max uint63 | Maximum supply. Non-negative integer string (up to 63-bit) |
-| `--scale` | `number` | `0` | Asset scale: 10^(-scale) of the standard unit (e.g. `2` for cents) |
+| `--asset-scale` | `number` | `0` | Asset scale: 10^(-scale) of the standard unit (e.g. `2` for cents) |
 | `--transfer-fee` | `number` | `0` | Fee for secondary sales (0–50000, representing 0.000%–50.000%) |
 | `--can-transfer` | `boolean` | `false` | Allow transfers between non-issuer accounts (`tfMPTCanTransfer`) |
 | `--can-lock` | `boolean` | `false` | Allow locking individual holders or all holders (`tfMPTCanLock`) |
@@ -589,10 +570,10 @@ xrpl mpt-create [--max-amount <max>] [--scale <scale>] [--transfer-fee <fee>] [-
 | `--can-escrow` | `boolean` | `false` | Allow holders to place balances in escrow (`tfMPTCanEscrow`) |
 | `--can-trade` | `boolean` | `false` | Allow holders to trade on the DEX or AMM (`tfMPTCanTrade`) |
 | `--require-auth` | `boolean` | `false` | Require holders to be individually authorized (`tfMPTRequireAuth`) |
-| `--metadata` | `json` | — | Token metadata following the [XLS-89](https://github.com/XRPLF/XRPL-Standards/tree/master/XLS-0089-multi-purpose-token-metadata-schema) schema. Required fields: `ticker`, `name`, `icon`, `asset_class`, `issuer_name`. Optional: `desc`, `asset_subclass`, `uris`, `additional_info`. The CLI hex-encodes it automatically |
+| `--metadata` | `string` | — | Token metadata as a hex string |
 
 ```bash
-xrpl mpt-create --scale 2 --can-transfer --metadata '{"ticker":"MTK","name":"MyToken","icon":"https://example.com/icon.png","asset_class":"fiat","issuer_name":"Example Corp"}'
+xrpl mpt-create --asset-scale 2 --can-transfer --metadata 4D79546F6B656E
 ```
 
 #### `mpt-authorize`
@@ -736,13 +717,13 @@ Remove the signer list from an account. Sends a `SignerListSet` with `SignerQuor
 Grant another account permission to send transactions on your behalf. Requires amendment: **PermissionDelegation**. Wraps [`DelegateSet`](https://xrpl.org/docs/references/protocol/transactions/types/delegateset).
 
 ```
-xrpl delegate-set --authorize <address> --permissions <permission>... [--prepare [--signers <n>]]
+xrpl delegate-set <authorize> [--permission <value>...] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--authorize` | `address` | required | The account to grant delegation to |
-| `--permissions` | `string[]` | required | Permission values to grant. Can be repeated. Each is a permission identifier string |
+| `<authorize>` | `address` | required | Account to delegate to (address or alias) |
+| `--permission` | `string[]` | — | Permission value(s) to grant. Can be repeated |
 
 To revoke delegation, submit a `DelegateSet` with an empty `Permissions` array via `xrpl build DelegateSet --Authorize <address> --Permissions '[]'`.
 
@@ -775,18 +756,20 @@ xrpl tickets <account> [--ledger-index <index>]
 
 ### DEX Commands
 
-#### `offer-create`
+#### `offer-create` (alias: `offer`)
 
 Create a DEX offer. Wraps [`OfferCreate`](https://xrpl.org/docs/references/protocol/transactions/types/offercreate).
 
 ```
-xrpl offer-create --taker-pays <amount> <token> --taker-gets <amount> <token> [--expiration <seconds>] [--offer-sequence <seq>] [--passive] [--immediate-or-cancel] [--fill-or-kill] [--sell] [--prepare [--signers <n>]]
+xrpl offer-create --taker-pays-amount <amount> --taker-pays-token <token> --taker-gets-amount <amount> --taker-gets-token <token> [--expiration <seconds>] [--offer-sequence <seq>] [--passive] [--immediate-or-cancel] [--fill-or-kill] [--sell] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--taker-pays` | `string` `token` | required | Amount and token the taker pays (alias: `--amount`) |
-| `--taker-gets` | `string` `token` | required | Amount and token the taker gets (alias: `--for`) |
+| `--taker-pays-amount` | `string` | required | Amount the taker pays |
+| `--taker-pays-token` | `token` | required | Token the taker pays: `XRP`, `<currency>.<issuer>`, or `mpt:<id>` |
+| `--taker-gets-amount` | `string` | required | Amount the taker gets |
+| `--taker-gets-token` | `token` | required | Token the taker gets: `XRP`, `<currency>.<issuer>`, or `mpt:<id>` |
 | `--expiration` | `number` | — | Time in seconds since the Ripple Epoch after which the offer is no longer active |
 | `--offer-sequence` | `number` | — | Sequence number of an existing offer to replace (cancelled atomically) |
 | `--passive` | `boolean` | `false` | Don't consume offers that exactly match; only cross (`tfPassive`) |
@@ -795,10 +778,7 @@ xrpl offer-create --taker-pays <amount> <token> --taker-gets <amount> <token> [-
 | `--sell` | `boolean` | `false` | Exchange the entire `TakerGets` even if it exceeds `TakerPays` (`tfSell`) |
 
 ```bash
-xrpl offer-create --taker-pays 100 USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --taker-gets 50 XRP
-
-# Using --amount / --for aliases
-xrpl offer-create --amount 100 USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --for 50 XRP
+xrpl offer-create --taker-pays-amount 100 --taker-pays-token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --taker-gets-amount 50 --taker-gets-token XRP
 ```
 
 #### `offer-cancel`
@@ -813,18 +793,18 @@ xrpl offer-cancel <offer-sequence> [--prepare [--signers <n>]]
 |--------|------|---------|-------------|
 | `<offer-sequence>` | `number` | required | Sequence number (or ticket number) of the `OfferCreate` transaction to cancel |
 
-#### `book-offers`
+#### `book-offers` (alias: `order-book`)
 
 Get the order book for a currency pair. Wraps [`book_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/book_offers).
 
 ```
-xrpl book-offers --taker-pays <token> --taker-gets <token> [--limit <n>] [--taker <address>] [--ledger-index <index>]
+xrpl book-offers <taker-pays> <taker-gets> [--limit <n>] [--taker <address>] [--ledger-index <index>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--taker-pays` | `token` | required | Currency specification for what the taker pays (e.g. `XRP`, `USD.rIssuer`) |
-| `--taker-gets` | `token` | required | Currency specification for what the taker gets |
+| `<taker-pays>` | `token` | required | Token the taker pays: `XRP` or `<currency>.<issuer>` |
+| `<taker-gets>` | `token` | required | Token the taker gets: `XRP` or `<currency>.<issuer>` |
 | `--limit` | `number` | server default | Max offers to return. Unfunded offers are omitted regardless of limit |
 | `--taker` | `address` | — | Perspective account. Unfunded offers from this account are always included |
 | `--ledger-index` | `string` | `"validated"` | Ledger version: integer, `validated`, `closed`, or `current` |
@@ -834,35 +814,33 @@ xrpl book-offers --taker-pays <token> --taker-gets <token> [--limit <n>] [--take
 Check whether one account is authorized to send payments to another. Wraps [`deposit_authorized`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/deposit_authorized).
 
 ```
-xrpl deposit-authorized --source <address> --destination <address> [--credentials <credential-id>...] [--ledger-index <index>]
+xrpl deposit-authorized <source> <destination> [--ledger-index <index>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--source` | `address` | required | The potential sender |
-| `--destination` | `address` | required | The potential recipient |
-| `--credentials` | `string[]` | — | Credential object IDs to include in the authorization check. Can be repeated (max 8) |
+| `<source>` | `address` | required | Source account address or alias |
+| `<destination>` | `address` | required | Destination account address or alias |
 | `--ledger-index` | `string` | `"validated"` | Ledger version: integer, `validated`, `closed`, or `current` |
 
 ### Path Finding Commands
 
-#### `path-find`
+#### `path-find` (alias: `paths`)
 
 Find a payment path between two accounts. Wraps [`ripple_path_find`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/ripple_path_find).
 
 ```
-xrpl path-find --from <source> --to <destination> --amount <amount> --token <token> [--send-max <amount> <token>] [--source-currencies <currency>...] [--ledger-index <index>]
+xrpl path-find <source> <destination> <amount> <token> [--send-max-amount <amount> --send-max-token <token>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--from` | `address` | required | Source account that would send funds |
-| `--to` | `address` | required | Destination account that would receive funds |
-| `--amount` | `string` | required | Amount the destination would receive |
-| `--token` | `token` | required | Token the destination would receive |
-| `--send-max` | `string` `token` | — | Max amount the source is willing to spend. Cannot be used with `--source-currencies` |
-| `--source-currencies` | `string[]` | — | Currencies the source might spend (e.g. `XRP`, `USD.rIssuer`). Can be repeated |
-| `--ledger-index` | `string` | `"validated"` | Ledger version: integer, `validated`, `closed`, or `current` |
+| `<source>` | `address` | required | Source account address or alias |
+| `<destination>` | `address` | required | Destination account address or alias |
+| `<amount>` | `string` | required | Destination amount |
+| `<token>` | `token` | required | Token: `XRP`, `<currency>.<issuer>`, or `mpt:<id>` |
+| `--send-max-amount` | `string` | — | Max source amount to spend |
+| `--send-max-token` | `token` | — | Token for `--send-max-amount` |
 
 ### AMM Commands
 
@@ -873,27 +851,26 @@ Commands for working with Automated Market Makers. Requires amendment: **AMM**. 
 Get info about an AMM instance. Query by token pair or by AMM account address. Wraps [`amm_info`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/amm_info).
 
 ```
-xrpl amm-info [--asset <token> --asset2 <token>] [--amm-account <address>]
+xrpl amm-info [--asset <token> --asset2 <token>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `--asset` | `token` | — | First token of the pair: `XRP`, `<currency>.<issuer>` |
 | `--asset2` | `token` | — | Second token of the pair |
-| `--amm-account` | `address` | — | AMM account address. Alternative to specifying the token pair |
 
 #### `amm-create`
 
 Create a new AMM for a token pair. Both initial deposits are required. Wraps [`AMMCreate`](https://xrpl.org/docs/references/protocol/transactions/types/ammcreate).
 
 ```
-xrpl amm-create --amount <amount> --token <token> --amount2 <amount> --token2 <token> [--trading-fee <fee>] [--prepare [--signers <n>]]
+xrpl amm-create --amount1 <amount> --token1 <token> --amount2 <amount> --token2 <token> [--trading-fee <fee>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--amount` | `string` | required | First token deposit amount |
-| `--token` | `token` | required | First token: `XRP`, `<currency>.<issuer>` |
+| `--amount1` | `string` | required | First token deposit amount |
+| `--token1` | `token` | required | First token: `XRP`, `<currency>.<issuer>` |
 | `--amount2` | `string` | required | Second token deposit amount |
 | `--token2` | `token` | required | Second token: `XRP`, `<currency>.<issuer>` |
 | `--trading-fee` | `number` | `0` | Trading fee in basis points (0–1000, i.e. 0–1%). Charged on swaps |
@@ -903,7 +880,7 @@ xrpl amm-create --amount <amount> --token <token> --amount2 <amount> --token2 <t
 Deposit funds into an AMM. Multiple deposit modes: two-asset (proportional), single-asset, LP-token targeted, or limit-price. The flags are inferred from which options you provide. Wraps [`AMMDeposit`](https://xrpl.org/docs/references/protocol/transactions/types/ammdeposit).
 
 ```
-xrpl amm-deposit --asset <token> --asset2 <token> [--amount <amount> --token <token>] [--amount2 <amount> --token2 <token>] [--lp-token-out <amount>] [--effective-price <amount>] [--prepare [--signers <n>]]
+xrpl amm-deposit --asset <token> --asset2 <token> [--amount <amount> --amount-token <token>] [--amount2 <amount> --amount2-token <token>] [--lp-token-out <amount> --lp-token-token <token>] [--e-price <amount> --e-price-token <token>] [--lp-token] [--single-asset] [--two-asset] [--one-asset-lp-token] [--limit-lp-token] [--two-asset-if-empty] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
@@ -911,25 +888,26 @@ xrpl amm-deposit --asset <token> --asset2 <token> [--amount <amount> --token <to
 | `--asset` | `token` | required | First token of the AMM pair (identifies the AMM) |
 | `--asset2` | `token` | required | Second token of the AMM pair |
 | `--amount` | `string` | — | Amount of the first asset to deposit |
-| `--token` | `token` | — | Currency of `--amount`: `XRP`, `<currency>.<issuer>` |
+| `--amount-token` | `token` | — | Token for `--amount` |
 | `--amount2` | `string` | — | Amount of the second asset to deposit |
-| `--token2` | `token` | — | Currency of `--amount2` |
-| `--lp-token-out` | `string` | — | Desired LP tokens to receive. Used for LP-token-targeted deposits |
-| `--effective-price` | `string` | — | Maximum effective price (limit price). Deposit fails if actual price exceeds this |
-
-**Deposit modes** (inferred from options):
-- `--lp-token-out` only → deposit proportional amounts to receive exact LP tokens (`tfLPToken`)
-- `--amount` only → single-asset deposit (`tfSingleAsset`)
-- `--amount` + `--amount2` → two-asset deposit (`tfTwoAsset`)
-- `--amount` + `--lp-token-out` → single-asset deposit capped by LP tokens (`tfOneAssetLPToken`)
-- `--amount` + `--effective-price` → single-asset deposit with price limit (`tfLimitLPToken`)
+| `--amount2-token` | `token` | — | Token for `--amount2` |
+| `--lp-token-out` | `string` | — | LP tokens to receive |
+| `--lp-token-token` | `token` | — | Token for `--lp-token-out` |
+| `--e-price` | `string` | — | Effective price limit |
+| `--e-price-token` | `token` | — | Token for `--e-price` |
+| `--lp-token` | `boolean` | `false` | Deposit LP tokens only (`tfLPToken`) |
+| `--single-asset` | `boolean` | `false` | Single-asset deposit (`tfSingleAsset`) |
+| `--two-asset` | `boolean` | `false` | Two-asset deposit (`tfTwoAsset`) |
+| `--one-asset-lp-token` | `boolean` | `false` | Single asset with LP token constraint (`tfOneAssetLPToken`) |
+| `--limit-lp-token` | `boolean` | `false` | Limit by LP token amount (`tfLimitLPToken`) |
+| `--two-asset-if-empty` | `boolean` | `false` | Two-asset deposit for empty pool (`tfTwoAssetIfEmpty`) |
 
 #### `amm-withdraw`
 
 Withdraw funds from an AMM. Multiple withdrawal modes mirror the deposit modes. The flags are inferred from which options you provide. Wraps [`AMMWithdraw`](https://xrpl.org/docs/references/protocol/transactions/types/ammwithdraw).
 
 ```
-xrpl amm-withdraw --asset <token> --asset2 <token> [--amount <amount> --token <token>] [--amount2 <amount> --token2 <token>] [--lp-token-in <amount>] [--effective-price <amount>] [--withdraw-all] [--prepare [--signers <n>]]
+xrpl amm-withdraw --asset <token> --asset2 <token> [--amount <amount> --amount-token <token>] [--amount2 <amount> --amount2-token <token>] [--lp-token-in <amount> --lp-token-token <token>] [--e-price <amount> --e-price-token <token>] [--lp-token] [--withdraw-all] [--one-asset-withdraw-all] [--single-asset] [--two-asset] [--one-asset-lp-token] [--limit-lp-token] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
@@ -937,20 +915,20 @@ xrpl amm-withdraw --asset <token> --asset2 <token> [--amount <amount> --token <t
 | `--asset` | `token` | required | First token of the AMM pair (identifies the AMM) |
 | `--asset2` | `token` | required | Second token of the AMM pair |
 | `--amount` | `string` | — | Amount of the first asset to withdraw |
-| `--token` | `token` | — | Currency of `--amount` |
+| `--amount-token` | `token` | — | Token for `--amount` |
 | `--amount2` | `string` | — | Amount of the second asset to withdraw |
-| `--token2` | `token` | — | Currency of `--amount2` |
+| `--amount2-token` | `token` | — | Token for `--amount2` |
 | `--lp-token-in` | `string` | — | LP tokens to redeem |
-| `--effective-price` | `string` | — | Minimum effective price (limit price). Withdrawal fails if actual price is below this |
-| `--withdraw-all` | `boolean` | `false` | Flag `tfWithdrawAll`: withdraw all assets proportionally by redeeming all LP tokens |
-
-**Withdrawal modes** (inferred from options):
-- `--lp-token-in` only → redeem exact LP tokens for proportional assets (`tfLPToken`)
-- `--amount` only → withdraw exact amount of one asset (`tfSingleAsset`)
-- `--amount` + `--amount2` → withdraw exact amounts of both assets (`tfTwoAsset`)
-- `--amount` + `--lp-token-in` → withdraw one asset, redeeming specific LP tokens (`tfOneAssetLPToken`)
-- `--withdraw-all` → withdraw all, redeeming all your LP tokens (`tfWithdrawAll`)
-- `--amount` + `--effective-price` → single-asset with price limit (`tfOneAssetWithdrawAll`)
+| `--lp-token-token` | `token` | — | Token for `--lp-token-in` |
+| `--e-price` | `string` | — | Effective price limit |
+| `--e-price-token` | `token` | — | Token for `--e-price` |
+| `--lp-token` | `boolean` | `false` | Withdraw LP tokens only (`tfLPToken`) |
+| `--withdraw-all` | `boolean` | `false` | Withdraw all assets proportionally (`tfWithdrawAll`) |
+| `--one-asset-withdraw-all` | `boolean` | `false` | Withdraw all of one asset (`tfOneAssetWithdrawAll`) |
+| `--single-asset` | `boolean` | `false` | Withdraw a single asset (`tfSingleAsset`) |
+| `--two-asset` | `boolean` | `false` | Withdraw both assets (`tfTwoAsset`) |
+| `--one-asset-lp-token` | `boolean` | `false` | Single asset with LP token constraint (`tfOneAssetLPToken`) |
+| `--limit-lp-token` | `boolean` | `false` | Limit by LP token amount (`tfLimitLPToken`) |
 
 #### `amm-vote`
 
@@ -971,16 +949,18 @@ xrpl amm-vote --asset <token> --asset2 <token> --trading-fee <fee> [--prepare [-
 Bid on an AMM's auction slot. The auction slot holder gets a discounted trading fee (0%) for 24 hours. Wraps [`AMMBid`](https://xrpl.org/docs/references/protocol/transactions/types/ammbid).
 
 ```
-xrpl amm-bid --asset <token> --asset2 <token> [--min <amount>] [--max <amount>] [--auth-accounts <address>...] [--prepare [--signers <n>]]
+xrpl amm-bid --asset <token> --asset2 <token> [--bid-min-amount <amount> --bid-min-token <token>] [--bid-max-amount <amount> --bid-max-token <token>] [--auth-accounts <address>...] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `--asset` | `token` | required | First token of the AMM pair |
 | `--asset2` | `token` | required | Second token of the AMM pair |
-| `--min` | `string` | — | Minimum LP token bid amount. Bid at least this much |
-| `--max` | `string` | — | Maximum LP token bid amount. Do not bid more than this |
-| `--auth-accounts` | `address[]` | — | Up to 4 accounts to authorize for the discounted trading fee (share the auction slot benefit) |
+| `--bid-min-amount` | `string` | — | Minimum bid amount |
+| `--bid-min-token` | `token` | — | Token for `--bid-min-amount` |
+| `--bid-max-amount` | `string` | — | Maximum bid amount |
+| `--bid-max-token` | `token` | — | Token for `--bid-max-amount` |
+| `--auth-accounts` | `address[]` | — | Up to 4 accounts to authorize for the discounted trading fee |
 
 ### Check Commands
 
@@ -991,32 +971,33 @@ Commands for working with Checks. Requires amendment: **Checks**. Wraps `CheckCr
 Create a check. Wraps [`CheckCreate`](https://xrpl.org/docs/references/protocol/transactions/types/checkcreate).
 
 ```
-xrpl check-create --to <destination> --send-max <amount> --token <token> [--tag <destination-tag>] [--expiration <seconds>] [--invoice-id <hex>] [--prepare [--signers <n>]]
+xrpl check-create --destination <address> --send-max-amount <amount> --send-max-token <token> [--tag <destination-tag>] [--expiration <seconds>] [--invoice-id <hex>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--to` | `address` | required | Account that can cash the check |
-| `--send-max` | `string` | required | Max amount the check can debit from the sender (including transfer fees) |
-| `--token` | `token` | required | Currency of the check: `XRP`, `<currency>.<issuer>` |
+| `--destination` | `address` | required | Recipient address or alias |
+| `--send-max-amount` | `string` | required | Maximum amount the check can debit |
+| `--send-max-token` | `token` | required | Token: `XRP`, `<currency>.<issuer>`, or `mpt:<id>` |
 | `--tag` | `number` | — | Destination tag |
-| `--expiration` | `number` | — | Time in seconds since the Ripple Epoch after which the check expires |
-| `--invoice-id` | `string` | — | Arbitrary 256-bit (64-char hex) hash identifying this check |
+| `--expiration` | `number` | — | Check expiration (Ripple epoch) |
+| `--invoice-id` | `string` | — | 256-bit invoice ID (64-char hex) |
 
 #### `check-cash`
 
-Redeem a check. Exactly one of `--amount` or `--deliver-min` is required. Wraps [`CheckCash`](https://xrpl.org/docs/references/protocol/transactions/types/checkcash).
+Redeem a check. Exactly one of `--amount`/`--token` or `--deliver-min-amount`/`--deliver-min-token` is required. Wraps [`CheckCash`](https://xrpl.org/docs/references/protocol/transactions/types/checkcash).
 
 ```
-xrpl check-cash <check-id> [--amount <amount> --token <token>] [--deliver-min <amount> --token <token>] [--prepare [--signers <n>]]
+xrpl check-cash <check-id> [--amount <amount> --token <token>] [--deliver-min-amount <amount> --deliver-min-token <token>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `<check-id>` | `string` | required | 64-character hex ID of the Check ledger object |
-| `--amount` | `string` | — | Redeem for exactly this amount. Currency must match the check's `SendMax` |
-| `--deliver-min` | `string` | — | Redeem for at least this amount, up to the full `SendMax` |
-| `--token` | `token` | required | Currency to cash: `XRP`, `<currency>.<issuer>` |
+| `--amount` | `string` | — | Exact amount to cash |
+| `--token` | `token` | — | Token for `--amount` |
+| `--deliver-min-amount` | `string` | — | Minimum amount to deliver |
+| `--deliver-min-token` | `token` | — | Token for `--deliver-min-amount` |
 
 #### `check-cancel`
 
@@ -1034,20 +1015,19 @@ xrpl check-cancel <check-id> [--prepare [--signers <n>]]
 
 #### `escrow-create`
 
-Create a time-based or condition-based escrow. Supports XRP, IOUs, and MPTs. At least one of `--finish-after` or `--condition` is required. Wraps [`EscrowCreate`](https://xrpl.org/docs/references/protocol/transactions/types/escrowcreate).
+Create a time-based or condition-based XRP escrow. At least one of `--finish-after` or `--condition` is required. Wraps [`EscrowCreate`](https://xrpl.org/docs/references/protocol/transactions/types/escrowcreate).
 
 ```
-xrpl escrow-create --to <destination> --amount <amount> --token <token> [--finish-after <iso-time>] [--cancel-after <iso-time>] [--condition <hex>] [--tag <destination-tag>] [--prepare [--signers <n>]]
+xrpl escrow-create --destination <address> --amount <xrp> [--finish-after <time>] [--cancel-after <time>] [--condition <hex>] [--tag <destination-tag>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--to` | `address` | required | Destination account to receive the escrowed funds |
-| `--amount` | `string` | required | Amount to escrow |
-| `--token` | `token` | required | Token to escrow: `XRP`, `<currency>.<issuer>`, or `mpt:<issuance-id>` |
-| `--finish-after` | `string` | — | ISO 8601 time after which the escrow can be finished (converted to Ripple Epoch internally) |
-| `--cancel-after` | `string` | — | ISO 8601 time after which the escrow can be cancelled and funds returned |
-| `--condition` | `string` | — | Hex-encoded PREIMAGE-SHA-256 crypto-condition. Funds require matching fulfillment to release |
+| `--destination` | `address` | required | Recipient address or alias |
+| `--amount` | `string` | required | Amount of XRP to escrow |
+| `--finish-after` | `string` | — | Earliest finish time (ISO 8601 or Ripple epoch) |
+| `--cancel-after` | `string` | — | Expiration time (ISO 8601 or Ripple epoch) |
+| `--condition` | `string` | — | Crypto-condition (hex) |
 | `--tag` | `number` | — | Destination tag |
 
 #### `escrow-finish`
@@ -1055,28 +1035,28 @@ xrpl escrow-create --to <destination> --amount <amount> --token <token> [--finis
 Complete an escrow and release funds to the destination. Wraps [`EscrowFinish`](https://xrpl.org/docs/references/protocol/transactions/types/escrowfinish).
 
 ```
-xrpl escrow-finish --owner <owner> --sequence <sequence> [--condition <hex>] [--fulfillment <hex>] [--prepare [--signers <n>]]
+xrpl escrow-finish <owner> <offer-sequence> [--condition <hex>] [--fulfillment <hex>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--owner` | `address` | required | Address of the account that funded the escrow |
-| `--sequence` | `number` | required | Sequence number of the `EscrowCreate` transaction |
-| `--condition` | `string` | — | Hex PREIMAGE-SHA-256 crypto-condition (must match the escrow's condition) |
-| `--fulfillment` | `string` | — | Hex fulfillment matching the escrow's condition. Required if the escrow has a condition |
+| `<owner>` | `address` | required | Escrow owner address or alias |
+| `<offer-sequence>` | `number` | required | Sequence number of the `EscrowCreate` transaction |
+| `--condition` | `string` | — | Crypto-condition (hex) |
+| `--fulfillment` | `string` | — | Crypto-condition fulfillment (hex) |
 
 #### `escrow-cancel`
 
 Cancel an expired escrow and return funds to the sender. The escrow's `CancelAfter` time must have passed. Wraps [`EscrowCancel`](https://xrpl.org/docs/references/protocol/transactions/types/escrowcancel).
 
 ```
-xrpl escrow-cancel --owner <owner> --sequence <sequence> [--prepare [--signers <n>]]
+xrpl escrow-cancel <owner> <offer-sequence> [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--owner` | `address` | required | Address of the account that funded the escrow |
-| `--sequence` | `number` | required | Sequence number of the `EscrowCreate` transaction |
+| `<owner>` | `address` | required | Escrow owner address or alias |
+| `<offer-sequence>` | `number` | required | Sequence number of the `EscrowCreate` transaction |
 
 ### Payment Channel Commands
 
@@ -1085,12 +1065,12 @@ xrpl escrow-cancel --owner <owner> --sequence <sequence> [--prepare [--signers <
 Create a payment channel (XRP only). Wraps [`PaymentChannelCreate`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelcreate).
 
 ```
-xrpl channel-create --to <destination> --amount <amount> --settle-delay <seconds> --public-key <key> [--cancel-after <iso-time>] [--tag <destination-tag>] [--prepare [--signers <n>]]
+xrpl channel-create --destination <address> --amount <xrp> --settle-delay <seconds> --public-key <hex> [--cancel-after <ripple-time>] [--tag <destination-tag>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--to` | `address` | required | Destination account for the channel |
+| `--destination` | `address` | required | Destination address or alias |
 | `--amount` | `string` | required | Amount of XRP (in XRP, converted to drops internally) to fund the channel with |
 | `--settle-delay` | `number` | required | Seconds the source must wait before closing the channel with unclaimed XRP |
 | `--public-key` | `string` | required | Hex public key (secp256k1 or ed25519) used to sign claims against this channel |
@@ -1102,28 +1082,28 @@ xrpl channel-create --to <destination> --amount <amount> --settle-delay <seconds
 Add XRP to an existing payment channel. Wraps [`PaymentChannelFund`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelfund).
 
 ```
-xrpl channel-fund --channel <channel-id> --amount <amount> [--expiration <iso-time>] [--prepare [--signers <n>]]
+xrpl channel-fund <channel-id> --amount <xrp> [--expiration <ripple-time>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--channel` | `string` | required | 64-character hex channel ID |
-| `--amount` | `string` | required | Amount of XRP to add to the channel |
-| `--expiration` | `string` | — | New expiration as ISO 8601 time. Must be later than current time + settle delay or existing expiration |
+| `<channel-id>` | `string` | required | Channel ID (64-char hex) |
+| `--amount` | `string` | required | Amount of XRP to add |
+| `--expiration` | `string` | — | New expiration (Ripple epoch) |
 
 #### `channel-claim`
 
 Claim XRP from a payment channel, or request to close it. Wraps [`PaymentChannelClaim`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelclaim).
 
 ```
-xrpl channel-claim --channel <channel-id> [--balance <drops>] [--amount <drops>] [--signature <hex>] [--public-key <hex>] [--close] [--renew] [--prepare [--signers <n>]]
+xrpl channel-claim <channel-id> [--balance <xrp>] [--amount <xrp>] [--signature <hex>] [--public-key <hex>] [--close] [--renew] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--channel` | `string` | required | 64-character hex channel ID |
-| `--balance` | `string` | — | Total XRP in drops delivered by this channel after processing this claim |
-| `--amount` | `string` | — | Cumulative XRP in drops authorized by the signature |
+| `<channel-id>` | `string` | required | Channel ID (64-char hex) |
+| `--balance` | `string` | — | New balance after claim |
+| `--amount` | `string` | — | Amount of XRP authorized by signature |
 | `--signature` | `string` | — | Hex signature of the claim. Not required if sender is the channel source |
 | `--public-key` | `string` | — | Hex public key matching the channel's `PublicKey`. Required with `--signature` |
 | `--close` | `boolean` | `false` | Request to close the channel (`tfClose`). Immediate if no XRP remains, otherwise closes after settle delay |
@@ -1134,15 +1114,15 @@ xrpl channel-claim --channel <channel-id> [--balance <drops>] [--amount <drops>]
 Verify a payment channel claim's signature. Wraps [`channel_verify`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/payment-channel-methods/channel_verify).
 
 ```
-xrpl channel-verify --channel <channel-id> --amount <drops> --signature <hex> --public-key <key>
+xrpl channel-verify <channel-id> --amount <xrp> --signature <hex> --public-key <hex>
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--channel` | `string` | required | 64-character hex channel ID |
-| `--amount` | `string` | required | Amount in drops that the signature authorizes |
-| `--signature` | `string` | required | Hex signature to verify |
-| `--public-key` | `string` | required | Hex or base58 public key of the channel |
+| `<channel-id>` | `string` | required | Channel ID (64-char hex) |
+| `--amount` | `string` | required | Amount of XRP the signature authorizes |
+| `--signature` | `string` | required | Signature to verify |
+| `--public-key` | `string` | required | Public key of the signer |
 
 ### NFT Commands
 
@@ -1153,7 +1133,7 @@ Commands for working with Non-Fungible Tokens. Requires amendment: **NonFungible
 Mint an NFT. Wraps [`NFTokenMint`](https://xrpl.org/docs/references/protocol/transactions/types/nftokenmint).
 
 ```
-xrpl nft-mint --taxon <taxon> [--uri <uri>] [--transfer-fee <fee>] [--issuer <address>] [--amount <amount> --token <token>] [--destination <address>] [--expiration <iso-time>] [--burnable] [--only-xrp] [--trust-line] [--transferable] [--mutable] [--prepare [--signers <n>]]
+xrpl nft-mint --taxon <taxon> [--uri <uri>] [--transfer-fee <fee>] [--issuer <address>] [--amount <amount> --amount-token <token>] [--destination <address>] [--expiration <ripple-time>] [--burnable] [--only-xrp] [--trust-line] [--transferable] [--mutable] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
@@ -1162,8 +1142,8 @@ xrpl nft-mint --taxon <taxon> [--uri <uri>] [--transfer-fee <fee>] [--issuer <ad
 | `--uri` | `string` | — | URI for the NFT data (up to 256 bytes). Hex-encoded internally |
 | `--transfer-fee` | `number` | — | Transfer fee in basis points (0–50000, i.e. 0–50%). Charged on secondary sales. Only meaningful with `--transferable` |
 | `--issuer` | `address` | — | Issuer account if minting on behalf of another account (requires `MintAccount` authorization) |
-| `--amount` | `string` | — | Mint price amount (requires `--token`). Buyer must pay this to mint |
-| `--token` | `token` | — | Currency for the mint price: `XRP`, `<currency>.<issuer>` |
+| `--amount` | `string` | — | Amount for mint-and-sell offer |
+| `--amount-token` | `token` | — | Token for `--amount` |
 | `--destination` | `address` | — | If set, only this account can mint the token (for private/allowlisted mints) |
 | `--expiration` | `string` | — | ISO 8601 time after which the mint offer expires (converted to Ripple Epoch internally) |
 | `--burnable` | `boolean` | `false` | Flag `tfBurnable`: issuer can burn this NFT even after transfer |
@@ -1208,15 +1188,15 @@ xrpl nft-offer-create <nft-id> --amount <amount> --token <token> [--sell] [--own
 Accept an offer to buy or sell an NFT. Provide one of `--buy-offer` / `--sell-offer`, or both for brokered mode. Wraps [`NFTokenAcceptOffer`](https://xrpl.org/docs/references/protocol/transactions/types/nftokenacceptoffer).
 
 ```
-xrpl nft-offer-accept [--buy-offer <offer-id>] [--sell-offer <offer-id>] [--broker-fee <amount> --broker-fee-token <token>] [--prepare [--signers <n>]]
+xrpl nft-offer-accept [--buy-offer <offer-id>] [--sell-offer <offer-id>] [--broker-fee-amount <amount> --broker-fee-token <token>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `--buy-offer` | `string` | — | 64-character hex ID of a buy offer to accept |
 | `--sell-offer` | `string` | — | 64-character hex ID of a sell offer to accept |
-| `--broker-fee` | `string` | — | Broker fee amount. Only valid in brokered mode (both `--buy-offer` and `--sell-offer` specified) |
-| `--broker-fee-token` | `token` | — | Currency for the broker fee: `XRP`, `<currency>.<issuer>` |
+| `--broker-fee-amount` | `string` | — | Broker fee amount. Only valid in brokered mode (both `--buy-offer` and `--sell-offer` specified) |
+| `--broker-fee-token` | `token` | — | Token for broker fee |
 
 #### `nft-offer-cancel`
 
@@ -1235,7 +1215,7 @@ xrpl nft-offer-cancel <offer-id>... [--prepare [--signers <n>]]
 Get buy offers for an NFT. Wraps [`nft_buy_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/nft_buy_offers).
 
 ```
-xrpl nft-buy-offers <nft-id> [--limit <n>] [--marker <marker>]
+xrpl nft-buy-offers <nft-id> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
 | Option | Type | Default | Description |
@@ -1243,13 +1223,14 @@ xrpl nft-buy-offers <nft-id> [--limit <n>] [--marker <marker>]
 | `<nft-id>` | `string` | required | 64-character hex NFTokenID to query buy offers for |
 | `--limit` | `number` | — | Maximum number of offers to return |
 | `--marker` | `string` | — | Pagination marker from a previous response |
+| `--ledger-index` | `string` | `"validated"` | Ledger version |
 
 #### `nft-sell-offers`
 
 Get sell offers for an NFT. Wraps [`nft_sell_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/nft_sell_offers).
 
 ```
-xrpl nft-sell-offers <nft-id> [--limit <n>] [--marker <marker>]
+xrpl nft-sell-offers <nft-id> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
 | Option | Type | Default | Description |
@@ -1257,6 +1238,7 @@ xrpl nft-sell-offers <nft-id> [--limit <n>] [--marker <marker>]
 | `<nft-id>` | `string` | required | 64-character hex NFTokenID to query sell offers for |
 | `--limit` | `number` | — | Maximum number of offers to return |
 | `--marker` | `string` | — | Pagination marker from a previous response |
+| `--ledger-index` | `string` | `"validated"` | Ledger version |
 
 ### Clawback Commands
 
@@ -1267,14 +1249,14 @@ Requires amendment: **Clawback**.
 Claw back tokens from a holder. For IOUs, the signer must be the token issuer and must have enabled `lsfAllowTrustLineClawback`. For MPTs, the issuer must have set `tfMPTCanClawback` at creation. Wraps [`Clawback`](https://xrpl.org/docs/references/protocol/transactions/types/clawback).
 
 ```
-xrpl clawback --from <holder-address> --amount <amount> --token <token> [--prepare [--signers <n>]]
+xrpl clawback --amount <amount> --token <token> [--holder <address>] [--prepare [--signers <n>]]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--from` | `address` | required | Address of the holder to claw back from |
 | `--amount` | `string` | required | Amount to claw back |
 | `--token` | `token` | required | Token to claw back: `<currency>.<issuer>` for IOUs, `mpt:<issuance-id>` for MPTs. XRP cannot be clawed back |
+| `--holder` | `address` | — | Holder account (for MPT clawback) |
 
 ### Multi-Signing Commands
 
@@ -1365,28 +1347,26 @@ Outputs address, public key, private key, and seed.
 Derive a wallet from an existing seed (e.g. `sEdV...`).
 
 ```
-xrpl wallet from-seed <seed> [--algorithm <ed25519|secp256k1>] [--master-address <address>]
+xrpl wallet from-seed <seed> [--algorithm <ed25519|secp256k1>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `<seed>` | `string` | required | Base58-encoded seed string |
 | `--algorithm` | `string` | `"ed25519"` | Key algorithm: `ed25519` or `secp256k1` |
-| `--master-address` | `address` | — | Include if the seed is for a regular key pair; specifies the account it signs for |
 
 #### `wallet from-entropy`
 
 Derive a wallet from raw entropy (16 bytes).
 
 ```
-xrpl wallet from-entropy <hex-entropy> [--algorithm <ed25519|secp256k1>] [--master-address <address>]
+xrpl wallet from-entropy <hex-entropy> [--algorithm <ed25519|secp256k1>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `<hex-entropy>` | `string` | required | 32-character hex string (16 bytes of entropy) |
 | `--algorithm` | `string` | `"ed25519"` | Key algorithm: `ed25519` or `secp256k1` |
-| `--master-address` | `address` | — | Include if the keypair is for a regular key; specifies the account it signs for |
 
 #### `wallet fund`
 
@@ -1559,15 +1539,13 @@ xrpl rpc vault_info '{"vault_id": "..."}'
 Subscribe to ledger events via WebSocket and print them as they arrive. Runs until interrupted (Ctrl+C). Wraps [`subscribe`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/subscription-methods/subscribe).
 
 ```
-xrpl subscribe [--streams <stream>...] [--accounts <address>...] [--accounts-proposed <address>...] [--books <taker-pays>/<taker-gets>...]
+xrpl subscribe [--streams <stream>...] [--accounts <address>...]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `--streams` | `string[]` | — | Event streams to subscribe to: `consensus`, `ledger`, `manifests`, `peer_status`, `transactions`, `transactions_proposed`, `validations` |
 | `--accounts` | `address[]` | — | Watch for validated transactions affecting these accounts |
-| `--accounts-proposed` | `address[]` | — | Watch for proposed (unvalidated) transactions affecting these accounts |
-| `--books` | `string[]` | — | Order book pairs to watch, as `<taker-pays-token>/<taker-gets-token>` (e.g. `XRP/USD.rIssuer`) |
 
 ```bash
 # Watch for new validated ledgers
@@ -1575,9 +1553,6 @@ xrpl subscribe --streams ledger
 
 # Watch transactions for a specific account
 xrpl subscribe --accounts rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
-
-# Watch an order book
-xrpl subscribe --books XRP/USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 ```
 
 #### `ping`
@@ -1644,11 +1619,11 @@ The XRPL uses an [amendment system](https://xrpl.org/docs/concepts/networks-and-
 
 `xrpl` makes all commands available regardless of the connected network. If you use a command that requires an amendment not enabled on the connected network, the transaction will be rejected by `rippled` with a clear error (e.g. `temDISABLED`). The CLI does not gate features client-side — the network is the source of truth.
 
-Use `xrpl amendments` to check what's enabled on your connected network:
+Use `xrpl feature` to check what's enabled on your connected network:
 
 ```bash
-xrpl amendments --enabled --network devnet
-xrpl amendments MPTokensV1 --network mainnet
+xrpl feature --enabled --network devnet
+xrpl feature MPTokensV1 --network mainnet
 ```
 
 Commands that depend on non-core amendments note the requirement in their help text and in this README (e.g. "Requires amendment: **MPTokensV1**").
@@ -1756,12 +1731,12 @@ Queries that don't require a wallet. This lets you start using the tool immediat
 - [x] `ledger-index`
 - [x] `fee`
 - [x] `server-info`
-- [x] `amendments`
+- [x] `feature` (alias: `amendment`)
 - [x] `account-nfts` (+ `nfts` alias)
 - [x] `rpc` (the raw escape hatch — unblocks all queries immediately)
 - [x] `ping`
 - [x] **Unit tests**: response formatting, `--json` output shape, alias routing
-- [x] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `amendments --enabled` returns non-empty list, `rpc server_info` round-trips correctly
+- [x] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `feature --enabled` returns non-empty list, `rpc server_info` round-trips correctly
 
 ### Phase 2: Wallet & Signing
 
