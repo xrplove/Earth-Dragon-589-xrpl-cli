@@ -55,8 +55,10 @@ export const currency = z
 	.string()
 	.refine(
 		(v) =>
-			standardCurrency.safeParse(v).success || hexCurrency.safeParse(v).success,
-		"Currency must be 3 standard characters or 40 hex characters",
+			standardCurrency.safeParse(v).success ||
+			hexCurrency.safeParse(v).success ||
+			(v.length > 0 && v.length <= 20 && /^[\x20-\x7E]+$/.test(v)),
+		"Currency must be 3 standard characters, 40 hex characters, or 1-20 ASCII characters",
 	);
 
 export const mptIssuanceId = hexString(48);

@@ -41,8 +41,17 @@ describe("currency schema", () => {
 		expect(currency.parse(hex)).toBe(hex);
 	});
 
-	it("currency union rejects invalid", () => {
-		expect(() => currency.parse("TOOLONG")).toThrow();
+	it("currency union accepts non-standard ASCII", () => {
+		expect(currency.parse("NONST")).toBe("NONST");
+		expect(currency.parse("MyToken")).toBe("MyToken");
+	});
+
+	it("currency union rejects empty string", () => {
+		expect(() => currency.parse("")).toThrow();
+	});
+
+	it("currency union rejects over 20 chars", () => {
+		expect(() => currency.parse("A".repeat(21))).toThrow();
 	});
 });
 

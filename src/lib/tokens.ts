@@ -1,5 +1,5 @@
 import { xrpToDrops, type IssuedCurrencyAmount, type MPTAmount } from "xrpl";
-import { tokenSpec } from "./schemas.js";
+import { currency, tokenSpec } from "./schemas.js";
 
 export interface XrpAmount {
 	type: "xrp";
@@ -18,10 +18,21 @@ export interface MptAmount {
 
 export type ParsedToken = XrpAmount | IouAmount | MptAmount;
 
-const STANDARD_CURRENCY_RE = /^[A-Za-z0-9?!@#$%^&*<>(){}[\]|]{3}$/;
-const HEX_CURRENCY_RE = /^[0-9A-Fa-f]{40}$/;
 const MPT_RE = /^mpt:([0-9A-Fa-f]{48})$/;
 const IOU_RE = /^(.+)\.([r][1-9A-HJ-NP-Za-km-z]{24,34})$/;
+const STANDARD_RE = /^[A-Za-z0-9?!@#$%^&*<>(){}[\]|]{3}$/;
+const HEX40_RE = /^[0-9A-Fa-f]{40}$/;
+
+/**
+ * Normalize a currency code for XRPL:
+ * - 3-char standard codes → pass through as-is
+ * - 40-char hex codes → pass through as-is
+ * - Non-standard ASCII (e.g. "NONST") → convert to 40-char hex (right-padded with zeros)
+ */
+function normalizeCurrency(code: string): string {
+	if (STANDARD_RE.test(code) || HEX40_RE.test(code)) return code;
+	return Buffer.from(code, "ascii").toString("hex").toUpperCase().padEnd(40, "0");
+}
 
 export function parseToken(token: string): ParsedToken {
 	tokenSpec.parse(token);
@@ -37,17 +48,10 @@ export function parseToken(token: string): ParsedToken {
 
 	const iouMatch = IOU_RE.exec(token);
 	if (iouMatch) {
-		const currency = iouMatch[1];
+		const curr = iouMatch[1];
 		const issuer = iouMatch[2];
-		if (
-			!STANDARD_CURRENCY_RE.test(currency) &&
-			!HEX_CURRENCY_RE.test(currency)
-		) {
-			throw new Error(
-				`Invalid currency code "${currency}". Must be 3 standard characters or 40 hex characters.`,
-			);
-		}
-		return { type: "iou", currency, issuer };
+		currency.parse(curr);
+		return { type: "iou", currency: normalizeCurrency(curr), issuer };
 	}
 
 	throw new Error(

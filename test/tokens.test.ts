@@ -35,10 +35,13 @@ describe("parseToken", () => {
 		expect(result).toEqual({ type: "mpt", mpt_issuance_id: id });
 	});
 
-	it("rejects invalid currency code", () => {
-		expect(() =>
-			parseToken("TOOLONG.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"),
-		).toThrow("Invalid currency code");
+	it("parses non-standard ASCII currency and hex-encodes it", () => {
+		const result = parseToken("NONST.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B");
+		expect(result).toEqual({
+			type: "iou",
+			currency: "4E4F4E5354000000000000000000000000000000",
+			issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+		});
 	});
 
 	it("rejects completely invalid notation", () => {
