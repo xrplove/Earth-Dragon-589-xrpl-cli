@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { Wallet } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -16,10 +16,10 @@ export function registerGenerate(wallet: Command, program: Command) {
 	wallet
 		.command("generate")
 		.description("Generate a new random XRPL keypair")
-		.option(
-			"--algorithm <algorithm>",
-			"Key algorithm: ed25519 or secp256k1",
-			"ed25519",
+		.addOption(
+			new Option("--algorithm <algorithm>", "Key algorithm")
+				.choices(["ed25519", "secp256k1"])
+				.default("ed25519"),
 		)
 		.action((opts: { algorithm: string }) =>
 			generateWallet(opts, program.opts() as GlobalOptions),

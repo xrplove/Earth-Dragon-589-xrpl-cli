@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { registerAmendmentsCommand } from "./amendments.js";
+import { registerFeatureCommand } from "./amendments.js";
 import { registerFeeCommand } from "./fee.js";
 import { registerLedgerCommand } from "./ledger.js";
 import { registerLedgerIndexCommand } from "./ledger-index.js";
@@ -13,7 +13,7 @@ export function registerLedgerCommands(program: Command) {
 	registerLedgerIndexCommand(program);
 	registerFeeCommand(program);
 	registerServerInfoCommand(program);
-	registerAmendmentsCommand(program);
+	registerFeatureCommand(program);
 	registerTxCommand(program);
 	registerPingCommand(program);
 	registerRpcCommand(program);

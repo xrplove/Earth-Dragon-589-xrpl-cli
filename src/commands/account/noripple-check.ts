@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { output } from "../../lib/output.js";
@@ -6,7 +6,7 @@ import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface NorippleCheckOpts {
-	role: string;
+	role: "gateway" | "user";
 	transactions: boolean;
 	limit?: number;
 	ledgerIndex: string;
@@ -21,7 +21,7 @@ async function checkNoripple(
 		const resp = await client.request({
 			command: "noripple_check",
 			account: resolve(account),
-			role: opts.role as "gateway" | "user",
+			role: opts.role,
 			transactions: opts.transactions || undefined,
 			limit: opts.limit,
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
@@ -35,7 +35,11 @@ export function registerNorippleCheck(program: Command) {
 		.command("noripple-check")
 		.description("Get recommended changes to NoRipple settings")
 		.argument("<account>", "Account address or alias")
-		.option("--role <role>", "Account role: gateway or user", "user")
+		.addOption(
+			new Option("--role <role>", "Account role")
+				.choices(["gateway", "user"])
+				.default("user"),
+		)
 		.option("--transactions", "Include suggested fix transactions", false)
 		.option("--limit <n>", "Max trust line problems to include", Number)
 		.option("--ledger-index <index>", "Ledger version", "validated")

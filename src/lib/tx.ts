@@ -38,9 +38,9 @@ export async function calcSignersFee(
  * to a transaction object before signing/submitting.
  */
 export function applyTxOptions(
-	tx: Transaction,
+	tx: UnsignedTx,
 	txOpts: TxOptions,
-): Transaction {
+): UnsignedTx {
 	if (txOpts.memo?.length) {
 		tx.Memos = parseMemos(txOpts.memo);
 	}
@@ -58,6 +58,12 @@ export function applyTxOptions(
 }
 
 /**
+ * A transaction body that may not yet have Account set.
+ * submitOrPrepare will fill it from the wallet when available.
+ */
+export type UnsignedTx = Omit<Transaction, "Account"> & { Account?: string };
+
+/**
  * Autofill, then either prepare (output JSON) or sign & submit.
  */
 export type TxOutcome =
@@ -67,15 +73,21 @@ export type TxOutcome =
 export async function submitOrPrepare(
 	client: Client,
 	wallet: Wallet | null,
-	tx: Transaction,
+	tx: UnsignedTx,
 	txOpts: TxOptions,
 	globalOpts: GlobalOptions,
 ): Promise<TxOutcome> {
-	if (txOpts.signers != null) {
-		tx.Fee = await calcSignersFee(client, tx.Fee, txOpts.signers);
+	if (wallet && !tx.Account) {
+		tx.Account = wallet.address;
 	}
 
-	const autofilled = await client.autofill(tx as SubmittableTransaction);
+	if (txOpts.signers != null) {
+		tx.Fee = await calcSignersFee(client, tx.Fee as string | undefined, txOpts.signers);
+	}
+
+	const autofilled = await client.autofill(
+		tx as unknown as SubmittableTransaction,
+	);
 	applyTxOptions(autofilled, txOpts);
 
 	if (txOpts.prepare || txOpts.signers != null) {

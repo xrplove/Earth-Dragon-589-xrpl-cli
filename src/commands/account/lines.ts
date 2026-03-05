@@ -6,7 +6,6 @@ import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface AccountLinesOpts {
-	counterparty?: string;
 	peer?: string;
 	limit?: number;
 	marker?: string;
@@ -18,7 +17,7 @@ async function fetchAccountLines(
 	opts: AccountLinesOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const peer = opts.counterparty ?? opts.peer;
+	const peer = opts.peer;
 	await withClient(globalOpts, async (client) => {
 		const resp = await client.request({
 			command: "account_lines",
@@ -38,11 +37,7 @@ export function registerAccountLines(program: Command) {
 		.alias("lines")
 		.description("Get trust lines for an account")
 		.argument("<account>", "Account address or alias")
-		.option(
-			"--counterparty <address>",
-			"Filter by counterparty (alias: --peer)",
-		)
-		.option("--peer <address>", "Alias for --counterparty")
+		.option("--peer, --counterparty <address>", "Filter by counterparty")
 		.option("--limit <n>", "Max lines to return", Number)
 		.option("--marker <marker>", "Pagination marker")
 		.option("--ledger-index <index>", "Ledger version", "validated")

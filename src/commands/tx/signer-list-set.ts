@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { Transaction } from "xrpl";
+import type { SignerListSet } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { signerEntry } from "../../lib/schemas.js";
 import {
@@ -22,19 +22,13 @@ async function setSignerList(
 	const wallet = loadWalletForTx(opts, globalOpts);
 	const signerEntries = opts.signer.map((s) => signerEntry.parse(s));
 
-	const tx: Transaction = {
+	const tx: Omit<SignerListSet, "Account"> = {
 		TransactionType: "SignerListSet",
-		Account: wallet?.address ?? "",
 		SignerQuorum: opts.quorum,
 		SignerEntries: signerEntries,
-	} as unknown as Transaction;
+	};
 
 	await withClient(globalOpts, async (client) => {
-		if (!tx.Account) {
-			throw new Error(
-				"Account is required in --prepare mode. Use --seed, --keyfile, or set XRPL_SEED.",
-			);
-		}
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
 		outputResult(outcome, globalOpts);
 	});

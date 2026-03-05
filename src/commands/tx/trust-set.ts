@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { type Transaction, TrustSetFlags } from "xrpl";
+import { type TrustSet, TrustSetFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -31,7 +31,7 @@ async function setTrustLine(
 ) {
 	const resolvedIssuer = resolve(issuer);
 
-	const tx: Record<string, unknown> = {
+	const tx: Omit<TrustSet, "Account"> = {
 		TransactionType: "TrustSet",
 		LimitAmount: {
 			currency,
@@ -56,13 +56,7 @@ async function setTrustLine(
 	const wallet = loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
-		const outcome = await submitOrPrepare(
-			client,
-			wallet,
-			tx as unknown as Transaction,
-			opts,
-			globalOpts,
-		);
+		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
 		outputResult(outcome, globalOpts);
 	});
 }

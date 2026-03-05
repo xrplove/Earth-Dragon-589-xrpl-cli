@@ -5,7 +5,7 @@ import type { GlobalOptions } from "../../lib/types.js";
 
 type FeatureInfo = { enabled: boolean; name: string; supported: boolean };
 
-async function fetchAmendments(
+async function fetchFeatures(
 	amendment: string | undefined,
 	opts: { enabled: boolean; pending: boolean },
 	globalOpts: GlobalOptions,
@@ -42,17 +42,18 @@ async function fetchAmendments(
 	});
 }
 
-export function registerAmendmentsCommand(program: Command) {
+export function registerFeatureCommand(program: Command) {
 	program
-		.command("amendments")
-		.description("List protocol amendments and their status")
+		.command("feature")
+		.alias("amendments")
+		.description("List protocol amendments/features and their status")
 		.argument("[amendment]", "Amendment name or hex ID to look up")
-		.option("--enabled", "Show only enabled amendments", false)
-		.option("--pending", "Show only pending amendments", false)
+		.option("--enabled", "Show only enabled features", false)
+		.option("--pending", "Show only pending features", false)
 		.action(
 			(
 				amendment: string | undefined,
 				opts: { enabled: boolean; pending: boolean },
-			) => fetchAmendments(amendment, opts, program.opts() as GlobalOptions),
+			) => fetchFeatures(amendment, opts, program.opts() as GlobalOptions),
 		);
 }

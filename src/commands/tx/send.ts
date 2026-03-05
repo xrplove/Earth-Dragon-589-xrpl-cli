@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { PaymentFlags, type Transaction } from "xrpl";
+import { PaymentFlags, type Payment } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
@@ -29,7 +29,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	const token = parseToken(opts.token);
 	const destination = resolve(opts.to);
 
-	const tx: Record<string, unknown> = {
+	const tx: Omit<Payment, "Account"> = {
 		TransactionType: "Payment",
 		Destination: destination,
 		Amount: toXrplAmount(token, opts.amount),
@@ -56,13 +56,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	const wallet = loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
-		const outcome = await submitOrPrepare(
-			client,
-			wallet,
-			tx as unknown as Transaction,
-			opts,
-			globalOpts,
-		);
+		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
 		outputResult(outcome, globalOpts);
 	});
 }

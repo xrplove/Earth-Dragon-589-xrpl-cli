@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { ZodError } from "zod";
 
 const require = createRequire(import.meta.url);
@@ -23,10 +23,10 @@ const program = new Command()
 		"A Swiss Army knife for interacting with the XRP Ledger from the command line.",
 	)
 	.version(pkg.version)
-	.option(
-		"-n, --network <network>",
-		"Network to connect to: mainnet, testnet, devnet",
-		config.network ?? process.env.XRPL_NETWORK ?? "mainnet",
+	.addOption(
+		new Option("-n, --network <network>", "Network to connect to")
+			.choices(["mainnet", "testnet", "devnet"])
+			.default(config.network ?? process.env.XRPL_NETWORK ?? "mainnet"),
 	)
 	.option(
 		"--rpc-url <url>",

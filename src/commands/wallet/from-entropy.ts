@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import { type Command, Option } from "commander";
 import { Wallet } from "xrpl";
 import { output } from "../../lib/output.js";
 import { entropy } from "../../lib/schemas.js";
@@ -25,10 +25,10 @@ export function registerFromEntropy(wallet: Command, program: Command) {
 		.command("from-entropy")
 		.description("Derive a wallet from raw entropy (16 bytes)")
 		.argument("<hex-entropy>", "32-character hex string (16 bytes)")
-		.option(
-			"--algorithm <algorithm>",
-			"Key algorithm: ed25519 or secp256k1",
-			"ed25519",
+		.addOption(
+			new Option("--algorithm <algorithm>", "Key algorithm")
+				.choices(["ed25519", "secp256k1"])
+				.default("ed25519"),
 		)
 		.option("--master-address <address>", "Account this regular key signs for")
 		.action(
