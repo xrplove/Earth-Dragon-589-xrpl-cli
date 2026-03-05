@@ -1809,12 +1809,12 @@ The full multi-signing pipeline.
 
 Account configuration commands.
 
-- [ ] `account-set` (+ `--prepare`)
-- [ ] `account-delete`
-- [ ] `set-regular-key`
-- [ ] `deposit-preauth`
-- [ ] `ticket-create`
-- [ ] `tickets`
+- [x] `account-set` (+ `--prepare`)
+- [x] `account-delete`
+- [x] `set-regular-key`
+- [x] `deposit-preauth`
+- [x] `ticket-create`
+- [x] `tickets`
 - [x] `account-channels` (+ `channels` alias)
 - [x] `account-currencies` (+ `currencies` alias)
 - [x] `gateway-balances`

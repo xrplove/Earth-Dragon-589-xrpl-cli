@@ -1,16 +1,22 @@
 import type { Command } from "commander";
+import { registerAccountDelete } from "./account-delete.js";
+import { registerAccountSet } from "./account-set.js";
+import { registerBalance } from "./balance.js";
 import { registerAccountChannels } from "./channels.js";
 import { registerAccountCurrencies } from "./currencies.js";
+import { registerDepositPreauth } from "./deposit-preauth.js";
+import { registerGatewayBalances } from "./gateway-balances.js";
 import { registerAccountInfo } from "./info.js";
 import { registerAccountLines } from "./lines.js";
 import { registerAccountNfts } from "./nfts.js";
-import { registerAccountObjects } from "./objects.js";
-import { registerAccountOffers } from "./offers.js";
-import { registerAccountTx } from "./tx.js";
-import { registerBalance } from "./balance.js";
-import { registerGatewayBalances } from "./gateway-balances.js";
 import { registerNonce } from "./nonce.js";
 import { registerNorippleCheck } from "./noripple-check.js";
+import { registerAccountObjects } from "./objects.js";
+import { registerAccountOffers } from "./offers.js";
+import { registerSetRegularKey } from "./set-regular-key.js";
+import { registerTicketCreate } from "./ticket-create.js";
+import { registerTickets } from "./tickets.js";
+import { registerAccountTx } from "./tx.js";
 
 export function registerAccountCommands(program: Command) {
 	registerBalance(program);
@@ -25,4 +31,10 @@ export function registerAccountCommands(program: Command) {
 	registerAccountChannels(program);
 	registerAccountCurrencies(program);
 	registerNorippleCheck(program);
+	registerAccountSet(program);
+	registerAccountDelete(program);
+	registerSetRegularKey(program);
+	registerDepositPreauth(program);
+	registerTicketCreate(program);
+	registerTickets(program);
 }
