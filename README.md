@@ -1,4 +1,4 @@
-# xrpl
+# xrpl-cli
 
 A Swiss Army knife for interacting with the XRP Ledger from the command line.
 
