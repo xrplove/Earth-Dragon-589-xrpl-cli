@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { CheckCreate } from "xrpl";
+import type { Amount, CheckCreate } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
@@ -11,7 +11,6 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
-import type { Amount } from "xrpl";
 
 interface CheckCreateOpts extends TxOptions {
 	destination: string;
@@ -50,9 +49,19 @@ export function registerCheckCreate(program: Command) {
 		.command("check-create")
 		.description("Create a check")
 		.requiredOption("--destination <address>", "Recipient address or alias")
-		.requiredOption("--send-max-amount <amount>", "Maximum amount the check can debit")
-		.requiredOption("--send-max-token <token>", "Token: XRP, <currency>.<issuer>, or mpt:<id>")
-		.option("--expiration <ripple-time>", "Check expiration (Ripple epoch)", Number)
+		.requiredOption(
+			"--send-max-amount <amount>",
+			"Maximum amount the check can debit",
+		)
+		.requiredOption(
+			"--send-max-token <token>",
+			"Token: XRP, <currency>.<issuer>, or mpt:<id>",
+		)
+		.option(
+			"--expiration <ripple-time>",
+			"Check expiration (Ripple epoch)",
+			Number,
+		)
 		.option("--invoice-id <hex>", "256-bit invoice ID (64-char hex)")
 		.option("--tag <tag>", "Destination tag", Number);
 	withTxOptions(cmd).action((opts: CheckCreateOpts) =>

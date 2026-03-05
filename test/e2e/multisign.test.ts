@@ -91,8 +91,8 @@ describe("e2e: multi-signing", () => {
 		expect(engineResult).toBe("tesSUCCESS");
 
 		// Wait for the transaction to be validated, then verify receiver got the 5 XRP
-		const hash =
-			(submitResult.tx_json as Record<string, unknown>)?.hash as string;
+		const hash = (submitResult.tx_json as Record<string, unknown>)
+			?.hash as string;
 		expect(hash).toBeTypeOf("string");
 
 		// Poll tx until validated (up to 15s)

@@ -1,4 +1,4 @@
-import { type Command, Option } from "commander";
+import type { Command } from "commander";
 import type { Amount, NFTokenAcceptOffer } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";

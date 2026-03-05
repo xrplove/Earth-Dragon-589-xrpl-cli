@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import {
-	AMMDepositFlags,
 	type AMMDeposit,
+	AMMDepositFlags,
 	type Amount,
 	type IssuedCurrencyAmount,
 } from "xrpl";
@@ -43,10 +43,16 @@ async function ammDeposit(opts: AmmDepositOpts, globalOpts: GlobalOptions) {
 	};
 
 	if (opts.amount && opts.amountToken) {
-		tx.Amount = toXrplAmount(parseToken(opts.amountToken), opts.amount) as Amount;
+		tx.Amount = toXrplAmount(
+			parseToken(opts.amountToken),
+			opts.amount,
+		) as Amount;
 	}
 	if (opts.amount2 && opts.amount2Token) {
-		tx.Amount2 = toXrplAmount(parseToken(opts.amount2Token), opts.amount2) as Amount;
+		tx.Amount2 = toXrplAmount(
+			parseToken(opts.amount2Token),
+			opts.amount2,
+		) as Amount;
 	}
 	if (opts.lpTokenOut && opts.lpTokenToken) {
 		tx.LPTokenOut = toXrplAmount(
@@ -55,7 +61,10 @@ async function ammDeposit(opts: AmmDepositOpts, globalOpts: GlobalOptions) {
 		) as IssuedCurrencyAmount;
 	}
 	if (opts.ePrice && opts.ePriceToken) {
-		tx.EPrice = toXrplAmount(parseToken(opts.ePriceToken), opts.ePrice) as Amount;
+		tx.EPrice = toXrplAmount(
+			parseToken(opts.ePriceToken),
+			opts.ePrice,
+		) as Amount;
 	}
 
 	let flags = 0;
@@ -79,7 +88,10 @@ export function registerAmmDeposit(program: Command) {
 	const cmd = program
 		.command("amm-deposit")
 		.description("Deposit assets into an AMM pool")
-		.requiredOption("--asset <token>", "First pool asset: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--asset <token>",
+			"First pool asset: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--asset2 <token>", "Second pool asset")
 		.option("--amount <amount>", "Amount of first asset to deposit")
 		.option("--amount-token <token>", "Token for --amount")
@@ -92,7 +104,11 @@ export function registerAmmDeposit(program: Command) {
 		.option("--lp-token", "Deposit LP tokens only", false)
 		.option("--single-asset", "Deposit a single asset", false)
 		.option("--two-asset", "Deposit both assets", false)
-		.option("--one-asset-lp-token", "Single asset with LP token constraint", false)
+		.option(
+			"--one-asset-lp-token",
+			"Single asset with LP token constraint",
+			false,
+		)
 		.option("--limit-lp-token", "Limit by LP token amount", false)
 		.option("--two-asset-if-empty", "Two-asset deposit for empty pool", false);
 	withTxOptions(cmd).action((opts: AmmDepositOpts) =>

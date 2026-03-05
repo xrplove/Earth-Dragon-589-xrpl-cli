@@ -35,7 +35,10 @@ export function registerSetRegularKey(program: Command) {
 	const cmd = program
 		.command("set-regular-key")
 		.description("Add, remove, or change the regular key pair for an account")
-		.option("--key <address>", "Regular key address to assign (omit to remove)");
+		.option(
+			"--key <address>",
+			"Regular key address to assign (omit to remove)",
+		);
 	withTxOptions(cmd).action((opts: SetRegularKeyOpts) =>
 		setRegularKey(opts, program.opts() as GlobalOptions),
 	);

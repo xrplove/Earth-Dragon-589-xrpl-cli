@@ -1,8 +1,5 @@
-import { type Command, Option } from "commander";
-import {
-	MPTokenIssuanceCreateFlags,
-	type MPTokenIssuanceCreate,
-} from "xrpl";
+import type { Command } from "commander";
+import { type MPTokenIssuanceCreate, MPTokenIssuanceCreateFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import {
 	loadWalletForTx,
@@ -12,8 +9,8 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import {
-	validateOptionalRange,
 	validateOptionalHex,
+	validateOptionalRange,
 } from "../../lib/validate.js";
 
 interface MptCreateOpts extends TxOptions {
@@ -66,7 +63,11 @@ export function registerMptCreate(program: Command) {
 		.description("Create a new Multi-Purpose Token issuance")
 		.option("--asset-scale <n>", "Decimal places (0-255)", Number)
 		.option("--max-amount <amount>", "Maximum token supply")
-		.option("--transfer-fee <fee>", "Transfer fee (0-50000, in 1/100000ths)", Number)
+		.option(
+			"--transfer-fee <fee>",
+			"Transfer fee (0-50000, in 1/100000ths)",
+			Number,
+		)
 		.option("--metadata <hex>", "Metadata as hex string")
 		.option("--can-lock", "Allow issuer to lock tokens", false)
 		.option("--require-auth", "Require authorization for holders", false)

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { run, runJson, TESTNET_ARGS } from "./helpers.js";
+import { runJson, TESTNET_ARGS } from "./helpers.js";
 
 /**
  * Helper: fund a fresh testnet wallet and return its seed + address.
@@ -134,19 +134,9 @@ describe("e2e: account management", () => {
 	it("ticket-create and tickets round-trip", async () => {
 		const account = await fundWallet();
 
-		await runJson(
-			...TESTNET_ARGS,
-			"-s",
-			account.seed,
-			"ticket-create",
-			"3",
-		);
+		await runJson(...TESTNET_ARGS, "-s", account.seed, "ticket-create", "3");
 
-		const tickets = await runJson(
-			...TESTNET_ARGS,
-			"tickets",
-			account.address,
-		);
+		const tickets = await runJson(...TESTNET_ARGS, "tickets", account.address);
 		const ticketList = tickets as unknown as Array<Record<string, unknown>>;
 		expect(ticketList.length).toBe(3);
 	}, 60_000);

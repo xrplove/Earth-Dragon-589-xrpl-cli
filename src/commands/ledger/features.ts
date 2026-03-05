@@ -21,9 +21,8 @@ async function fetchFeatures(
 			features = resp.result as unknown as Record<string, FeatureInfo>;
 		} else {
 			const resp = await client.request({ command: "feature" });
-			features = (
-				resp.result as { features: Record<string, FeatureInfo> }
-			).features;
+			features = (resp.result as { features: Record<string, FeatureInfo> })
+				.features;
 		}
 
 		if (opts.enabled) {

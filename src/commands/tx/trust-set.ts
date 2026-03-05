@@ -71,7 +71,9 @@ export function registerTrustSetCommand(program: Command) {
 		.option("--quality-in <n>", "Incoming quality ratio", Number)
 		.option("--quality-out <n>", "Outgoing quality ratio", Number)
 		.addOption(
-			new Option("--no-ripple", "Set No Ripple flag").conflicts("clearNoRipple"),
+			new Option("--no-ripple", "Set No Ripple flag").conflicts(
+				"clearNoRipple",
+			),
 		)
 		.addOption(
 			new Option("--clear-no-ripple", "Clear No Ripple flag").conflicts(

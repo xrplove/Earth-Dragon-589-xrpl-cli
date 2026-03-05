@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { xrpToDrops, type PaymentChannelCreate } from "xrpl";
+import { type PaymentChannelCreate, xrpToDrops } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -20,7 +20,10 @@ interface ChannelCreateOpts extends TxOptions {
 	tag?: number;
 }
 
-async function channelCreate(opts: ChannelCreateOpts, globalOpts: GlobalOptions) {
+async function channelCreate(
+	opts: ChannelCreateOpts,
+	globalOpts: GlobalOptions,
+) {
 	validateXrpAmount(opts.amount, "amount");
 
 	const tx: Omit<PaymentChannelCreate, "Account"> = {
@@ -48,9 +51,17 @@ export function registerChannelCreate(program: Command) {
 		.description("Create a payment channel")
 		.requiredOption("--destination <address>", "Destination address or alias")
 		.requiredOption("--amount <xrp>", "Amount of XRP to fund the channel")
-		.requiredOption("--settle-delay <seconds>", "Settlement delay in seconds", Number)
+		.requiredOption(
+			"--settle-delay <seconds>",
+			"Settlement delay in seconds",
+			Number,
+		)
 		.requiredOption("--public-key <hex>", "Public key for claim verification")
-		.option("--cancel-after <ripple-time>", "Channel expiration (Ripple epoch)", Number)
+		.option(
+			"--cancel-after <ripple-time>",
+			"Channel expiration (Ripple epoch)",
+			Number,
+		)
 		.option("--tag <tag>", "Destination tag", Number);
 	withTxOptions(cmd).action((opts: ChannelCreateOpts) =>
 		channelCreate(opts, program.opts() as GlobalOptions),

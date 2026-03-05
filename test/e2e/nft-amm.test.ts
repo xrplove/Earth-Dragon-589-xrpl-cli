@@ -31,11 +31,7 @@ describe("e2e: NFTs", () => {
 		expect(nftokenId).toBeTypeOf("string");
 
 		// 2. Verify via account-nfts
-		const nfts = await runJson(
-			...TESTNET_ARGS,
-			"account-nfts",
-			minter.address,
-		);
+		const nfts = await runJson(...TESTNET_ARGS, "account-nfts", minter.address);
 		const nftList = nfts.account_nfts as Array<Record<string, unknown>>;
 		expect(nftList.some((n) => n.NFTokenID === nftokenId)).toBe(true);
 
@@ -72,7 +68,9 @@ describe("e2e: NFTs", () => {
 			"account-nfts",
 			buyer.address,
 		);
-		const buyerNftList = buyerNfts.account_nfts as Array<Record<string, unknown>>;
+		const buyerNftList = buyerNfts.account_nfts as Array<
+			Record<string, unknown>
+		>;
 		expect(buyerNftList.some((n) => n.NFTokenID === nftokenId)).toBe(true);
 
 		// Minter should no longer have it
@@ -81,7 +79,9 @@ describe("e2e: NFTs", () => {
 			"account-nfts",
 			minter.address,
 		);
-		const minterNftList = minterNfts.account_nfts as Array<Record<string, unknown>>;
+		const minterNftList = minterNfts.account_nfts as Array<
+			Record<string, unknown>
+		>;
 		expect(minterNftList.some((n) => n.NFTokenID === nftokenId)).toBe(false);
 	}, 180_000);
 });
@@ -153,8 +153,10 @@ describe("e2e: AMMs", () => {
 				(n.CreatedNode as Record<string, unknown>)?.LedgerEntryType === "AMM",
 		);
 		const ammAccount = (
-			(ammNode?.CreatedNode as Record<string, unknown>)
-				?.NewFields as Record<string, unknown>
+			(ammNode?.CreatedNode as Record<string, unknown>)?.NewFields as Record<
+				string,
+				unknown
+			>
 		)?.Account as string;
 
 		if (ammAccount) {

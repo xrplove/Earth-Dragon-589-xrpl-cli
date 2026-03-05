@@ -35,7 +35,11 @@ export function registerEscrowCancel(program: Command) {
 		.command("escrow-cancel")
 		.description("Cancel an expired escrow")
 		.argument("<owner>", "Escrow owner address or alias")
-		.argument("<offer-sequence>", "Sequence number of the EscrowCreate", Number);
+		.argument(
+			"<offer-sequence>",
+			"Sequence number of the EscrowCreate",
+			Number,
+		);
 	withTxOptions(cmd).action(
 		(owner: string, offerSequence: number, opts: TxOptions) =>
 			escrowCancel(owner, offerSequence, opts, program.opts() as GlobalOptions),

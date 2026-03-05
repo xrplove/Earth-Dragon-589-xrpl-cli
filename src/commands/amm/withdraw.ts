@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import {
-	AMMWithdrawFlags,
 	type AMMWithdraw,
+	AMMWithdrawFlags,
 	type Amount,
 	type IssuedCurrencyAmount,
 } from "xrpl";
@@ -44,10 +44,16 @@ async function ammWithdraw(opts: AmmWithdrawOpts, globalOpts: GlobalOptions) {
 	};
 
 	if (opts.amount && opts.amountToken) {
-		tx.Amount = toXrplAmount(parseToken(opts.amountToken), opts.amount) as Amount;
+		tx.Amount = toXrplAmount(
+			parseToken(opts.amountToken),
+			opts.amount,
+		) as Amount;
 	}
 	if (opts.amount2 && opts.amount2Token) {
-		tx.Amount2 = toXrplAmount(parseToken(opts.amount2Token), opts.amount2) as Amount;
+		tx.Amount2 = toXrplAmount(
+			parseToken(opts.amount2Token),
+			opts.amount2,
+		) as Amount;
 	}
 	if (opts.lpTokenIn && opts.lpTokenToken) {
 		tx.LPTokenIn = toXrplAmount(
@@ -56,7 +62,10 @@ async function ammWithdraw(opts: AmmWithdrawOpts, globalOpts: GlobalOptions) {
 		) as IssuedCurrencyAmount;
 	}
 	if (opts.ePrice && opts.ePriceToken) {
-		tx.EPrice = toXrplAmount(parseToken(opts.ePriceToken), opts.ePrice) as Amount;
+		tx.EPrice = toXrplAmount(
+			parseToken(opts.ePriceToken),
+			opts.ePrice,
+		) as Amount;
 	}
 
 	let flags = 0;
@@ -81,7 +90,10 @@ export function registerAmmWithdraw(program: Command) {
 	const cmd = program
 		.command("amm-withdraw")
 		.description("Withdraw assets from an AMM pool")
-		.requiredOption("--asset <token>", "First pool asset: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--asset <token>",
+			"First pool asset: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--asset2 <token>", "Second pool asset")
 		.option("--amount <amount>", "Amount of first asset to withdraw")
 		.option("--amount-token <token>", "Token for --amount")
@@ -96,7 +108,11 @@ export function registerAmmWithdraw(program: Command) {
 		.option("--one-asset-withdraw-all", "Withdraw all of one asset", false)
 		.option("--single-asset", "Withdraw a single asset", false)
 		.option("--two-asset", "Withdraw both assets", false)
-		.option("--one-asset-lp-token", "Single asset with LP token constraint", false)
+		.option(
+			"--one-asset-lp-token",
+			"Single asset with LP token constraint",
+			false,
+		)
 		.option("--limit-lp-token", "Limit by LP token amount", false);
 	withTxOptions(cmd).action((opts: AmmWithdrawOpts) =>
 		ammWithdraw(opts, program.opts() as GlobalOptions),

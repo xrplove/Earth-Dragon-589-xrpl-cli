@@ -1,8 +1,8 @@
-import { type Command, Option } from "commander";
+import type { Command } from "commander";
 import {
-	NFTokenCreateOfferFlags,
 	type Amount,
 	type NFTokenCreateOffer,
+	NFTokenCreateOfferFlags,
 } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
@@ -59,7 +59,11 @@ export function registerNftOfferCreate(program: Command) {
 		.requiredOption("--amount <amount>", "Offer amount")
 		.requiredOption("--token <token>", "Token: XRP or <currency>.<issuer>")
 		.option("--owner <address>", "NFT owner (required for buy offers)")
-		.option("--expiration <ripple-time>", "Offer expiration (Ripple epoch)", Number)
+		.option(
+			"--expiration <ripple-time>",
+			"Offer expiration (Ripple epoch)",
+			Number,
+		)
 		.option("--destination <address>", "Only this account can accept the offer")
 		.option("--sell", "Create a sell offer (default is buy)", false);
 	withTxOptions(cmd).action((nftokenId: string, opts: NftOfferCreateOpts) =>

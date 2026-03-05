@@ -68,8 +68,12 @@ describe("parseCredentials", () => {
 	});
 
 	it("splits on the last colon", () => {
-		const result = parseCredentials(["rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY:KYC_LEVEL_2"]);
-		expect(result[0].Credential.Issuer).toBe("rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY");
+		const result = parseCredentials([
+			"rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY:KYC_LEVEL_2",
+		]);
+		expect(result[0].Credential.Issuer).toBe(
+			"rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY",
+		);
 		expect(result[0].Credential.CredentialType).toBe("KYC_LEVEL_2");
 	});
 

@@ -54,20 +54,26 @@ export function registerCheckCash(program: Command) {
 		.description("Cash a check")
 		.argument("<check-id>", "Check ID (64-char hex)")
 		.addOption(
-			new Option("--amount <amount>", "Exact amount to cash")
-				.conflicts("deliverMinAmount"),
+			new Option("--amount <amount>", "Exact amount to cash").conflicts(
+				"deliverMinAmount",
+			),
 		)
 		.addOption(
-			new Option("--token <token>", "Token for --amount")
-				.conflicts("deliverMinToken"),
+			new Option("--token <token>", "Token for --amount").conflicts(
+				"deliverMinToken",
+			),
 		)
 		.addOption(
-			new Option("--deliver-min-amount <amount>", "Minimum amount to deliver")
-				.conflicts("amount"),
+			new Option(
+				"--deliver-min-amount <amount>",
+				"Minimum amount to deliver",
+			).conflicts("amount"),
 		)
 		.addOption(
-			new Option("--deliver-min-token <token>", "Token for --deliver-min-amount")
-				.conflicts("token"),
+			new Option(
+				"--deliver-min-token <token>",
+				"Token for --deliver-min-amount",
+			).conflicts("token"),
 		);
 	withTxOptions(cmd).action((checkId: string, opts: CheckCashOpts) =>
 		checkCash(checkId, opts, program.opts() as GlobalOptions),

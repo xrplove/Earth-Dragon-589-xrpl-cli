@@ -62,12 +62,24 @@ export function registerDepositPreauth(program: Command) {
 		.command("deposit-preauth")
 		.description("Preauthorize an account to send payments to you")
 		.addOption(
-			new Option("--authorize <address>", "Preauthorize this account")
-				.conflicts(["unauthorize", "authorizeCredentials", "unauthorizeCredentials"]),
+			new Option(
+				"--authorize <address>",
+				"Preauthorize this account",
+			).conflicts([
+				"unauthorize",
+				"authorizeCredentials",
+				"unauthorizeCredentials",
+			]),
 		)
 		.addOption(
-			new Option("--unauthorize <address>", "Revoke preauthorization")
-				.conflicts(["authorize", "authorizeCredentials", "unauthorizeCredentials"]),
+			new Option(
+				"--unauthorize <address>",
+				"Revoke preauthorization",
+			).conflicts([
+				"authorize",
+				"authorizeCredentials",
+				"unauthorizeCredentials",
+			]),
 		)
 		.addOption(
 			new Option(

@@ -1,10 +1,10 @@
 import type { Command } from "commander";
 import { registerAccountDelete } from "./account-delete.js";
 import { registerAccountSet } from "./account-set.js";
-import { registerDelegateSet } from "./delegate-set.js";
 import { registerBalance } from "./balance.js";
 import { registerAccountChannels } from "./channels.js";
 import { registerAccountCurrencies } from "./currencies.js";
+import { registerDelegateSet } from "./delegate-set.js";
 import { registerDepositPreauth } from "./deposit-preauth.js";
 import { registerGatewayBalances } from "./gateway-balances.js";
 import { registerAccountInfo } from "./info.js";

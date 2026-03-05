@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { run, runJson, TESTNET_ARGS } from "./helpers.js";
+import { runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: wallet & signing", () => {
 	it("wallet generate produces valid keypair", async () => {

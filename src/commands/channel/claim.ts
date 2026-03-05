@@ -1,8 +1,8 @@
 import { type Command, Option } from "commander";
 import {
+	type PaymentChannelClaim,
 	PaymentChannelClaimFlags,
 	xrpToDrops,
-	type PaymentChannelClaim,
 } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import {
@@ -67,9 +67,7 @@ export function registerChannelClaim(program: Command) {
 		.addOption(
 			new Option("--renew", "Reset the channel's settle delay").default(false),
 		)
-		.addOption(
-			new Option("--close", "Request channel closure").default(false),
-		);
+		.addOption(new Option("--close", "Request channel closure").default(false));
 	withTxOptions(cmd).action((channelId: string, opts: ChannelClaimOpts) =>
 		channelClaim(channelId, opts, program.opts() as GlobalOptions),
 	);

@@ -46,7 +46,9 @@ export function resolve(addressOrAlias: string): string {
 	const resolved = resolveAlias(addressOrAlias, _config.aliases);
 	const r = xrplAddress.safeParse(resolved);
 	if (!r.success) {
-		throw new Error(`Invalid address: "${addressOrAlias}". Expected an r-address, X-address, or configured alias.`);
+		throw new Error(
+			`Invalid address: "${addressOrAlias}". Expected an r-address, X-address, or configured alias.`,
+		);
 	}
 	return resolved;
 }

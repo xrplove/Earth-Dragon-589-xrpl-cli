@@ -1,5 +1,5 @@
-import { type Command, Option } from "commander";
-import { MPTokenAuthorizeFlags, type MPTokenAuthorize } from "xrpl";
+import type { Command } from "commander";
+import { type MPTokenAuthorize, MPTokenAuthorizeFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -46,8 +46,7 @@ export function registerMptAuthorize(program: Command) {
 		.argument("<mpt-issuance-id>", "MPT issuance ID (48-char hex)")
 		.option("--holder <address>", "Holder account to authorize (issuer only)")
 		.option("--unauthorize", "Revoke authorization", false);
-	withTxOptions(cmd).action(
-		(mptIssuanceId: string, opts: MptAuthorizeOpts) =>
-			mptAuthorize(mptIssuanceId, opts, program.opts() as GlobalOptions),
+	withTxOptions(cmd).action((mptIssuanceId: string, opts: MptAuthorizeOpts) =>
+		mptAuthorize(mptIssuanceId, opts, program.opts() as GlobalOptions),
 	);
 }

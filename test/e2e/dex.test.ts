@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { run, runJson, TESTNET_ARGS } from "./helpers.js";
+import { runJson, TESTNET_ARGS } from "./helpers.js";
 
 /**
  * Helper: fund a fresh testnet wallet and return its seed + address.
@@ -71,7 +71,9 @@ describe("e2e: DEX", () => {
 			"account-offers",
 			account.address,
 		);
-		const remainingOffers = afterCancel.offers as Array<Record<string, unknown>>;
+		const remainingOffers = afterCancel.offers as Array<
+			Record<string, unknown>
+		>;
 		expect(remainingOffers.length).toBe(0);
 	}, 120_000);
 

@@ -36,7 +36,11 @@ export function registerOfferCancel(program: Command) {
 	const cmd = program
 		.command("offer-cancel")
 		.description("Cancel an existing DEX offer")
-		.argument("<offer-sequence>", "Sequence number of the offer to cancel", Number);
+		.argument(
+			"<offer-sequence>",
+			"Sequence number of the offer to cancel",
+			Number,
+		);
 	withTxOptions(cmd).action((offerSequence: number, opts: OfferCancelOpts) =>
 		offerCancel(offerSequence, opts, program.opts() as GlobalOptions),
 	);

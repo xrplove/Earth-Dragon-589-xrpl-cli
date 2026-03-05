@@ -29,7 +29,10 @@ describe("e2e: escrows, checks, payment channels", () => {
 		expect(createResult).toBeDefined();
 
 		// Extract the sequence from the tx
-		const txJson = (createResult.tx_json ?? createResult) as Record<string, unknown>;
+		const txJson = (createResult.tx_json ?? createResult) as Record<
+			string,
+			unknown
+		>;
 		const sequence = txJson.Sequence as number;
 		expect(sequence).toBeTypeOf("number");
 
@@ -75,7 +78,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 			"--type",
 			"check",
 		);
-		const accountObjects = objects.account_objects as Array<Record<string, unknown>>;
+		const accountObjects = objects.account_objects as Array<
+			Record<string, unknown>
+		>;
 		const check = accountObjects.find((o) => o.LedgerEntryType === "Check");
 		expect(check).toBeDefined();
 		const checkId = check?.index as string;
@@ -149,7 +154,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 			"account-channels",
 			sender.address,
 		);
-		const updatedChannels = afterFund.channels as Array<Record<string, unknown>>;
+		const updatedChannels = afterFund.channels as Array<
+			Record<string, unknown>
+		>;
 		const updated = updatedChannels.find((c) => c.channel_id === channelId);
 		// 10 + 5 = 15 XRP = 15000000 drops
 		expect(updated?.amount).toBe("15000000");

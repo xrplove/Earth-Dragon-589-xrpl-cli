@@ -1,8 +1,8 @@
 import type { Command } from "commander";
 import type { AMMBid, AuthAccount, IssuedCurrencyAmount } from "xrpl";
 import { withClient } from "../../lib/client.js";
-import { toCurrency } from "../../lib/currency.js";
 import { resolve } from "../../lib/config.js";
+import { toCurrency } from "../../lib/currency.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
 import {
 	loadWalletForTx,
@@ -59,13 +59,19 @@ export function registerAmmBid(program: Command) {
 	const cmd = program
 		.command("amm-bid")
 		.description("Bid for the auction slot on an AMM pool")
-		.requiredOption("--asset <token>", "First pool asset: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--asset <token>",
+			"First pool asset: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--asset2 <token>", "Second pool asset")
 		.option("--bid-min-amount <amount>", "Minimum bid amount")
 		.option("--bid-min-token <token>", "Token for --bid-min-amount")
 		.option("--bid-max-amount <amount>", "Maximum bid amount")
 		.option("--bid-max-token <token>", "Token for --bid-max-amount")
-		.option("--auth-accounts <addresses...>", "Authorized accounts for discounted trading");
+		.option(
+			"--auth-accounts <addresses...>",
+			"Authorized accounts for discounted trading",
+		);
 	withTxOptions(cmd).action((opts: AmmBidOpts) =>
 		ammBid(opts, program.opts() as GlobalOptions),
 	);

@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { xrpToDrops, type EscrowCreate } from "xrpl";
+import { type EscrowCreate, xrpToDrops } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -9,7 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-import { validateXrpAmount, validateOptionalHex } from "../../lib/validate.js";
+import { validateOptionalHex, validateXrpAmount } from "../../lib/validate.js";
 
 interface EscrowCreateOpts extends TxOptions {
 	destination: string;
@@ -48,7 +48,8 @@ function toRippleTime(value: string): number {
 	const num = Number(value);
 	if (Number.isFinite(num) && num > 0) return num;
 	const ms = Date.parse(value);
-	if (Number.isNaN(ms)) throw new Error(`Invalid time "${value}". Use ISO 8601 or Ripple epoch.`);
+	if (Number.isNaN(ms))
+		throw new Error(`Invalid time "${value}". Use ISO 8601 or Ripple epoch.`);
 	// Ripple epoch starts 2000-01-01T00:00:00Z = 946684800 Unix
 	return Math.floor(ms / 1000) - 946684800;
 }
@@ -60,7 +61,10 @@ export function registerEscrowCreate(program: Command) {
 		.requiredOption("--destination <address>", "Recipient address or alias")
 		.requiredOption("--amount <xrp>", "Amount of XRP to escrow")
 		.option("--cancel-after <time>", "Expiration (ISO 8601 or Ripple epoch)")
-		.option("--finish-after <time>", "Earliest finish (ISO 8601 or Ripple epoch)")
+		.option(
+			"--finish-after <time>",
+			"Earliest finish (ISO 8601 or Ripple epoch)",
+		)
 		.option("--condition <hex>", "Crypto-condition (hex)")
 		.option("--tag <tag>", "Destination tag", Number);
 	withTxOptions(cmd).action((opts: EscrowCreateOpts) =>

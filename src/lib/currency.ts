@@ -5,6 +5,7 @@ import { parseToken } from "./tokens.js";
 export function toCurrency(spec: string): Currency {
 	const token = parseToken(spec);
 	if (token.type === "xrp") return { currency: "XRP" };
-	if (token.type === "iou") return { currency: token.currency, issuer: token.issuer };
+	if (token.type === "iou")
+		return { currency: token.currency, issuer: token.issuer };
 	return { mpt_issuance_id: token.mpt_issuance_id };
 }

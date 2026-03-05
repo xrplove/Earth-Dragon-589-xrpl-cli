@@ -37,13 +37,7 @@ describe("e2e: MPTs", () => {
 		expect(mptId).toHaveLength(48);
 
 		// 2. Holder self-authorizes (opts in to hold the token)
-		await runJson(
-			...DEVNET_ARGS,
-			"-s",
-			holder.seed,
-			"mpt-authorize",
-			mptId,
-		);
+		await runJson(...DEVNET_ARGS, "-s", holder.seed, "mpt-authorize", mptId);
 
 		// 3. Send MPT from issuer to holder
 		await runJson(

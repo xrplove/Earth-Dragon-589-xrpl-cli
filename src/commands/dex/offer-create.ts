@@ -1,5 +1,5 @@
 import { type Command, Option } from "commander";
-import { OfferCreateFlags, type OfferCreate } from "xrpl";
+import { type OfferCreate, OfferCreateFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
 import {
@@ -56,31 +56,27 @@ export function registerOfferCreate(program: Command) {
 		.command("offer-create")
 		.alias("offer")
 		.description("Create a DEX offer")
-		.requiredOption(
-			"--taker-pays-amount <amount>",
-			"Amount the taker pays",
-		)
+		.requiredOption("--taker-pays-amount <amount>", "Amount the taker pays")
 		.requiredOption(
 			"--taker-pays-token <token>",
 			"Token the taker pays: XRP, <currency>.<issuer>, or mpt:<id>",
 		)
-		.requiredOption(
-			"--taker-gets-amount <amount>",
-			"Amount the taker gets",
-		)
+		.requiredOption("--taker-gets-amount <amount>", "Amount the taker gets")
 		.requiredOption(
 			"--taker-gets-token <token>",
 			"Token the taker gets: XRP, <currency>.<issuer>, or mpt:<id>",
 		)
-		.option("--expiration <ripple-time>", "Offer expiration (Ripple epoch)", Number)
+		.option(
+			"--expiration <ripple-time>",
+			"Offer expiration (Ripple epoch)",
+			Number,
+		)
 		.option(
 			"--offer-sequence <seq>",
 			"Replace an existing offer by sequence",
 			Number,
 		)
-		.addOption(
-			new Option("--passive", "Create a passive offer").default(false),
-		)
+		.addOption(new Option("--passive", "Create a passive offer").default(false))
 		.addOption(
 			new Option("--immediate-or-cancel", "Fill what you can, cancel the rest")
 				.default(false)

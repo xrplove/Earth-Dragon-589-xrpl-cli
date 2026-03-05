@@ -1,5 +1,5 @@
-import { type Command, Option } from "commander";
-import { NFTokenMintFlags, type Amount, type NFTokenMint } from "xrpl";
+import type { Command } from "commander";
+import { type Amount, type NFTokenMint, NFTokenMintFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
@@ -38,9 +38,13 @@ async function nftMint(opts: NftMintOpts, globalOpts: GlobalOptions) {
 
 	if (opts.issuer) tx.Issuer = resolve(opts.issuer);
 	if (opts.transferFee != null) tx.TransferFee = opts.transferFee;
-	if (opts.uri) tx.URI = Buffer.from(opts.uri, "utf-8").toString("hex").toUpperCase();
+	if (opts.uri)
+		tx.URI = Buffer.from(opts.uri, "utf-8").toString("hex").toUpperCase();
 	if (opts.amount && opts.amountToken) {
-		tx.Amount = toXrplAmount(parseToken(opts.amountToken), opts.amount) as Amount;
+		tx.Amount = toXrplAmount(
+			parseToken(opts.amountToken),
+			opts.amount,
+		) as Amount;
 	}
 	if (opts.expiration != null) tx.Expiration = opts.expiration;
 	if (opts.destination) tx.Destination = resolve(opts.destination);
@@ -67,7 +71,11 @@ export function registerNftMint(program: Command) {
 		.description("Mint a new NFT")
 		.requiredOption("--taxon <n>", "NFToken taxon (grouping value)", Number)
 		.option("--issuer <address>", "Issuer account (for authorized minting)")
-		.option("--transfer-fee <fee>", "Transfer fee (0-50000, in 1/100000ths)", Number)
+		.option(
+			"--transfer-fee <fee>",
+			"Transfer fee (0-50000, in 1/100000ths)",
+			Number,
+		)
 		.option("--uri <uri>", "URI for token data (will be hex-encoded)")
 		.option("--amount <amount>", "Amount for mint-and-sell offer")
 		.option("--amount-token <token>", "Token for --amount")
@@ -76,7 +84,11 @@ export function registerNftMint(program: Command) {
 		.option("--burnable", "Allow issuer to burn this NFT", false)
 		.option("--only-xrp", "Only allow XRP for offers", false)
 		.option("--trust-line", "Allow trust line for transfer fees", false)
-		.option("--transferable", "Allow transfers between non-issuer accounts", false)
+		.option(
+			"--transferable",
+			"Allow transfers between non-issuer accounts",
+			false,
+		)
 		.option("--mutable", "Allow issuer to modify the URI", false);
 	withTxOptions(cmd).action((opts: NftMintOpts) =>
 		nftMint(opts, program.opts() as GlobalOptions),

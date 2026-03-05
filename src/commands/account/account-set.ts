@@ -1,5 +1,5 @@
 import { type Command, Option } from "commander";
-import { AccountSetAsfFlags, type AccountSet } from "xrpl";
+import { type AccountSet, AccountSetAsfFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import {
 	loadWalletForTx,

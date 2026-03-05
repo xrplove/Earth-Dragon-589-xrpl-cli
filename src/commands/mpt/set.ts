@@ -1,5 +1,5 @@
 import { type Command, Option } from "commander";
-import { MPTokenIssuanceSetFlags, type MPTokenIssuanceSet } from "xrpl";
+import { type MPTokenIssuanceSet, MPTokenIssuanceSetFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -51,13 +51,16 @@ export function registerMptSet(program: Command) {
 		.argument("<mpt-issuance-id>", "MPT issuance ID (48-char hex)")
 		.option("--holder <address>", "Lock/unlock a specific holder")
 		.addOption(
-			new Option("--lock", "Lock the token or holder").default(false).conflicts("unlock"),
+			new Option("--lock", "Lock the token or holder")
+				.default(false)
+				.conflicts("unlock"),
 		)
 		.addOption(
-			new Option("--unlock", "Unlock the token or holder").default(false).conflicts("lock"),
+			new Option("--unlock", "Unlock the token or holder")
+				.default(false)
+				.conflicts("lock"),
 		);
-	withTxOptions(cmd).action(
-		(mptIssuanceId: string, opts: MptSetOpts) =>
-			mptSet(mptIssuanceId, opts, program.opts() as GlobalOptions),
+	withTxOptions(cmd).action((mptIssuanceId: string, opts: MptSetOpts) =>
+		mptSet(mptIssuanceId, opts, program.opts() as GlobalOptions),
 	);
 }

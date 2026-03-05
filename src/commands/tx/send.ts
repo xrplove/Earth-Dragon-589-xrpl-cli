@@ -1,5 +1,5 @@
 import { type Command, Option } from "commander";
-import { PaymentFlags, type Payment } from "xrpl";
+import { type Payment, PaymentFlags } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
@@ -42,10 +42,16 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 
 	if (opts.tag != null) tx.DestinationTag = opts.tag;
 	if (opts.sendMaxAmount && opts.sendMaxToken) {
-		tx.SendMax = toXrplAmount(parseToken(opts.sendMaxToken), opts.sendMaxAmount);
+		tx.SendMax = toXrplAmount(
+			parseToken(opts.sendMaxToken),
+			opts.sendMaxAmount,
+		);
 	}
 	if (opts.deliverMinAmount && opts.deliverMinToken) {
-		tx.DeliverMin = toXrplAmount(parseToken(opts.deliverMinToken), opts.deliverMinAmount);
+		tx.DeliverMin = toXrplAmount(
+			parseToken(opts.deliverMinToken),
+			opts.deliverMinAmount,
+		);
 	}
 	if (opts.paths) tx.Paths = JSON.parse(opts.paths);
 	if (opts.invoiceId) tx.InvoiceID = opts.invoiceId;
@@ -80,7 +86,10 @@ export function registerSendCommand(program: Command) {
 			"Token: XRP, <currency>.<issuer>, or mpt:<id>",
 		)
 		.option("--tag <tag>", "Destination tag", Number)
-		.option("--send-max-amount <amount>", "Max source amount for cross-currency")
+		.option(
+			"--send-max-amount <amount>",
+			"Max source amount for cross-currency",
+		)
 		.option("--send-max-token <token>", "Token for --send-max-amount")
 		.addOption(
 			new Option(

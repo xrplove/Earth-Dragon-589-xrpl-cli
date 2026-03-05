@@ -39,9 +39,16 @@ export function registerAmmVote(program: Command) {
 	const cmd = program
 		.command("amm-vote")
 		.description("Vote on the trading fee for an AMM pool")
-		.requiredOption("--asset <token>", "First pool asset: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--asset <token>",
+			"First pool asset: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--asset2 <token>", "Second pool asset")
-		.requiredOption("--trading-fee <fee>", "Proposed trading fee (0-1000)", Number);
+		.requiredOption(
+			"--trading-fee <fee>",
+			"Proposed trading fee (0-1000)",
+			Number,
+		);
 	withTxOptions(cmd).action((opts: AmmVoteOpts) =>
 		ammVote(opts, program.opts() as GlobalOptions),
 	);

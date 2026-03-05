@@ -1,4 +1,4 @@
-import { xrpToDrops, type IssuedCurrencyAmount, type MPTAmount } from "xrpl";
+import { type IssuedCurrencyAmount, type MPTAmount, xrpToDrops } from "xrpl";
 import { currency, tokenSpec } from "./schemas.js";
 
 export interface XrpAmount {
@@ -31,7 +31,10 @@ const HEX40_RE = /^[0-9A-Fa-f]{40}$/;
  */
 function normalizeCurrency(code: string): string {
 	if (STANDARD_RE.test(code) || HEX40_RE.test(code)) return code;
-	return Buffer.from(code, "ascii").toString("hex").toUpperCase().padEnd(40, "0");
+	return Buffer.from(code, "ascii")
+		.toString("hex")
+		.toUpperCase()
+		.padEnd(40, "0");
 }
 
 export function parseToken(token: string): ParsedToken {

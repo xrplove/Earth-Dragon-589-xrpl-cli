@@ -15,7 +15,7 @@ async function nftOfferCancel(
 	opts: TxOptions,
 	globalOpts: GlobalOptions,
 ) {
-	offerIds.forEach((id) => validateHex64(id, "offer ID"));
+	for (const id of offerIds) validateHex64(id, "offer ID");
 
 	const tx: Omit<NFTokenCancelOffer, "Account"> = {
 		TransactionType: "NFTokenCancelOffer",

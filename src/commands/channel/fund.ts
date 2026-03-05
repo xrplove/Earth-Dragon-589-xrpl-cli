@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { xrpToDrops, type PaymentChannelFund } from "xrpl";
+import { type PaymentChannelFund, xrpToDrops } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import {
 	loadWalletForTx,
@@ -45,7 +45,11 @@ export function registerChannelFund(program: Command) {
 		.description("Add XRP to an existing payment channel")
 		.argument("<channel-id>", "Channel ID (64-char hex)")
 		.requiredOption("--amount <xrp>", "Amount of XRP to add")
-		.option("--expiration <ripple-time>", "New expiration (Ripple epoch)", Number);
+		.option(
+			"--expiration <ripple-time>",
+			"New expiration (Ripple epoch)",
+			Number,
+		);
 	withTxOptions(cmd).action((channelId: string, opts: ChannelFundOpts) =>
 		channelFund(channelId, opts, program.opts() as GlobalOptions),
 	);

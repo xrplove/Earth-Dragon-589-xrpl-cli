@@ -29,12 +29,19 @@ async function depositAuthorized(
 export function registerDepositAuthorized(program: Command) {
 	program
 		.command("deposit-authorized")
-		.description("Check if a source account is authorized to send to a destination")
+		.description(
+			"Check if a source account is authorized to send to a destination",
+		)
 		.argument("<source>", "Source account address or alias")
 		.argument("<destination>", "Destination account address or alias")
 		.option("--ledger-index <index>", "Ledger version", "validated")
 		.action(
 			(source: string, destination: string, opts: DepositAuthorizedOpts) =>
-				depositAuthorized(source, destination, opts, program.opts() as GlobalOptions),
+				depositAuthorized(
+					source,
+					destination,
+					opts,
+					program.opts() as GlobalOptions,
+				),
 		);
 }

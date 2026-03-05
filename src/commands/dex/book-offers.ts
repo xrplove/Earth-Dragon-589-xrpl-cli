@@ -44,17 +44,18 @@ export function registerBookOffers(program: Command) {
 		.command("book-offers")
 		.alias("order-book")
 		.description("Get DEX order book for a currency pair")
-		.argument("<taker-pays>", "Token the taker pays: XRP or <currency>.<issuer>")
-		.argument("<taker-gets>", "Token the taker gets: XRP or <currency>.<issuer>")
+		.argument(
+			"<taker-pays>",
+			"Token the taker pays: XRP or <currency>.<issuer>",
+		)
+		.argument(
+			"<taker-gets>",
+			"Token the taker gets: XRP or <currency>.<issuer>",
+		)
 		.option("--limit <n>", "Max offers to return", Number)
 		.option("--taker <address>", "Address of prospective taker")
 		.option("--ledger-index <index>", "Ledger version", "validated")
-		.action(
-			(
-				takerPays: string,
-				takerGets: string,
-				opts: BookOffersOpts,
-			) =>
-				bookOffers(takerPays, takerGets, opts, program.opts() as GlobalOptions),
+		.action((takerPays: string, takerGets: string, opts: BookOffersOpts) =>
+			bookOffers(takerPays, takerGets, opts, program.opts() as GlobalOptions),
 		);
 }

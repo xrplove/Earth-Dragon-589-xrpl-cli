@@ -60,6 +60,13 @@ export function registerPathFind(program: Command) {
 				token: string,
 				opts: PathFindOpts,
 			) =>
-				pathFind(source, destination, amount, token, opts, program.opts() as GlobalOptions),
+				pathFind(
+					source,
+					destination,
+					amount,
+					token,
+					opts,
+					program.opts() as GlobalOptions,
+				),
 		);
 }

@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import { withClient } from "../../lib/client.js";
-import { output } from "../../lib/output.js";
 import { toCurrency } from "../../lib/currency.js";
+import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface AmmInfoOpts {
@@ -24,7 +24,10 @@ export function registerAmmInfo(program: Command) {
 	program
 		.command("amm-info")
 		.description("Get AMM pool information")
-		.requiredOption("--asset <token>", "First pool asset: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--asset <token>",
+			"First pool asset: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--asset2 <token>", "Second pool asset")
 		.action((opts: AmmInfoOpts) =>
 			ammInfo(opts, program.opts() as GlobalOptions),

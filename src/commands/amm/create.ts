@@ -42,10 +42,20 @@ export function registerAmmCreate(program: Command) {
 		.command("amm-create")
 		.description("Create a new AMM pool")
 		.requiredOption("--amount1 <amount>", "Amount of first asset")
-		.requiredOption("--token1 <token>", "First token: XRP or <currency>.<issuer>")
+		.requiredOption(
+			"--token1 <token>",
+			"First token: XRP or <currency>.<issuer>",
+		)
 		.requiredOption("--amount2 <amount>", "Amount of second asset")
-		.requiredOption("--token2 <token>", "Second token: XRP or <currency>.<issuer>")
-		.requiredOption("--trading-fee <fee>", "Trading fee (0-1000, in 1/100000ths)", Number);
+		.requiredOption(
+			"--token2 <token>",
+			"Second token: XRP or <currency>.<issuer>",
+		)
+		.requiredOption(
+			"--trading-fee <fee>",
+			"Trading fee (0-1000, in 1/100000ths)",
+			Number,
+		);
 	withTxOptions(cmd).action((opts: AmmCreateOpts) =>
 		ammCreate(opts, program.opts() as GlobalOptions),
 	);

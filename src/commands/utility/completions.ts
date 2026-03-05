@@ -30,7 +30,13 @@ complete -F _xrpl_completions xrpl
 }
 
 function generateZshCompletions(program: Command): string {
-	const lines = ["#compdef xrpl", "", "_xrpl() {", "    local -a commands", "    commands=("];
+	const lines = [
+		"#compdef xrpl",
+		"",
+		"_xrpl() {",
+		"    local -a commands",
+		"    commands=(",
+	];
 	for (const cmd of program.commands) {
 		const desc = cmd.description().replace(/'/g, "'\\''");
 		lines.push(`        '${cmd.name()}:${desc}'`);
@@ -39,7 +45,7 @@ function generateZshCompletions(program: Command): string {
 		}
 	}
 	lines.push("    )", "", '    _describe "command" commands', "}", "", "_xrpl");
-	return lines.join("\n") + "\n";
+	return `${lines.join("\n")}\n`;
 }
 
 function generateFishCompletions(program: Command): string {
@@ -55,7 +61,7 @@ function generateFishCompletions(program: Command): string {
 			);
 		}
 	}
-	return lines.join("\n") + "\n";
+	return `${lines.join("\n")}\n`;
 }
 
 export function registerCompletions(program: Command) {
@@ -75,9 +81,7 @@ export function registerCompletions(program: Command) {
 					console.log(generateFishCompletions(program));
 					break;
 				default:
-					console.error(
-						`Unknown shell "${shell}". Supported: bash, zsh, fish`,
-					);
+					console.error(`Unknown shell "${shell}". Supported: bash, zsh, fish`);
 					process.exit(1);
 			}
 		});

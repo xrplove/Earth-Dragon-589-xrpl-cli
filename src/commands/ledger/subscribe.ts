@@ -15,7 +15,8 @@ async function subscribe(opts: SubscribeOpts, globalOpts: GlobalOptions) {
 	await client.connect();
 
 	const req: SubscribeRequest = { command: "subscribe" };
-	if (opts.streams?.length) req.streams = opts.streams as SubscribeRequest["streams"];
+	if (opts.streams?.length)
+		req.streams = opts.streams as SubscribeRequest["streams"];
 	if (opts.accounts?.length) req.accounts = opts.accounts;
 
 	await client.request(req);
@@ -43,7 +44,10 @@ export function registerSubscribe(program: Command) {
 	program
 		.command("subscribe")
 		.description("Subscribe to real-time ledger events (Ctrl+C to stop)")
-		.option("--streams <streams...>", "Streams to subscribe to (e.g. ledger, transactions)")
+		.option(
+			"--streams <streams...>",
+			"Streams to subscribe to (e.g. ledger, transactions)",
+		)
 		.option("--accounts <accounts...>", "Accounts to monitor")
 		.action((opts: SubscribeOpts) =>
 			subscribe(opts, program.opts() as GlobalOptions),
