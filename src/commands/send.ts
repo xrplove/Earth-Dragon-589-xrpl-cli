@@ -26,6 +26,63 @@ interface SendOpts extends TxOptions {
 	limitQuality: boolean;
 }
 
+async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
+	const token = parseToken(opts.token);
+	const destination = resolve(opts.to);
+
+	const tx: Record<string, unknown> = {
+		TransactionType: "Payment",
+		Destination: destination,
+		Amount: toXrplAmount(token, opts.amount),
+	};
+
+	if (opts.tag != null) {
+		tx.DestinationTag = opts.tag;
+	}
+
+	if (opts.sendMax) {
+		const sendMaxToken = parseToken(opts.sendMax[1]);
+		tx.SendMax = toXrplAmount(sendMaxToken, opts.sendMax[0]);
+	}
+
+	if (opts.deliverMin) {
+		const deliverMinToken = parseToken(opts.deliverMin[1]);
+		tx.DeliverMin = toXrplAmount(deliverMinToken, opts.deliverMin[0]);
+	}
+
+	if (opts.paths) {
+		tx.Paths = JSON.parse(opts.paths);
+	}
+
+	if (opts.invoiceId) {
+		tx.InvoiceID = opts.invoiceId;
+	}
+
+	let flags = 0;
+	if (opts.partial) flags |= TF_PARTIAL_PAYMENT;
+	if (opts.noDirect) flags |= TF_NO_RIPPLE_DIRECT;
+	if (opts.limitQuality) flags |= TF_LIMIT_QUALITY;
+	if (flags) tx.Flags = flags;
+
+	const wallet =
+		opts.prepare || opts.signers != null ? null : loadWallet(globalOpts);
+
+	await withClient(globalOpts, async (client) => {
+		const outcome = await submitOrPrepare(
+			client,
+			wallet,
+			tx as unknown as Transaction,
+			opts,
+			globalOpts,
+		);
+		if (outcome.mode === "prepared") {
+			output(outcome.tx, globalOpts);
+		} else {
+			output(outcome.result, globalOpts);
+		}
+	});
+}
+
 export function registerSendCommand(program: Command) {
 	program
 		.command("send")
@@ -59,61 +116,7 @@ export function registerSendCommand(program: Command) {
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
 		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
 		.option("--ticket <n>", "Use a ticket instead of sequence number", Number)
-		.action(async (opts: SendOpts) => {
-			const globalOpts = program.opts() as GlobalOptions;
-			const token = parseToken(opts.token);
-			const destination = resolve(opts.to);
-
-			const tx: Record<string, unknown> = {
-				TransactionType: "Payment",
-				Destination: destination,
-				Amount: toXrplAmount(token, opts.amount),
-			};
-
-			if (opts.tag != null) {
-				tx.DestinationTag = opts.tag;
-			}
-
-			if (opts.sendMax) {
-				const sendMaxToken = parseToken(opts.sendMax[1]);
-				tx.SendMax = toXrplAmount(sendMaxToken, opts.sendMax[0]);
-			}
-
-			if (opts.deliverMin) {
-				const deliverMinToken = parseToken(opts.deliverMin[1]);
-				tx.DeliverMin = toXrplAmount(deliverMinToken, opts.deliverMin[0]);
-			}
-
-			if (opts.paths) {
-				tx.Paths = JSON.parse(opts.paths);
-			}
-
-			if (opts.invoiceId) {
-				tx.InvoiceID = opts.invoiceId;
-			}
-
-			let flags = 0;
-			if (opts.partial) flags |= TF_PARTIAL_PAYMENT;
-			if (opts.noDirect) flags |= TF_NO_RIPPLE_DIRECT;
-			if (opts.limitQuality) flags |= TF_LIMIT_QUALITY;
-			if (flags) tx.Flags = flags;
-
-			const wallet =
-				opts.prepare || opts.signers != null ? null : loadWallet(globalOpts);
-
-			await withClient(globalOpts, async (client) => {
-				const outcome = await submitOrPrepare(
-					client,
-					wallet,
-					tx as unknown as Transaction,
-					opts,
-					globalOpts,
-				);
-				if (outcome.mode === "prepared") {
-					output(outcome.tx, globalOpts);
-				} else {
-					output(outcome.result, globalOpts);
-				}
-			});
-		});
+		.action((opts: SendOpts) =>
+			sendPayment(opts, program.opts() as GlobalOptions),
+		);
 }

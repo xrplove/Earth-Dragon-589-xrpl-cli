@@ -7,6 +7,43 @@ import { calcSignersFee } from "../../lib/tx.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
 
+async function buildTransaction(
+	txType: string,
+	opts: { signers?: number },
+	cmd: Command,
+	globalOpts: GlobalOptions,
+) {
+	const rawArgs = cmd.parseOptions(cmd.args).unknown;
+	const fields: Record<string, unknown> = {
+		TransactionType: txType,
+		...parseFields(rawArgs),
+	};
+
+	if (!fields.Account) {
+		try {
+			fields.Account = loadWallet(globalOpts).address;
+		} catch {
+			// Account must be in the fields
+		}
+	}
+
+	await withClient(globalOpts, async (client) => {
+		const tx = fields as unknown as Transaction;
+
+		if (opts.signers != null) {
+			tx.Fee = await calcSignersFee(client, tx.Fee, opts.signers);
+		}
+
+		const autofilled = (await client.autofill(tx as never)) as Record<
+			string,
+			unknown
+		>;
+		autofilled.SigningPubKey = "";
+
+		output(autofilled, globalOpts);
+	});
+}
+
 export function registerBuild(program: Command) {
 	program
 		.command("build")
@@ -17,39 +54,7 @@ export function registerBuild(program: Command) {
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
 		.allowUnknownOption(true)
 		.allowExcessArguments(true)
-		.action(
-			async (txType: string, opts: { signers?: number }, cmd: Command) => {
-				const globalOpts = program.opts() as GlobalOptions;
-
-				const rawArgs = cmd.parseOptions(cmd.args).unknown;
-				const fields: Record<string, unknown> = {
-					TransactionType: txType,
-					...parseFields(rawArgs),
-				};
-
-				if (!fields.Account) {
-					try {
-						fields.Account = loadWallet(globalOpts).address;
-					} catch {
-						// Account must be in the fields
-					}
-				}
-
-				await withClient(globalOpts, async (client) => {
-					const tx = fields as unknown as Transaction;
-
-					if (opts.signers != null) {
-						tx.Fee = await calcSignersFee(client, tx.Fee, opts.signers);
-					}
-
-					const autofilled = (await client.autofill(tx as never)) as Record<
-						string,
-						unknown
-					>;
-					autofilled.SigningPubKey = "";
-
-					output(autofilled, globalOpts);
-				});
-			},
+		.action((txType: string, opts: { signers?: number }, cmd: Command) =>
+			buildTransaction(txType, opts, cmd, program.opts() as GlobalOptions),
 		);
 }

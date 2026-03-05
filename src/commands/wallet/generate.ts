@@ -4,6 +4,14 @@ import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { formatWallet, parseAlgorithm } from "./shared.js";
 
+async function generateWallet(
+	opts: { algorithm: string },
+	globalOpts: GlobalOptions,
+) {
+	const w = Wallet.generate(parseAlgorithm(opts.algorithm));
+	output(formatWallet(w), globalOpts);
+}
+
 export function registerGenerate(wallet: Command, program: Command) {
 	wallet
 		.command("generate")
@@ -13,9 +21,7 @@ export function registerGenerate(wallet: Command, program: Command) {
 			"Key algorithm: ed25519 or secp256k1",
 			"ed25519",
 		)
-		.action(async (opts: { algorithm: string }) => {
-			const globalOpts = program.opts() as GlobalOptions;
-			const w = Wallet.generate(parseAlgorithm(opts.algorithm));
-			output(formatWallet(w), globalOpts);
-		});
+		.action((opts: { algorithm: string }) =>
+			generateWallet(opts, program.opts() as GlobalOptions),
+		);
 }

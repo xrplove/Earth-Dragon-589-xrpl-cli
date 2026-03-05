@@ -28,6 +28,55 @@ interface TrustSetOpts extends TxOptions {
 	auth: boolean;
 }
 
+async function setTrustLine(
+	currency: string,
+	issuer: string,
+	opts: TrustSetOpts,
+	globalOpts: GlobalOptions,
+) {
+	const resolvedIssuer = resolve(issuer);
+
+	const tx: Record<string, unknown> = {
+		TransactionType: "TrustSet",
+		LimitAmount: {
+			currency,
+			issuer: resolvedIssuer,
+			value: opts.limit,
+		},
+	};
+
+	if (opts.qualityIn != null) tx.QualityIn = opts.qualityIn;
+	if (opts.qualityOut != null) tx.QualityOut = opts.qualityOut;
+
+	let flags = 0;
+	if (opts.noRipple) flags |= TF_SET_NO_RIPPLE;
+	if (opts.clearNoRipple) flags |= TF_CLEAR_NO_RIPPLE;
+	if (opts.freeze) flags |= TF_SET_FREEZE;
+	if (opts.clearFreeze) flags |= TF_CLEAR_FREEZE;
+	if (opts.deepFreeze) flags |= TF_SET_DEEP_FREEZE;
+	if (opts.clearDeepFreeze) flags |= TF_CLEAR_DEEP_FREEZE;
+	if (opts.auth) flags |= TF_SET_AUTH;
+	if (flags) tx.Flags = flags;
+
+	const wallet =
+		opts.prepare || opts.signers != null ? null : loadWallet(globalOpts);
+
+	await withClient(globalOpts, async (client) => {
+		const outcome = await submitOrPrepare(
+			client,
+			wallet,
+			tx as unknown as Transaction,
+			opts,
+			globalOpts,
+		);
+		if (outcome.mode === "prepared") {
+			output(outcome.tx, globalOpts);
+		} else {
+			output(outcome.result, globalOpts);
+		}
+	});
+}
+
 export function registerTrustSetCommand(program: Command) {
 	program
 		.command("trust-set")
@@ -48,48 +97,7 @@ export function registerTrustSetCommand(program: Command) {
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
 		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
 		.option("--ticket <n>", "Use a ticket instead of sequence number", Number)
-		.action(async (currency: string, issuer: string, opts: TrustSetOpts) => {
-			const globalOpts = program.opts() as GlobalOptions;
-			const resolvedIssuer = resolve(issuer);
-
-			const tx: Record<string, unknown> = {
-				TransactionType: "TrustSet",
-				LimitAmount: {
-					currency,
-					issuer: resolvedIssuer,
-					value: opts.limit,
-				},
-			};
-
-			if (opts.qualityIn != null) tx.QualityIn = opts.qualityIn;
-			if (opts.qualityOut != null) tx.QualityOut = opts.qualityOut;
-
-			let flags = 0;
-			if (opts.noRipple) flags |= TF_SET_NO_RIPPLE;
-			if (opts.clearNoRipple) flags |= TF_CLEAR_NO_RIPPLE;
-			if (opts.freeze) flags |= TF_SET_FREEZE;
-			if (opts.clearFreeze) flags |= TF_CLEAR_FREEZE;
-			if (opts.deepFreeze) flags |= TF_SET_DEEP_FREEZE;
-			if (opts.clearDeepFreeze) flags |= TF_CLEAR_DEEP_FREEZE;
-			if (opts.auth) flags |= TF_SET_AUTH;
-			if (flags) tx.Flags = flags;
-
-			const wallet =
-				opts.prepare || opts.signers != null ? null : loadWallet(globalOpts);
-
-			await withClient(globalOpts, async (client) => {
-				const outcome = await submitOrPrepare(
-					client,
-					wallet,
-					tx as unknown as Transaction,
-					opts,
-					globalOpts,
-				);
-				if (outcome.mode === "prepared") {
-					output(outcome.tx, globalOpts);
-				} else {
-					output(outcome.result, globalOpts);
-				}
-			});
-		});
+		.action((currency: string, issuer: string, opts: TrustSetOpts) =>
+			setTrustLine(currency, issuer, opts, program.opts() as GlobalOptions),
+		);
 }

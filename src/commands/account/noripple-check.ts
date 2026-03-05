@@ -5,6 +5,31 @@ import { output } from "../../lib/output.js";
 import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
+interface NorippleCheckOpts {
+	role: string;
+	transactions: boolean;
+	limit?: number;
+	ledgerIndex: string;
+}
+
+async function checkNoripple(
+	account: string,
+	opts: NorippleCheckOpts,
+	globalOpts: GlobalOptions,
+) {
+	await withClient(globalOpts, async (client) => {
+		const resp = await client.request({
+			command: "noripple_check",
+			account: resolve(account),
+			role: opts.role,
+			transactions: opts.transactions || undefined,
+			limit: opts.limit,
+			ledger_index: parseLedgerIndex(opts.ledgerIndex),
+		} as never);
+		output(resp.result, globalOpts);
+	});
+}
+
 export function registerNorippleCheck(program: Command) {
 	program
 		.command("noripple-check")
@@ -14,28 +39,7 @@ export function registerNorippleCheck(program: Command) {
 		.option("--transactions", "Include suggested fix transactions", false)
 		.option("--limit <n>", "Max trust line problems to include", Number)
 		.option("--ledger-index <index>", "Ledger version", "validated")
-		.action(
-			async (
-				account: string,
-				opts: {
-					role: string;
-					transactions: boolean;
-					limit?: number;
-					ledgerIndex: string;
-				},
-			) => {
-				const globalOpts = program.opts() as GlobalOptions;
-				await withClient(globalOpts, async (client) => {
-					const resp = await client.request({
-						command: "noripple_check",
-						account: resolve(account),
-						role: opts.role,
-						transactions: opts.transactions || undefined,
-						limit: opts.limit,
-						ledger_index: parseLedgerIndex(opts.ledgerIndex),
-					} as never);
-					output(resp.result, globalOpts);
-				});
-			},
+		.action((account: string, opts: NorippleCheckOpts) =>
+			checkNoripple(account, opts, program.opts() as GlobalOptions),
 		);
 }

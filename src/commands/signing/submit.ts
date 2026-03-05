@@ -3,6 +3,21 @@ import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
+async function submitBlob(
+	txBlob: string,
+	opts: { failHard: boolean },
+	globalOpts: GlobalOptions,
+) {
+	await withClient(globalOpts, async (client) => {
+		const resp = await client.request({
+			command: "submit",
+			tx_blob: txBlob,
+			fail_hard: opts.failHard || undefined,
+		});
+		output(resp.result, globalOpts);
+	});
+}
+
 export function registerSubmit(program: Command) {
 	program
 		.command("submit")
@@ -13,15 +28,7 @@ export function registerSubmit(program: Command) {
 			"Fail immediately with tec-class errors instead of queuing",
 			false,
 		)
-		.action(async (txBlob: string, opts: { failHard: boolean }) => {
-			const globalOpts = program.opts() as GlobalOptions;
-			await withClient(globalOpts, async (client) => {
-				const resp = await client.request({
-					command: "submit",
-					tx_blob: txBlob,
-					fail_hard: opts.failHard || undefined,
-				});
-				output(resp.result, globalOpts);
-			});
-		});
+		.action((txBlob: string, opts: { failHard: boolean }) =>
+			submitBlob(txBlob, opts, program.opts() as GlobalOptions),
+		);
 }

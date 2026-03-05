@@ -4,6 +4,18 @@ import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { formatWallet, parseAlgorithm } from "./shared.js";
 
+async function deriveFromSeed(
+	seed: string,
+	opts: { algorithm: string; masterAddress?: string },
+	globalOpts: GlobalOptions,
+) {
+	const w = Wallet.fromSeed(seed, {
+		algorithm: parseAlgorithm(opts.algorithm),
+		masterAddress: opts.masterAddress,
+	});
+	output(formatWallet(w), globalOpts);
+}
+
 export function registerFromSeed(wallet: Command, program: Command) {
 	wallet
 		.command("from-seed")
@@ -16,16 +28,7 @@ export function registerFromSeed(wallet: Command, program: Command) {
 		)
 		.option("--master-address <address>", "Account this regular key signs for")
 		.action(
-			async (
-				seed: string,
-				opts: { algorithm: string; masterAddress?: string },
-			) => {
-				const globalOpts = program.opts() as GlobalOptions;
-				const w = Wallet.fromSeed(seed, {
-					algorithm: parseAlgorithm(opts.algorithm),
-					masterAddress: opts.masterAddress,
-				});
-				output(formatWallet(w), globalOpts);
-			},
+			(seed: string, opts: { algorithm: string; masterAddress?: string }) =>
+				deriveFromSeed(seed, opts, program.opts() as GlobalOptions),
 		);
 }

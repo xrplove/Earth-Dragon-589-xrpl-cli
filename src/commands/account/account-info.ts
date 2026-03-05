@@ -5,6 +5,29 @@ import { output } from "../../lib/output.js";
 import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
+interface AccountInfoOpts {
+	signerLists: boolean;
+	queue: boolean;
+	ledgerIndex: string;
+}
+
+async function fetchAccountInfo(
+	account: string,
+	opts: AccountInfoOpts,
+	globalOpts: GlobalOptions,
+) {
+	await withClient(globalOpts, async (client) => {
+		const resp = await client.request({
+			command: "account_info",
+			account: resolve(account),
+			signer_lists: opts.signerLists || undefined,
+			queue: opts.queue || undefined,
+			ledger_index: parseLedgerIndex(opts.ledgerIndex),
+		} as never);
+		output(resp.result, globalOpts);
+	});
+}
+
 export function registerAccountInfo(program: Command) {
 	program
 		.command("account-info")
@@ -14,26 +37,7 @@ export function registerAccountInfo(program: Command) {
 		.option("--signer-lists", "Include SignerList objects", false)
 		.option("--queue", "Include queued transaction info", false)
 		.option("--ledger-index <index>", "Ledger version", "validated")
-		.action(
-			async (
-				account: string,
-				opts: {
-					signerLists: boolean;
-					queue: boolean;
-					ledgerIndex: string;
-				},
-			) => {
-				const globalOpts = program.opts() as GlobalOptions;
-				await withClient(globalOpts, async (client) => {
-					const resp = await client.request({
-						command: "account_info",
-						account: resolve(account),
-						signer_lists: opts.signerLists || undefined,
-						queue: opts.queue || undefined,
-						ledger_index: parseLedgerIndex(opts.ledgerIndex),
-					} as never);
-					output(resp.result, globalOpts);
-				});
-			},
+		.action((account: string, opts: AccountInfoOpts) =>
+			fetchAccountInfo(account, opts, program.opts() as GlobalOptions),
 		);
 }

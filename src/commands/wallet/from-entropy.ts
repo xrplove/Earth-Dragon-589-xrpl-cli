@@ -4,6 +4,23 @@ import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { formatWallet, parseAlgorithm } from "./shared.js";
 
+async function deriveFromEntropy(
+	hexEntropy: string,
+	opts: { algorithm: string; masterAddress?: string },
+	globalOpts: GlobalOptions,
+) {
+	if (!/^[0-9A-Fa-f]{32}$/.test(hexEntropy)) {
+		throw new Error("Entropy must be exactly 32 hex characters (16 bytes).");
+	}
+	const pairs = hexEntropy.match(/.{2}/g) ?? [];
+	const bytes = Uint8Array.from(pairs.map((b) => Number.parseInt(b, 16)));
+	const w = Wallet.fromEntropy(bytes, {
+		algorithm: parseAlgorithm(opts.algorithm),
+		masterAddress: opts.masterAddress,
+	});
+	output(formatWallet(w), globalOpts);
+}
+
 export function registerFromEntropy(wallet: Command, program: Command) {
 	wallet
 		.command("from-entropy")
@@ -16,23 +33,9 @@ export function registerFromEntropy(wallet: Command, program: Command) {
 		)
 		.option("--master-address <address>", "Account this regular key signs for")
 		.action(
-			async (
+			(
 				hexEntropy: string,
 				opts: { algorithm: string; masterAddress?: string },
-			) => {
-				const globalOpts = program.opts() as GlobalOptions;
-				if (!/^[0-9A-Fa-f]{32}$/.test(hexEntropy)) {
-					throw new Error(
-						"Entropy must be exactly 32 hex characters (16 bytes).",
-					);
-				}
-				const pairs = hexEntropy.match(/.{2}/g) ?? [];
-				const bytes = Uint8Array.from(pairs.map((b) => Number.parseInt(b, 16)));
-				const w = Wallet.fromEntropy(bytes, {
-					algorithm: parseAlgorithm(opts.algorithm),
-					masterAddress: opts.masterAddress,
-				});
-				output(formatWallet(w), globalOpts);
-			},
+			) => deriveFromEntropy(hexEntropy, opts, program.opts() as GlobalOptions),
 		);
 }
