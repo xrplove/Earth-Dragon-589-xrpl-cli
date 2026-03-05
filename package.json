@@ -27,8 +27,9 @@
 	"author": "Nikolaos Kamarinakis",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/k4m4/xrpl-cli"
+		"url": "git+https://github.com/commonprefix/xrpl-cli.git"
 	},
+	"packageManager": "pnpm@10.30.3",
 	"license": "MIT",
 	"files": [
 		"dist"
