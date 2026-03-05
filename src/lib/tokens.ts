@@ -1,9 +1,7 @@
 import { xrpToDrops } from "xrpl";
-import type { IssuedCurrencyAmount } from "xrpl/dist/npm/models/common/index.js";
 
 export interface XrpAmount {
 	type: "xrp";
-	drops: string;
 }
 
 export interface IouAmount {
@@ -26,7 +24,7 @@ const IOU_RE = /^(.+)\.([r][1-9A-HJ-NP-Za-km-z]{24,34})$/;
 
 export function parseToken(token: string): ParsedToken {
 	if (token.toUpperCase() === "XRP") {
-		return { type: "xrp", drops: "0" };
+		return { type: "xrp" };
 	}
 
 	const mptMatch = MPT_RE.exec(token);
@@ -54,10 +52,20 @@ export function parseToken(token: string): ParsedToken {
 	);
 }
 
-export function toXrplAmount(
-	token: ParsedToken,
-	value: string,
-): string | IssuedCurrencyAmount | { mpt_issuance_id: string; value: string } {
+export interface IssuedCurrencyAmount {
+	currency: string;
+	issuer: string;
+	value: string;
+}
+
+export interface MptCurrencyAmount {
+	mpt_issuance_id: string;
+	value: string;
+}
+
+export type XrplAmount = string | IssuedCurrencyAmount | MptCurrencyAmount;
+
+export function toXrplAmount(token: ParsedToken, value: string): XrplAmount {
 	switch (token.type) {
 		case "xrp":
 			return xrpToDrops(value);

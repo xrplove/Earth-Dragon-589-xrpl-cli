@@ -3,9 +3,9 @@ import { parseToken, toXrplAmount } from "../src/lib/tokens.js";
 
 describe("parseToken", () => {
 	it("parses XRP (case-insensitive)", () => {
-		expect(parseToken("XRP")).toEqual({ type: "xrp", drops: "0" });
-		expect(parseToken("xrp")).toEqual({ type: "xrp", drops: "0" });
-		expect(parseToken("Xrp")).toEqual({ type: "xrp", drops: "0" });
+		expect(parseToken("XRP")).toEqual({ type: "xrp" });
+		expect(parseToken("xrp")).toEqual({ type: "xrp" });
+		expect(parseToken("Xrp")).toEqual({ type: "xrp" });
 	});
 
 	it("parses standard IOU currency.issuer", () => {
