@@ -22,10 +22,7 @@
 	},
 	"keywords": [
 		"xrpl",
-		"xrp",
-		"ripple",
-		"cli",
-		"blockchain"
+		"cli"
 	],
 	"author": "Nikolaos Kamarinakis",
 	"repository": {
