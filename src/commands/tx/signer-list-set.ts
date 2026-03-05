@@ -6,6 +6,7 @@ import {
 	loadWalletForTx,
 	outputResult,
 	submitOrPrepare,
+	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
@@ -40,7 +41,7 @@ async function setSignerList(
 }
 
 export function registerSignerListSet(program: Command) {
-	program
+	const cmd = program
 		.command("signer-list-set")
 		.description("Set or update the signer list on an account")
 		.requiredOption("--quorum <quorum>", "Target weight threshold", Number)
@@ -49,12 +50,8 @@ export function registerSignerListSet(program: Command) {
 			"Signer entry (repeatable)",
 			(val: string, prev: string[]) => [...prev, val],
 			[] as string[],
-		)
-		.option("--prepare", "Output unsigned JSON instead of submitting", false)
-		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
-		.option("--ticket <seq>", "Use a ticket instead of sequence number", Number)
-		.action((opts: SignerListSetOpts) =>
-			setSignerList(opts, program.opts() as GlobalOptions),
 		);
+	withTxOptions(cmd).action((opts: SignerListSetOpts) =>
+		setSignerList(opts, program.opts() as GlobalOptions),
+	);
 }

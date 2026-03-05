@@ -1,9 +1,18 @@
+import type { Command } from "commander";
 import type { Client, Transaction, Wallet } from "xrpl";
 import { parseMemos } from "./memo.js";
 import { info, output } from "./output.js";
 import type { GlobalOptions, TxOptions } from "./types.js";
 import { EXIT_CODES } from "./types.js";
 import { loadWallet } from "./wallet.js";
+
+export function withTxOptions(cmd: Command): Command {
+	return cmd
+		.option("--prepare", "Output unsigned JSON instead of submitting", false)
+		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
+		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
+		.option("--ticket <n>", "Use a ticket instead of sequence number", Number);
+}
 
 export async function calcSignersFee(
 	client: Client,

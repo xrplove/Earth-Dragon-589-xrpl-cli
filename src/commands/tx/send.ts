@@ -7,6 +7,7 @@ import {
 	loadWalletForTx,
 	outputResult,
 	submitOrPrepare,
+	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
@@ -71,7 +72,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 }
 
 export function registerSendCommand(program: Command) {
-	program
+	const cmd = program
 		.command("send")
 		.alias("pay")
 		.alias("payment")
@@ -98,12 +99,8 @@ export function registerSendCommand(program: Command) {
 		.option("--invoice-id <hex>", "256-bit invoice ID (64-char hex)")
 		.option("--partial", "Allow partial payments", false)
 		.option("--no-direct", "Only use explicit paths", false)
-		.option("--limit-quality", "Only take equal-quality paths", false)
-		.option("--prepare", "Output unsigned JSON instead of submitting", false)
-		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
-		.option("--ticket <n>", "Use a ticket instead of sequence number", Number)
-		.action((opts: SendOpts) =>
-			sendPayment(opts, program.opts() as GlobalOptions),
-		);
+		.option("--limit-quality", "Only take equal-quality paths", false);
+	withTxOptions(cmd).action((opts: SendOpts) =>
+		sendPayment(opts, program.opts() as GlobalOptions),
+	);
 }

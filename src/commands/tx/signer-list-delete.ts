@@ -5,6 +5,7 @@ import {
 	loadWalletForTx,
 	outputResult,
 	submitOrPrepare,
+	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
@@ -30,14 +31,10 @@ async function deleteSignerList(opts: TxOptions, globalOpts: GlobalOptions) {
 }
 
 export function registerSignerListDelete(program: Command) {
-	program
+	const cmd = program
 		.command("signer-list-delete")
-		.description("Remove the signer list from an account")
-		.option("--prepare", "Output unsigned JSON instead of submitting", false)
-		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
-		.option("--ticket <seq>", "Use a ticket instead of sequence number", Number)
-		.action((opts: TxOptions) =>
-			deleteSignerList(opts, program.opts() as GlobalOptions),
-		);
+		.description("Remove the signer list from an account");
+	withTxOptions(cmd).action((opts: TxOptions) =>
+		deleteSignerList(opts, program.opts() as GlobalOptions),
+	);
 }

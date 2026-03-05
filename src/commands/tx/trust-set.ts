@@ -6,6 +6,7 @@ import {
 	loadWalletForTx,
 	outputResult,
 	submitOrPrepare,
+	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
@@ -75,7 +76,7 @@ async function setTrustLine(
 }
 
 export function registerTrustSetCommand(program: Command) {
-	program
+	const cmd = program
 		.command("trust-set")
 		.description("Create or modify a trust line")
 		.argument("<currency>", "Currency code (3-char or 40-char hex)")
@@ -89,12 +90,9 @@ export function registerTrustSetCommand(program: Command) {
 		.option("--clear-freeze", "Unfreeze this trust line", false)
 		.option("--deep-freeze", "Deep-freeze this trust line", false)
 		.option("--clear-deep-freeze", "Clear deep-freeze", false)
-		.option("--auth", "Authorize counterparty to hold currency", false)
-		.option("--prepare", "Output unsigned JSON instead of submitting", false)
-		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
-		.option("--ticket <n>", "Use a ticket instead of sequence number", Number)
-		.action((currency: string, issuer: string, opts: TrustSetOpts) =>
+		.option("--auth", "Authorize counterparty to hold currency", false);
+	withTxOptions(cmd).action(
+		(currency: string, issuer: string, opts: TrustSetOpts) =>
 			setTrustLine(currency, issuer, opts, program.opts() as GlobalOptions),
-		);
+	);
 }
