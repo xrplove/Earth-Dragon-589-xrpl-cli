@@ -1,16 +1,10 @@
 import type { Command } from "commander";
 import { withClient } from "../lib/client.js";
-import { loadConfig, resolveAlias } from "../lib/config.js";
+import { resolve } from "../lib/config.js";
 import { output } from "../lib/output.js";
 import { parseLedgerIndex } from "../lib/parsing.js";
 import { parseToken } from "../lib/tokens.js";
 import type { GlobalOptions } from "../lib/types.js";
-
-const { aliases } = loadConfig();
-
-function resolve(address: string): string {
-	return resolveAlias(address, aliases);
-}
 
 export function registerAccountCommands(program: Command) {
 	program

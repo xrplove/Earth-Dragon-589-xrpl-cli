@@ -35,3 +35,9 @@ export function resolveAlias(
 ): string {
 	return aliases[addressOrAlias] ?? addressOrAlias;
 }
+
+const _config = loadConfig();
+
+export function resolve(address: string): string {
+	return resolveAlias(address, _config.aliases);
+}

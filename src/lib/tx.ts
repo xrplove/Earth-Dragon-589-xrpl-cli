@@ -44,13 +44,17 @@ export function applyTxOptions(
 /**
  * Autofill, then either prepare (output JSON) or sign & submit.
  */
+export type TxOutcome =
+	| { mode: "prepared"; tx: Transaction }
+	| { mode: "submitted"; result: unknown };
+
 export async function submitOrPrepare(
 	client: Client,
 	wallet: Wallet | null,
 	tx: Transaction,
 	txOpts: TxOptions,
 	globalOpts: GlobalOptions,
-): Promise<{ prepared?: Transaction; result?: unknown }> {
+): Promise<TxOutcome> {
 	if (txOpts.signers != null) {
 		tx.Fee = await calcSignersFee(client, tx.Fee, txOpts.signers);
 	}
@@ -59,7 +63,7 @@ export async function submitOrPrepare(
 	applyTxOptions(autofilled, txOpts);
 
 	if (txOpts.prepare || txOpts.signers != null) {
-		return { prepared: autofilled };
+		return { mode: "prepared", tx: autofilled };
 	}
 
 	if (!wallet) {
@@ -79,11 +83,10 @@ export async function submitOrPrepare(
 			: undefined;
 
 	if (resultCode && resultCode !== "tesSUCCESS") {
-		const code = resultCode.startsWith("tec")
+		process.exitCode = resultCode.startsWith("tec")
 			? EXIT_CODES.TX_REJECTED
 			: EXIT_CODES.GENERAL_ERROR;
-		return { result: { ...response.result, _exitCode: code } };
 	}
 
-	return { result: response.result };
+	return { mode: "submitted", result: response.result };
 }

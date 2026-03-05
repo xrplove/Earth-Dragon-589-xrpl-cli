@@ -4,7 +4,6 @@ import { registerLedgerCommands } from "./commands/ledger.js";
 import { registerSigningCommands } from "./commands/signing.js";
 import { registerWalletCommands } from "./commands/wallet.js";
 import { loadConfig } from "./lib/config.js";
-import type { GlobalOptions } from "./lib/types.js";
 import { EXIT_CODES } from "./lib/types.js";
 
 const config = loadConfig();
@@ -35,12 +34,6 @@ registerAccountCommands(program);
 registerLedgerCommands(program);
 registerWalletCommands(program);
 registerSigningCommands(program);
-
-export function getGlobalOptions(): GlobalOptions {
-	return program.opts() as GlobalOptions;
-}
-
-export { program };
 
 async function main() {
 	try {
