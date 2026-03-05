@@ -1,4 +1,4 @@
-import { xrpToDrops } from "xrpl";
+import { xrpToDrops, type IssuedCurrencyAmount, type MPTAmount } from "xrpl";
 import { tokenSpec } from "./schemas.js";
 
 export interface XrpAmount {
@@ -55,18 +55,7 @@ export function parseToken(token: string): ParsedToken {
 	);
 }
 
-export interface IssuedCurrencyAmount {
-	currency: string;
-	issuer: string;
-	value: string;
-}
-
-export interface MptCurrencyAmount {
-	mpt_issuance_id: string;
-	value: string;
-}
-
-export type XrplAmount = string | IssuedCurrencyAmount | MptCurrencyAmount;
+export type XrplAmount = string | IssuedCurrencyAmount | MPTAmount;
 
 export function toXrplAmount(token: ParsedToken, value: string): XrplAmount {
 	switch (token.type) {

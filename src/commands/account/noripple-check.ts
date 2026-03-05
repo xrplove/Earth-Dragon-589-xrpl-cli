@@ -21,11 +21,11 @@ async function checkNoripple(
 		const resp = await client.request({
 			command: "noripple_check",
 			account: resolve(account),
-			role: opts.role,
+			role: opts.role as "gateway" | "user",
 			transactions: opts.transactions || undefined,
 			limit: opts.limit,
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

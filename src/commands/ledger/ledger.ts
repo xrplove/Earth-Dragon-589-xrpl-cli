@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import type { LedgerRequest } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import { parseLedgerIndex } from "../../lib/parsing.js";
@@ -13,7 +14,7 @@ interface LedgerOpts {
 
 async function fetchLedger(opts: LedgerOpts, globalOpts: GlobalOptions) {
 	await withClient(globalOpts, async (client) => {
-		const req: Record<string, unknown> = {
+		const req: LedgerRequest = {
 			command: "ledger",
 			transactions: opts.transactions || undefined,
 			expand: opts.expand || undefined,
@@ -23,7 +24,7 @@ async function fetchLedger(opts: LedgerOpts, globalOpts: GlobalOptions) {
 		} else {
 			req.ledger_index = parseLedgerIndex(opts.index);
 		}
-		const resp = await client.request(req as never);
+		const resp = await client.request(req);
 		output(resp.result, globalOpts);
 	});
 }

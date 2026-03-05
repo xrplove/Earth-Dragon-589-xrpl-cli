@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { encode } from "xrpl";
+import { encode, type Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -12,7 +12,7 @@ async function multisignSubmit(
 ) {
 	const { baseTx, signers } = collectSigners(txJsonArgs, opts.files);
 	const combined = { ...baseTx, Signers: signers };
-	const txBlob = encode(combined as never);
+	const txBlob = encode(combined as unknown as Transaction);
 
 	await withClient(globalOpts, async (client) => {
 		const resp = await client.request({

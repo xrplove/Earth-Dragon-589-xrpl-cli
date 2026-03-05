@@ -21,7 +21,7 @@ async function fetchGatewayBalances(
 			account: resolve(account),
 			hotwallet: opts.hotWallet?.map(resolve),
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

@@ -1,25 +1,18 @@
 import { readFileSync } from "node:fs";
 import type { Command } from "commander";
+import type { Signer } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
-interface SignerEntry {
-	Signer: {
-		Account: string;
-		SigningPubKey: string;
-		TxnSignature: string;
-	};
-}
-
 interface SignedTx {
-	Signers?: SignerEntry[];
+	Signers?: Signer[];
 	[key: string]: unknown;
 }
 
 function collectSigners(
 	txJsonArgs: string[],
 	files: string[] | undefined,
-): { baseTx: SignedTx; signers: SignerEntry[] } {
+): { baseTx: SignedTx; signers: Signer[] } {
 	const txs: SignedTx[] = [];
 
 	for (const arg of txJsonArgs) {
@@ -36,7 +29,7 @@ function collectSigners(
 		throw new Error("Provide signed transactions as arguments or use --files.");
 	}
 
-	const signers: SignerEntry[] = [];
+	const signers: Signer[] = [];
 	for (const tx of txs) {
 		if (!tx.Signers?.length) {
 			throw new Error("Each signed transaction must have a Signers array.");

@@ -26,7 +26,7 @@ async function fetchAccountTx(
 			ledger_index_min: opts.ledgerIndexMin,
 			ledger_index_max: opts.ledgerIndexMax,
 			marker: opts.marker,
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

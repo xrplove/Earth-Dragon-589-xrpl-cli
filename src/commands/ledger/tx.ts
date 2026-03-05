@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import type { TxRequest } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -9,13 +10,13 @@ async function fetchTx(
 	globalOpts: GlobalOptions,
 ) {
 	await withClient(globalOpts, async (client) => {
-		const req: Record<string, unknown> = { command: "tx" };
+		const req: TxRequest = { command: "tx" };
 		if (opts.ctid) {
 			req.ctid = hash;
 		} else {
 			req.transaction = hash;
 		}
-		const resp = await client.request(req as never);
+		const resp = await client.request(req);
 		output(resp.result, globalOpts);
 	});
 }

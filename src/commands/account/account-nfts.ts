@@ -23,7 +23,7 @@ async function fetchAccountNfts(
 			limit: opts.limit,
 			marker: opts.marker,
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

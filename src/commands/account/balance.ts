@@ -49,7 +49,7 @@ async function fetchBalance(
 			const resp = await client.request({
 				command: "account_objects",
 				account: addr,
-				type: "mptoken" as never,
+				type: "mptoken",
 				ledger_index: "validated",
 			});
 			const mpt = (

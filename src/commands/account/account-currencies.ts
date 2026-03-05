@@ -15,7 +15,7 @@ async function fetchAccountCurrencies(
 			command: "account_currencies",
 			account: resolve(account),
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

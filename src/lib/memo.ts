@@ -1,9 +1,6 @@
-export interface Memo {
-	Memo: {
-		MemoType: string;
-		MemoData: string;
-	};
-}
+import type { Memo } from "xrpl";
+
+export type { Memo };
 
 const MEMO_RE = /^(hex:)?([^:]+):(hex:)?(.+)$/s;
 

@@ -23,7 +23,7 @@ async function fetchAccountInfo(
 			signer_lists: opts.signerLists || undefined,
 			queue: opts.queue || undefined,
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

@@ -1,8 +1,9 @@
+import type { LedgerIndex } from "xrpl";
 import { ledgerIndex } from "./schemas.js";
 
-export function parseLedgerIndex(value?: string): string | number | undefined {
+export function parseLedgerIndex(value?: string): LedgerIndex | undefined {
 	if (value === undefined) return undefined;
-	return ledgerIndex.parse(value);
+	return ledgerIndex.parse(value) as LedgerIndex;
 }
 
 /**

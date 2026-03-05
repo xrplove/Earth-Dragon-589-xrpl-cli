@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import type { Request } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -13,7 +14,7 @@ async function sendRpc(
 		const resp = await client.request({
 			command: method,
 			...parsed,
-		} as never);
+		} as unknown as Request);
 		output(resp.result, globalOpts);
 	});
 }

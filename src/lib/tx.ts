@@ -1,5 +1,11 @@
 import type { Command } from "commander";
-import type { Client, Transaction, Wallet } from "xrpl";
+import type {
+	Client,
+	SubmittableTransaction,
+	Transaction,
+	TransactionMetadataBase,
+	Wallet,
+} from "xrpl";
 import { parseMemos } from "./memo.js";
 import { info, output } from "./output.js";
 import type { GlobalOptions, TxOptions } from "./types.js";
@@ -69,7 +75,7 @@ export async function submitOrPrepare(
 		tx.Fee = await calcSignersFee(client, tx.Fee, txOpts.signers);
 	}
 
-	const autofilled = await client.autofill(tx);
+	const autofilled = await client.autofill(tx as SubmittableTransaction);
 	applyTxOptions(autofilled, txOpts);
 
 	if (txOpts.prepare || txOpts.signers != null) {
@@ -84,12 +90,10 @@ export async function submitOrPrepare(
 
 	info("Signing and submitting transaction...", globalOpts);
 	const response = await client.submitAndWait(autofilled, { wallet });
+	const meta = response.result.meta;
 	const resultCode =
-		response.result.meta &&
-		typeof response.result.meta === "object" &&
-		"TransactionResult" in response.result.meta
-			? (response.result.meta as { TransactionResult: string })
-					.TransactionResult
+		meta && typeof meta === "object"
+			? (meta as TransactionMetadataBase).TransactionResult
 			: undefined;
 
 	if (resultCode && resultCode !== "tesSUCCESS") {

@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { Transaction } from "xrpl";
+import type { SubmittableTransaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import { parseFields } from "../../lib/parsing.js";
@@ -28,16 +28,13 @@ async function buildTransaction(
 	}
 
 	await withClient(globalOpts, async (client) => {
-		const tx = fields as unknown as Transaction;
+		const tx = fields as unknown as SubmittableTransaction;
 
 		if (opts.signers != null) {
 			tx.Fee = await calcSignersFee(client, tx.Fee, opts.signers);
 		}
 
-		const autofilled = (await client.autofill(tx as never)) as Record<
-			string,
-			unknown
-		>;
+		const autofilled = (await client.autofill(tx)) as Record<string, unknown>;
 		autofilled.SigningPubKey = "";
 
 		output(autofilled, globalOpts);

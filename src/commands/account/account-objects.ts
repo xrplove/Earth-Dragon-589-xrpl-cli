@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import type { AccountObjectType } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import { output } from "../../lib/output.js";
@@ -21,11 +22,11 @@ async function fetchAccountObjects(
 		const resp = await client.request({
 			command: "account_objects",
 			account: resolve(account),
-			type: opts.type,
+			type: opts.type as AccountObjectType,
 			limit: opts.limit,
 			marker: opts.marker,
 			ledger_index: parseLedgerIndex(opts.ledgerIndex),
-		} as never);
+		});
 		output(resp.result, globalOpts);
 	});
 }

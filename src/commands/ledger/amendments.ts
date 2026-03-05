@@ -3,19 +3,28 @@ import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
+type FeatureInfo = { enabled: boolean; name: string; supported: boolean };
+
 async function fetchAmendments(
 	amendment: string | undefined,
 	opts: { enabled: boolean; pending: boolean },
 	globalOpts: GlobalOptions,
 ) {
 	await withClient(globalOpts, async (client) => {
-		const resp = await client.request({
-			command: "feature",
-			feature: amendment,
-		} as never);
-		let features = (
-			resp.result as { features?: Record<string, Record<string, unknown>> }
-		).features as Record<string, Record<string, unknown>>;
+		let features: Record<string, FeatureInfo>;
+
+		if (amendment) {
+			const resp = await client.request({
+				command: "feature",
+				feature: amendment,
+			});
+			features = resp.result as unknown as Record<string, FeatureInfo>;
+		} else {
+			const resp = await client.request({ command: "feature" });
+			features = (
+				resp.result as { features: Record<string, FeatureInfo> }
+			).features;
+		}
 
 		if (opts.enabled) {
 			features = Object.fromEntries(
