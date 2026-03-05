@@ -9,6 +9,7 @@ import { registerPingCommand } from "./ping.js";
 import { registerRpcCommand } from "./rpc.js";
 import { registerServerInfoCommand } from "./server-info.js";
 import { registerServerState } from "./server-state.js";
+import { registerSubscribe } from "./subscribe.js";
 import { registerTxCommand } from "./tx.js";
 
 export function registerLedgerCommands(program: Command) {
@@ -23,4 +24,5 @@ export function registerLedgerCommands(program: Command) {
 	registerTxCommand(program);
 	registerPingCommand(program);
 	registerRpcCommand(program);
+	registerSubscribe(program);
 }

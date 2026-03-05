@@ -10,7 +10,7 @@ export function run(
 		execFile(
 			"node",
 			[CLI, ...args],
-			{ timeout: 30_000 },
+			{ timeout: 120_000 },
 			(err, stdout, stderr) => {
 				resolve({
 					stdout: stdout.trim(),

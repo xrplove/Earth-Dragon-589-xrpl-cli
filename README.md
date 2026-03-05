@@ -1860,13 +1860,13 @@ Less common but fully supported features.
 
 Higher-level DeFi and NFT features.
 
-- [ ] `nft-mint`, `nft-burn`
-- [ ] `nft-offer-create`, `nft-offer-accept`, `nft-offer-cancel`
-- [ ] `nft-buy-offers`, `nft-sell-offers`
-- [ ] `amm-info`, `amm-create`, `amm-deposit`, `amm-withdraw`, `amm-vote`, `amm-bid`
-- [ ] `clawback`
-- [ ] `subscribe`
-- [ ] **E2E tests**: mint NFT → `account-nfts` lists it → create sell offer → accept → verify ownership transferred. AMM create → deposit → withdraw round-trip
+- [x] `nft-mint`, `nft-burn`
+- [x] `nft-offer-create`, `nft-offer-accept`, `nft-offer-cancel`
+- [x] `nft-buy-offers`, `nft-sell-offers`
+- [x] `amm-info`, `amm-create`, `amm-deposit`, `amm-withdraw`, `amm-vote`, `amm-bid`
+- [x] `clawback`
+- [x] `subscribe`
+- [x] **E2E tests**: mint NFT → `account-nfts` lists it → create sell offer → accept → verify ownership transferred. AMM create → deposit → withdraw round-trip
 
 ### Phase 10: Polish
 

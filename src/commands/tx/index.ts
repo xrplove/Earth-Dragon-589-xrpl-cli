@@ -1,5 +1,6 @@
 import type { Command } from "commander";
 import { registerBuild } from "./build.js";
+import { registerClawback } from "./clawback.js";
 import { registerSendCommand } from "./send.js";
 import { registerSignerListDelete } from "./signer-list-delete.js";
 import { registerSignerListSet } from "./signer-list-set.js";
@@ -10,5 +11,6 @@ export function registerTxCommands(program: Command) {
 	registerTrustSetCommand(program);
 	registerSignerListSet(program);
 	registerSignerListDelete(program);
+	registerClawback(program);
 	registerBuild(program);
 }
