@@ -11,8 +11,10 @@ import {
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
 interface OfferCreateOpts extends TxOptions {
-	takerPays: string[];
-	takerGets: string[];
+	takerPaysAmount: string;
+	takerPaysToken: string;
+	takerGetsAmount: string;
+	takerGetsToken: string;
 	expiration?: number;
 	offerSequence?: number;
 	passive: boolean;
@@ -22,13 +24,13 @@ interface OfferCreateOpts extends TxOptions {
 }
 
 async function offerCreate(opts: OfferCreateOpts, globalOpts: GlobalOptions) {
-	const paysToken = parseToken(opts.takerPays[1]);
-	const getsToken = parseToken(opts.takerGets[1]);
+	const paysToken = parseToken(opts.takerPaysToken);
+	const getsToken = parseToken(opts.takerGetsToken);
 
 	const tx: Omit<OfferCreate, "Account"> = {
 		TransactionType: "OfferCreate",
-		TakerPays: toXrplAmount(paysToken, opts.takerPays[0]),
-		TakerGets: toXrplAmount(getsToken, opts.takerGets[0]),
+		TakerPays: toXrplAmount(paysToken, opts.takerPaysAmount),
+		TakerGets: toXrplAmount(getsToken, opts.takerGetsAmount),
 	};
 
 	if (opts.expiration != null) tx.Expiration = opts.expiration;
@@ -55,12 +57,20 @@ export function registerOfferCreate(program: Command) {
 		.alias("offer")
 		.description("Create a DEX offer")
 		.requiredOption(
-			"--taker-pays <amount> <token>",
-			"Amount and token the taker pays",
+			"--taker-pays-amount <amount>",
+			"Amount the taker pays",
 		)
 		.requiredOption(
-			"--taker-gets <amount> <token>",
-			"Amount and token the taker gets",
+			"--taker-pays-token <token>",
+			"Token the taker pays: XRP, <currency>.<issuer>, or mpt:<id>",
+		)
+		.requiredOption(
+			"--taker-gets-amount <amount>",
+			"Amount the taker gets",
+		)
+		.requiredOption(
+			"--taker-gets-token <token>",
+			"Token the taker gets: XRP, <currency>.<issuer>, or mpt:<id>",
 		)
 		.option("--expiration <ripple-time>", "Offer expiration (Ripple epoch)", Number)
 		.option(

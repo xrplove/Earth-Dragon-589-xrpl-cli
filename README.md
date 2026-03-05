@@ -1831,7 +1831,7 @@ Order book and offer commands.
 - [x] `book-offers`
 - [x] `deposit-authorized`
 - [x] `path-find`
-- [ ] **E2E tests**: create a trust line + offer on testnet, `account-offers` shows it, `offer-cancel` removes it, `book-offers` returns order book
+- [x] **E2E tests**: create a trust line + offer on testnet, `account-offers` shows it, `offer-cancel` removes it, `book-offers` returns order book
 
 ### Phase 7: MPTs
 
