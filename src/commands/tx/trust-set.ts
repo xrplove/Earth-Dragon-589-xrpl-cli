@@ -1,11 +1,11 @@
 import type { Command } from "commander";
 import type { Transaction } from "xrpl";
-import { withClient } from "../lib/client.js";
-import { resolve } from "../lib/config.js";
-import { output } from "../lib/output.js";
-import { submitOrPrepare } from "../lib/tx.js";
-import type { GlobalOptions, TxOptions } from "../lib/types.js";
-import { loadWallet } from "../lib/wallet.js";
+import { withClient } from "../../lib/client.js";
+import { resolve } from "../../lib/config.js";
+import { output } from "../../lib/output.js";
+import { submitOrPrepare } from "../../lib/tx.js";
+import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { loadWallet } from "../../lib/wallet.js";
 
 const TF_SET_NO_RIPPLE = 0x00020000;
 const TF_CLEAR_NO_RIPPLE = 0x00040000;

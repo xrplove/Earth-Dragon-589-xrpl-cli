@@ -1,9 +1,9 @@
 import { Command } from "commander";
 import { registerAccountCommands } from "./commands/account/index.js";
 import { registerLedgerCommands } from "./commands/ledger.js";
-import { registerSendCommand } from "./commands/send.js";
 import { registerSigningCommands } from "./commands/signing/index.js";
-import { registerTrustSetCommand } from "./commands/trust-set.js";
+import { registerSubmitCommands } from "./commands/submit/index.js";
+import { registerTxCommands } from "./commands/tx/index.js";
 import { registerUtilityCommands } from "./commands/utility/index.js";
 import { registerWalletCommands } from "./commands/wallet/index.js";
 import { loadConfig } from "./lib/config.js";
@@ -36,9 +36,9 @@ const program = new Command()
 registerAccountCommands(program);
 registerLedgerCommands(program);
 registerWalletCommands(program);
+registerTxCommands(program);
 registerSigningCommands(program);
-registerSendCommand(program);
-registerTrustSetCommand(program);
+registerSubmitCommands(program);
 registerUtilityCommands(program);
 
 async function main() {

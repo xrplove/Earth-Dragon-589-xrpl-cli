@@ -1,12 +1,12 @@
 import type { Command } from "commander";
 import type { Transaction } from "xrpl";
-import { withClient } from "../lib/client.js";
-import { resolve } from "../lib/config.js";
-import { output } from "../lib/output.js";
-import { parseToken, toXrplAmount } from "../lib/tokens.js";
-import { submitOrPrepare } from "../lib/tx.js";
-import type { GlobalOptions, TxOptions } from "../lib/types.js";
-import { loadWallet } from "../lib/wallet.js";
+import { withClient } from "../../lib/client.js";
+import { resolve } from "../../lib/config.js";
+import { output } from "../../lib/output.js";
+import { parseToken, toXrplAmount } from "../../lib/tokens.js";
+import { submitOrPrepare } from "../../lib/tx.js";
+import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { loadWallet } from "../../lib/wallet.js";
 
 const TF_PARTIAL_PAYMENT = 0x00020000;
 const TF_NO_RIPPLE_DIRECT = 0x00010000;

@@ -3,7 +3,7 @@ import { encode } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
-import { collectSigners } from "./multisign-combine.js";
+import { collectSigners } from "../signing/multisign-combine.js";
 
 async function multisignSubmit(
 	txJsonArgs: string[],
