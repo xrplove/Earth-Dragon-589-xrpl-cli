@@ -6,6 +6,7 @@ const require = createRequire(import.meta.url);
 const pkg = require("../package.json") as { name: string; version: string };
 
 import { registerAccountCommands } from "./commands/account/index.js";
+import { registerDexCommands } from "./commands/dex/index.js";
 import { registerLedgerCommands } from "./commands/ledger/index.js";
 import { registerSigningCommands } from "./commands/signing/index.js";
 import { registerSubmitCommands } from "./commands/submit/index.js";
@@ -56,6 +57,7 @@ registerAccountCommands(program);
 registerLedgerCommands(program);
 registerWalletCommands(program);
 registerTxCommands(program);
+registerDexCommands(program);
 registerSigningCommands(program);
 registerSubmitCommands(program);
 registerUtilityCommands(program);

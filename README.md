@@ -1826,11 +1826,11 @@ Account configuration commands.
 
 Order book and offer commands.
 
-- [ ] `offer-create` (+ `--prepare`, all flags: `--immediate-or-cancel`, `--fill-or-kill`, `--sell`)
-- [ ] `offer-cancel`
-- [ ] `book-offers`
-- [ ] `deposit-authorized`
-- [ ] `path-find`
+- [x] `offer-create` (+ `--prepare`, all flags: `--immediate-or-cancel`, `--fill-or-kill`, `--sell`)
+- [x] `offer-cancel`
+- [x] `book-offers`
+- [x] `deposit-authorized`
+- [x] `path-find`
 - [ ] **E2E tests**: create a trust line + offer on testnet, `account-offers` shows it, `offer-cancel` removes it, `book-offers` returns order book
 
 ### Phase 7: MPTs
