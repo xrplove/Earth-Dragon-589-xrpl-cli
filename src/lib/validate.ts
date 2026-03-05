@@ -6,16 +6,10 @@ import {
 	positiveInt,
 	txHash,
 	xrpAmount,
-	xrplAddress,
 } from "./schemas.js";
 
 function label(name: string, value: unknown): string {
 	return `Invalid ${name}: "${value}".`;
-}
-
-export function validateAddress(value: string, name = "address"): void {
-	const r = xrplAddress.safeParse(value);
-	if (!r.success) throw new Error(`${label(name, value)} ${r.error.issues[0].message}`);
 }
 
 export function validateHex(value: string, length: number, name = "hex"): void {
@@ -55,10 +49,6 @@ export function validateNonNegativeInt(value: number, name = "value"): void {
 export function validateRange(value: number, min: number, max: number, name = "value"): void {
 	const r = intRange(min, max).safeParse(value);
 	if (!r.success) throw new Error(`${label(name, value)} ${r.error.issues[0].message}`);
-}
-
-export function validateOptionalAddress(value: string | undefined, name = "address"): void {
-	if (value != null) validateAddress(value, name);
 }
 
 export function validateOptionalHex(value: string | undefined, name = "hex"): void {

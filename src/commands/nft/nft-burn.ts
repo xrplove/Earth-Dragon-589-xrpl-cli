@@ -9,7 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-import { validateHex64, validateOptionalAddress } from "../../lib/validate.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface NftBurnOpts extends TxOptions {
 	owner?: string;
@@ -21,7 +21,6 @@ async function nftBurn(
 	globalOpts: GlobalOptions,
 ) {
 	validateHex64(nftokenId, "NFToken ID");
-	validateOptionalAddress(opts.owner, "owner");
 
 	const tx: Omit<NFTokenBurn, "Account"> = {
 		TransactionType: "NFTokenBurn",

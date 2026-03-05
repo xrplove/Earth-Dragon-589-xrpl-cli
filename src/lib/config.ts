@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { parse } from "smol-toml";
+import { xrplAddress } from "./schemas.js";
 
 export interface Config {
 	network?: string;
@@ -43,9 +44,8 @@ const _config = loadConfig();
  */
 export function resolve(addressOrAlias: string): string {
 	const resolved = resolveAlias(addressOrAlias, _config.aliases);
-	// If it was an alias, the resolved value is an address — validate it.
-	// If it wasn't an alias, the input itself should be an address.
-	if (!/^(r[1-9A-HJ-NP-Za-km-z]{24,34}|[XT][1-9A-HJ-NP-Za-km-z]{46})$/.test(resolved)) {
+	const r = xrplAddress.safeParse(resolved);
+	if (!r.success) {
 		throw new Error(`Invalid address: "${addressOrAlias}". Expected an r-address, X-address, or configured alias.`);
 	}
 	return resolved;
