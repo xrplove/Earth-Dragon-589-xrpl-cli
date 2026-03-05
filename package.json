@@ -15,6 +15,7 @@
 		"test": "vitest run",
 		"test:e2e": "vitest run --config vitest.config.e2e.ts",
 		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
 		"prepublishOnly": "pnpm build"
 	},
 	"keywords": [
@@ -45,6 +46,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.5",
 		"@types/node": "^25.3.3",
+		"@vitest/coverage-v8": "^4.0.18",
 		"tsup": "^8.5.1",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
