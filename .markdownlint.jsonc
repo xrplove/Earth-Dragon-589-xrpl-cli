@@ -1,0 +1,10 @@
+{
+	// Disable line length — too strict for README prose
+	"MD013": false,
+	// Dollar signs before commands are intentional style
+	"MD014": false,
+	// Allow multiple top-level headings
+	"MD025": false,
+	// Table column alignment — too noisy for compact tables
+	"MD060": false
+}

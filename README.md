@@ -2,8 +2,8 @@
 
 A Swiss Army knife for interacting with the XRP Ledger from the command line.
 
-```
-$ xrpl --help
+```bash
+xrpl --help
 ```
 
 `xrpl` is a CLI tool for querying, transacting, and managing accounts on the XRP Ledger. It wraps [xrpl.js](https://js.xrpl.org/) and exposes the full breadth of XRPL functionality through a flat, composable command interface — inspired by Foundry's [`cast`](https://www.getfoundry.sh/reference/cast/cast) for EVM chains.
@@ -71,7 +71,7 @@ xrpl wallet generate
 
 These options apply to all commands that interact with the network:
 
-```
+```text
 --network <network>     Network to connect to: mainnet, testnet, devnet (default: mainnet)
 --rpc-url <url>         Custom WebSocket RPC URL (overrides --network)
 --seed <seed>           Wallet seed for signing (or set XRPL_SEED env var)
@@ -125,7 +125,7 @@ Commands for reading account state. These correspond to the rippled [account met
 
 Get the balance of an account. Returns the XRP balance by default, or a specific token balance with `--token`.
 
-```
+```bash
 xrpl balance <account> [--token <token>]
 ```
 
@@ -149,7 +149,7 @@ xrpl balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY --token mpt:00064D1C63CEBEB49FC2
 
 Get full account info (sequence, flags, balance, owner count, etc.). Wraps [`account_info`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_info).
 
-```
+```bash
 xrpl account-info <account> [--signer-lists] [--queue] [--ledger-index <index>]
 ```
 
@@ -164,7 +164,7 @@ xrpl account-info <account> [--signer-lists] [--queue] [--ledger-index <index>]
 
 Get objects owned by an account (offers, trust lines, escrows, tickets, signer lists, etc.). Wraps [`account_objects`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_objects).
 
-```
+```bash
 xrpl account-objects <account> [--type <type>] [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -182,7 +182,7 @@ xrpl account-objects <account> [--type <type>] [--limit <n>] [--marker <marker>]
 
 Get trust lines for an account. Wraps [`account_lines`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_lines).
 
-```
+```bash
 xrpl account-lines <account> [--counterparty <address>] [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -198,7 +198,7 @@ xrpl account-lines <account> [--counterparty <address>] [--limit <n>] [--marker 
 
 Get payment channels where the account is the source. Wraps [`account_channels`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_channels).
 
-```
+```bash
 xrpl account-channels <account> [--destination <address>] [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -214,7 +214,7 @@ xrpl account-channels <account> [--destination <address>] [--limit <n>] [--marke
 
 Get a list of currencies an account can send or receive. Wraps [`account_currencies`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_currencies).
 
-```
+```bash
 xrpl account-currencies <account> [--ledger-index <index>]
 ```
 
@@ -227,7 +227,7 @@ xrpl account-currencies <account> [--ledger-index <index>]
 
 Get NFTs owned by an account. Wraps [`account_nfts`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_nfts).
 
-```
+```bash
 xrpl account-nfts <account> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -242,7 +242,7 @@ xrpl account-nfts <account> [--limit <n>] [--marker <marker>] [--ledger-index <i
 
 Get open DEX offers for an account. Wraps [`account_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_offers).
 
-```
+```bash
 xrpl account-offers <account> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -257,7 +257,7 @@ xrpl account-offers <account> [--limit <n>] [--marker <marker>] [--ledger-index 
 
 Get transaction history for an account. Wraps [`account_tx`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/account_tx).
 
-```
+```bash
 xrpl account-tx <account> [--limit <n>] [--forward] [--ledger-index-min <n>] [--ledger-index-max <n>] [--marker <marker>]
 ```
 
@@ -274,7 +274,7 @@ xrpl account-tx <account> [--limit <n>] [--forward] [--ledger-index-min <n>] [--
 
 Calculate total amounts of tokens issued by an account. Wraps [`gateway_balances`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/gateway_balances).
 
-```
+```bash
 xrpl gateway-balances <account> [--hot-wallet <address>...] [--ledger-index <index>]
 ```
 
@@ -288,7 +288,7 @@ xrpl gateway-balances <account> [--hot-wallet <address>...] [--ledger-index <ind
 
 Get recommended changes to an account's Default Ripple and No Ripple settings. Wraps [`noripple_check`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/account-methods/noripple_check).
 
-```
+```bash
 xrpl noripple-check <account> [--role <gateway|user>] [--transactions] [--limit <n>] [--ledger-index <index>]
 ```
 
@@ -304,7 +304,7 @@ xrpl noripple-check <account> [--role <gateway|user>] [--transactions] [--limit 
 
 Get the current sequence number for an account. Derived from `account_info`.
 
-```
+```bash
 xrpl nonce <account>
 ```
 
@@ -320,7 +320,7 @@ Commands for reading ledger state. These correspond to the rippled [ledger metho
 
 Get information about a ledger. Defaults to the latest validated ledger. Wraps [`ledger`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger).
 
-```
+```bash
 xrpl ledger [--index <ledger-index>] [--hash <ledger-hash>] [--transactions] [--expand]
 ```
 
@@ -339,7 +339,7 @@ Get the latest validated ledger index. Takes no options.
 
 Get raw contents of a ledger version. Wraps [`ledger_data`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_data).
 
-```
+```bash
 xrpl ledger-data [--ledger-index <index>] [--limit <n>] [--type <type>] [--binary] [--marker <marker>]
 ```
 
@@ -355,7 +355,7 @@ xrpl ledger-data [--ledger-index <index>] [--limit <n>] [--type <type>] [--binar
 
 Get a single ledger entry by its index. Wraps [`ledger_entry`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry).
 
-```
+```bash
 xrpl ledger-entry <index> [--ledger-index <index>]
 ```
 
@@ -380,7 +380,7 @@ Get machine-readable server status. Wraps [`server_state`](https://xrpl.org/docs
 
 List protocol amendments and their status on the connected network. Wraps [`feature`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/server-info-methods/feature).
 
-```
+```bash
 xrpl feature [<amendment>] [--enabled] [--pending]
 ```
 
@@ -407,7 +407,7 @@ Commands for building, signing, and submitting transactions.
 
 All transaction commands (`send`, `trust-set`, `offer-create`, `account-set`, `escrow-create`, etc.) accept the following shared flags:
 
-```
+```text
 --prepare              Output unsigned JSON instead of signing and submitting.
                        Sets SigningPubKey to "" for multi-signing. See Multi-Signing Commands.
 --signers <n>          Set fee to (n+1) * base_fee for multi-signing. Implies --prepare.
@@ -420,7 +420,7 @@ All transaction commands (`send`, `trust-set`, `offer-create`, `account-set`, `e
 
 Get information about a transaction by hash. Wraps [`tx`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/tx).
 
-```
+```bash
 xrpl tx <hash> [--ctid]
 ```
 
@@ -433,7 +433,7 @@ xrpl tx <hash> [--ctid]
 
 Sign, submit, and wait for a Payment transaction. Wraps [`Payment`](https://xrpl.org/docs/references/protocol/transactions/types/payment).
 
-```
+```bash
 xrpl send --to <destination> --amount <amount> --token <token> [--tag <destination-tag>] [--send-max-amount <amount> --send-max-token <token>] [--deliver-min-amount <amount> --deliver-min-token <token>] [--paths <json>] [--invoice-id <hex>] [--partial] [--no-direct] [--limit-quality] [--memo <memo>...] [--prepare [--signers <n>]]
 ```
 
@@ -502,7 +502,7 @@ xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 10 --token XRP \
 
 Submit a raw signed transaction blob. Wraps [`submit`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/submit).
 
-```
+```bash
 xrpl submit <tx-blob> [--fail-hard]
 ```
 
@@ -515,7 +515,7 @@ xrpl submit <tx-blob> [--fail-hard]
 
 Sign a transaction (from JSON) without submitting. Uses the wallet from `--seed` / `--keyfile` / `XRPL_SEED`.
 
-```
+```bash
 xrpl sign <tx-json> [--file <path>] [--multisign [<account>]]
 ```
 
@@ -531,7 +531,7 @@ Outputs the signed blob (`tx_blob`) and transaction hash. When `--multisign` is 
 
 Build a transaction, autofilling sequence/fee/ledger, and print it without signing or submitting. This is the generic escape hatch for any transaction type — you provide the raw fields and the CLI autofills the rest. Outputs unsigned JSON with `SigningPubKey: ""`, ready for `xrpl multisign` or `xrpl sign`.
 
-```
+```bash
 xrpl build <TransactionType> [--<Field> <value>...] [--signers <n>]
 ```
 
@@ -555,7 +555,7 @@ xrpl build AccountDelete --Destination rTarget --DestinationTag 12345
 
 Create or modify a trust line. Wraps [`TrustSet`](https://xrpl.org/docs/references/protocol/transactions/types/trustset).
 
-```
+```bash
 xrpl trust-set <currency> <issuer> [--limit <limit>] [--quality-in <quality>] [--quality-out <quality>] [--no-ripple] [--clear-no-ripple] [--freeze] [--clear-freeze] [--deep-freeze] [--clear-deep-freeze] [--auth] [--prepare [--signers <n>]]
 ```
 
@@ -592,7 +592,7 @@ Commands for working with Multi-Purpose Tokens. Requires amendment: **MPTokensV1
 
 Create a new Multi-Purpose Token issuance. Wraps [`MPTokenIssuanceCreate`](https://xrpl.org/docs/references/protocol/transactions/types/mptokenissuancecreate).
 
-```
+```bash
 xrpl mpt-create [--max-amount <max>] [--asset-scale <scale>] [--transfer-fee <fee>] [--can-transfer] [--can-lock] [--can-clawback] [--can-escrow] [--can-trade] [--require-auth] [--metadata <hex>] [--prepare [--signers <n>]]
 ```
 
@@ -617,7 +617,7 @@ xrpl mpt-create --asset-scale 2 --can-transfer --metadata 4D79546F6B656E
 
 Authorize an account to hold a specific MPT, or authorize/unauthorize a holder (as issuer). Wraps [`MPTokenAuthorize`](https://xrpl.org/docs/references/protocol/transactions/types/mptokenauthorize).
 
-```
+```bash
 xrpl mpt-authorize <issuance-id> [--holder <address>] [--unauthorize] [--prepare [--signers <n>]]
 ```
 
@@ -631,7 +631,7 @@ xrpl mpt-authorize <issuance-id> [--holder <address>] [--unauthorize] [--prepare
 
 Lock or unlock an MPT issuance or individual holder. Wraps [`MPTokenIssuanceSet`](https://xrpl.org/docs/references/protocol/transactions/types/mptokenissuanceset).
 
-```
+```bash
 xrpl mpt-set <issuance-id> [--holder <address>] [--lock] [--unlock] [--prepare [--signers <n>]]
 ```
 
@@ -648,7 +648,7 @@ Exactly one of `--lock` or `--unlock` is required. The issuance must have been c
 
 Destroy an MPT issuance. The issuance must have zero outstanding supply. Wraps [`MPTokenIssuanceDestroy`](https://xrpl.org/docs/references/protocol/transactions/types/mptokenissuancedestroy).
 
-```
+```bash
 xrpl mpt-destroy <issuance-id> [--prepare [--signers <n>]]
 ```
 
@@ -662,7 +662,7 @@ xrpl mpt-destroy <issuance-id> [--prepare [--signers <n>]]
 
 Modify account properties. Wraps [`AccountSet`](https://xrpl.org/docs/references/protocol/transactions/types/accountset).
 
-```
+```bash
 xrpl account-set [--flag <flag>] [--clear-flag <flag>] [--domain <domain>] [--transfer-rate <rate>] [--tick-size <size>] [--email-hash <hash>] [--message-key <key>] [--nftoken-minter <address>] [--prepare [--signers <n>]]
 ```
 
@@ -683,7 +683,7 @@ xrpl account-set [--flag <flag>] [--clear-flag <flag>] [--domain <domain>] [--tr
 
 Delete an account, sending remaining XRP to a destination. The account must have a sequence number at least 256 higher than the current ledger index, own no ledger objects, and the special transaction fee is 5 XRP. Wraps [`AccountDelete`](https://xrpl.org/docs/references/protocol/transactions/types/accountdelete).
 
-```
+```bash
 xrpl account-delete --to <destination> [--tag <destination-tag>] [--prepare [--signers <n>]]
 ```
 
@@ -696,7 +696,7 @@ xrpl account-delete --to <destination> [--tag <destination-tag>] [--prepare [--s
 
 Add, remove, or change an account's regular key pair. Wraps [`SetRegularKey`](https://xrpl.org/docs/references/protocol/transactions/types/setregularkey).
 
-```
+```bash
 xrpl set-regular-key [--key <address>] [--prepare [--signers <n>]]
 ```
 
@@ -708,7 +708,7 @@ xrpl set-regular-key [--key <address>] [--prepare [--signers <n>]]
 
 Preauthorize an account to send payments to you (for accounts with Deposit Authorization enabled). Wraps [`DepositPreauth`](https://xrpl.org/docs/references/protocol/transactions/types/depositpreauth).
 
-```
+```bash
 xrpl deposit-preauth --authorize <address> [--prepare [--signers <n>]]
 xrpl deposit-preauth --unauthorize <address> [--prepare [--signers <n>]]
 xrpl deposit-preauth --authorize-credentials <issuer:credential-type>... [--prepare [--signers <n>]]
@@ -728,7 +728,7 @@ Exactly one of the four options is required per invocation.
 
 Set or update the signer list on an account. Wraps [`SignerListSet`](https://xrpl.org/docs/references/protocol/transactions/types/signerlistset).
 
-```
+```bash
 xrpl signer-list-set --quorum <quorum> --signer <address:weight>... [--prepare [--signers <n>]]
 ```
 
@@ -753,7 +753,7 @@ Remove the signer list from an account. Sends a `SignerListSet` with `SignerQuor
 
 Grant another account permission to send transactions on your behalf. Requires amendment: **PermissionDelegation**. Wraps [`DelegateSet`](https://xrpl.org/docs/references/protocol/transactions/types/delegateset).
 
-```
+```bash
 xrpl delegate-set <authorize> [--permission <value>...] [--prepare [--signers <n>]]
 ```
 
@@ -770,7 +770,7 @@ To revoke delegation, submit a `DelegateSet` with an empty `Permissions` array v
 
 Create tickets for later use. Wraps [`TicketCreate`](https://xrpl.org/docs/references/protocol/transactions/types/ticketcreate).
 
-```
+```bash
 xrpl ticket-create <count> [--prepare [--signers <n>]]
 ```
 
@@ -782,7 +782,7 @@ xrpl ticket-create <count> [--prepare [--signers <n>]]
 
 List available tickets for an account. Convenience wrapper around `account_objects --type ticket`.
 
-```
+```bash
 xrpl tickets <account> [--ledger-index <index>]
 ```
 
@@ -797,7 +797,7 @@ xrpl tickets <account> [--ledger-index <index>]
 
 Create a DEX offer. Wraps [`OfferCreate`](https://xrpl.org/docs/references/protocol/transactions/types/offercreate).
 
-```
+```bash
 xrpl offer-create --taker-pays-amount <amount> --taker-pays-token <token> --taker-gets-amount <amount> --taker-gets-token <token> [--expiration <seconds>] [--offer-sequence <seq>] [--passive] [--immediate-or-cancel] [--fill-or-kill] [--sell] [--prepare [--signers <n>]]
 ```
 
@@ -822,7 +822,7 @@ xrpl offer-create --taker-pays-amount 100 --taker-pays-token USD.rvYAfWj5gh67oV6
 
 Cancel an existing DEX offer. Wraps [`OfferCancel`](https://xrpl.org/docs/references/protocol/transactions/types/offercancel).
 
-```
+```bash
 xrpl offer-cancel <offer-sequence> [--prepare [--signers <n>]]
 ```
 
@@ -834,7 +834,7 @@ xrpl offer-cancel <offer-sequence> [--prepare [--signers <n>]]
 
 Get the order book for a currency pair. Wraps [`book_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/book_offers).
 
-```
+```bash
 xrpl book-offers <taker-pays> <taker-gets> [--limit <n>] [--taker <address>] [--ledger-index <index>]
 ```
 
@@ -850,7 +850,7 @@ xrpl book-offers <taker-pays> <taker-gets> [--limit <n>] [--taker <address>] [--
 
 Check whether one account is authorized to send payments to another. Wraps [`deposit_authorized`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/deposit_authorized).
 
-```
+```bash
 xrpl deposit-authorized <source> <destination> [--ledger-index <index>]
 ```
 
@@ -866,7 +866,7 @@ xrpl deposit-authorized <source> <destination> [--ledger-index <index>]
 
 Find a payment path between two accounts. Wraps [`ripple_path_find`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/ripple_path_find).
 
-```
+```bash
 xrpl path-find <source> <destination> <amount> <token> [--send-max-amount <amount> --send-max-token <token>]
 ```
 
@@ -887,7 +887,7 @@ Commands for working with Automated Market Makers. Requires amendment: **AMM**. 
 
 Get info about an AMM instance. Query by token pair or by AMM account address. Wraps [`amm_info`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/amm_info).
 
-```
+```bash
 xrpl amm-info [--asset <token> --asset2 <token>]
 ```
 
@@ -900,7 +900,7 @@ xrpl amm-info [--asset <token> --asset2 <token>]
 
 Create a new AMM for a token pair. Both initial deposits are required. Wraps [`AMMCreate`](https://xrpl.org/docs/references/protocol/transactions/types/ammcreate).
 
-```
+```bash
 xrpl amm-create --amount1 <amount> --token1 <token> --amount2 <amount> --token2 <token> [--trading-fee <fee>] [--prepare [--signers <n>]]
 ```
 
@@ -916,7 +916,7 @@ xrpl amm-create --amount1 <amount> --token1 <token> --amount2 <amount> --token2 
 
 Deposit funds into an AMM. Multiple deposit modes: two-asset (proportional), single-asset, LP-token targeted, or limit-price. The flags are inferred from which options you provide. Wraps [`AMMDeposit`](https://xrpl.org/docs/references/protocol/transactions/types/ammdeposit).
 
-```
+```bash
 xrpl amm-deposit --asset <token> --asset2 <token> [--amount <amount> --amount-token <token>] [--amount2 <amount> --amount2-token <token>] [--lp-token-out <amount> --lp-token-token <token>] [--e-price <amount> --e-price-token <token>] [--lp-token] [--single-asset] [--two-asset] [--one-asset-lp-token] [--limit-lp-token] [--two-asset-if-empty] [--prepare [--signers <n>]]
 ```
 
@@ -943,7 +943,7 @@ xrpl amm-deposit --asset <token> --asset2 <token> [--amount <amount> --amount-to
 
 Withdraw funds from an AMM. Multiple withdrawal modes mirror the deposit modes. The flags are inferred from which options you provide. Wraps [`AMMWithdraw`](https://xrpl.org/docs/references/protocol/transactions/types/ammwithdraw).
 
-```
+```bash
 xrpl amm-withdraw --asset <token> --asset2 <token> [--amount <amount> --amount-token <token>] [--amount2 <amount> --amount2-token <token>] [--lp-token-in <amount> --lp-token-token <token>] [--e-price <amount> --e-price-token <token>] [--lp-token] [--withdraw-all] [--one-asset-withdraw-all] [--single-asset] [--two-asset] [--one-asset-lp-token] [--limit-lp-token] [--prepare [--signers <n>]]
 ```
 
@@ -971,7 +971,7 @@ xrpl amm-withdraw --asset <token> --asset2 <token> [--amount <amount> --amount-t
 
 Vote on an AMM's trading fee. Your vote is weighted by your LP token holdings. Wraps [`AMMVote`](https://xrpl.org/docs/references/protocol/transactions/types/ammvote).
 
-```
+```bash
 xrpl amm-vote --asset <token> --asset2 <token> --trading-fee <fee> [--prepare [--signers <n>]]
 ```
 
@@ -985,7 +985,7 @@ xrpl amm-vote --asset <token> --asset2 <token> --trading-fee <fee> [--prepare [-
 
 Bid on an AMM's auction slot. The auction slot holder gets a discounted trading fee (0%) for 24 hours. Wraps [`AMMBid`](https://xrpl.org/docs/references/protocol/transactions/types/ammbid).
 
-```
+```bash
 xrpl amm-bid --asset <token> --asset2 <token> [--bid-min-amount <amount> --bid-min-token <token>] [--bid-max-amount <amount> --bid-max-token <token>] [--auth-accounts <address>...] [--prepare [--signers <n>]]
 ```
 
@@ -1007,7 +1007,7 @@ Commands for working with Checks. Requires amendment: **Checks**. Wraps `CheckCr
 
 Create a check. Wraps [`CheckCreate`](https://xrpl.org/docs/references/protocol/transactions/types/checkcreate).
 
-```
+```bash
 xrpl check-create --destination <address> --send-max-amount <amount> --send-max-token <token> [--tag <destination-tag>] [--expiration <seconds>] [--invoice-id <hex>] [--prepare [--signers <n>]]
 ```
 
@@ -1024,7 +1024,7 @@ xrpl check-create --destination <address> --send-max-amount <amount> --send-max-
 
 Redeem a check. Exactly one of `--amount`/`--token` or `--deliver-min-amount`/`--deliver-min-token` is required. Wraps [`CheckCash`](https://xrpl.org/docs/references/protocol/transactions/types/checkcash).
 
-```
+```bash
 xrpl check-cash <check-id> [--amount <amount> --token <token>] [--deliver-min-amount <amount> --deliver-min-token <token>] [--prepare [--signers <n>]]
 ```
 
@@ -1040,7 +1040,7 @@ xrpl check-cash <check-id> [--amount <amount> --token <token>] [--deliver-min-am
 
 Cancel a check. Can be cancelled by the sender or recipient, or by anyone after expiration. Wraps [`CheckCancel`](https://xrpl.org/docs/references/protocol/transactions/types/checkcancel).
 
-```
+```bash
 xrpl check-cancel <check-id> [--prepare [--signers <n>]]
 ```
 
@@ -1054,7 +1054,7 @@ xrpl check-cancel <check-id> [--prepare [--signers <n>]]
 
 Create a time-based or condition-based XRP escrow. At least one of `--finish-after` or `--condition` is required. Wraps [`EscrowCreate`](https://xrpl.org/docs/references/protocol/transactions/types/escrowcreate).
 
-```
+```bash
 xrpl escrow-create --destination <address> --amount <xrp> [--finish-after <time>] [--cancel-after <time>] [--condition <hex>] [--tag <destination-tag>] [--prepare [--signers <n>]]
 ```
 
@@ -1071,7 +1071,7 @@ xrpl escrow-create --destination <address> --amount <xrp> [--finish-after <time>
 
 Complete an escrow and release funds to the destination. Wraps [`EscrowFinish`](https://xrpl.org/docs/references/protocol/transactions/types/escrowfinish).
 
-```
+```bash
 xrpl escrow-finish <owner> <offer-sequence> [--condition <hex>] [--fulfillment <hex>] [--prepare [--signers <n>]]
 ```
 
@@ -1086,7 +1086,7 @@ xrpl escrow-finish <owner> <offer-sequence> [--condition <hex>] [--fulfillment <
 
 Cancel an expired escrow and return funds to the sender. The escrow's `CancelAfter` time must have passed. Wraps [`EscrowCancel`](https://xrpl.org/docs/references/protocol/transactions/types/escrowcancel).
 
-```
+```bash
 xrpl escrow-cancel <owner> <offer-sequence> [--prepare [--signers <n>]]
 ```
 
@@ -1101,7 +1101,7 @@ xrpl escrow-cancel <owner> <offer-sequence> [--prepare [--signers <n>]]
 
 Create a payment channel (XRP only). Wraps [`PaymentChannelCreate`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelcreate).
 
-```
+```bash
 xrpl channel-create --destination <address> --amount <xrp> --settle-delay <seconds> --public-key <hex> [--cancel-after <ripple-time>] [--tag <destination-tag>] [--prepare [--signers <n>]]
 ```
 
@@ -1118,7 +1118,7 @@ xrpl channel-create --destination <address> --amount <xrp> --settle-delay <secon
 
 Add XRP to an existing payment channel. Wraps [`PaymentChannelFund`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelfund).
 
-```
+```bash
 xrpl channel-fund <channel-id> --amount <xrp> [--expiration <ripple-time>] [--prepare [--signers <n>]]
 ```
 
@@ -1132,7 +1132,7 @@ xrpl channel-fund <channel-id> --amount <xrp> [--expiration <ripple-time>] [--pr
 
 Claim XRP from a payment channel, or request to close it. Wraps [`PaymentChannelClaim`](https://xrpl.org/docs/references/protocol/transactions/types/paymentchannelclaim).
 
-```
+```bash
 xrpl channel-claim <channel-id> [--balance <xrp>] [--amount <xrp>] [--signature <hex>] [--public-key <hex>] [--close] [--renew] [--prepare [--signers <n>]]
 ```
 
@@ -1150,7 +1150,7 @@ xrpl channel-claim <channel-id> [--balance <xrp>] [--amount <xrp>] [--signature 
 
 Verify a payment channel claim's signature. Wraps [`channel_verify`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/payment-channel-methods/channel_verify).
 
-```
+```bash
 xrpl channel-verify <channel-id> --amount <xrp> --signature <hex> --public-key <hex>
 ```
 
@@ -1169,7 +1169,7 @@ Commands for working with Non-Fungible Tokens. Requires amendment: **NonFungible
 
 Mint an NFT. Wraps [`NFTokenMint`](https://xrpl.org/docs/references/protocol/transactions/types/nftokenmint).
 
-```
+```bash
 xrpl nft-mint --taxon <taxon> [--uri <uri>] [--transfer-fee <fee>] [--issuer <address>] [--amount <amount> --amount-token <token>] [--destination <address>] [--expiration <ripple-time>] [--burnable] [--only-xrp] [--trust-line] [--transferable] [--mutable] [--prepare [--signers <n>]]
 ```
 
@@ -1193,7 +1193,7 @@ xrpl nft-mint --taxon <taxon> [--uri <uri>] [--transfer-fee <fee>] [--issuer <ad
 
 Burn an NFT. The signer must be the NFT owner or the issuer (if `tfBurnable` was set at mint). Wraps [`NFTokenBurn`](https://xrpl.org/docs/references/protocol/transactions/types/nftokenburn).
 
-```
+```bash
 xrpl nft-burn <nft-id> [--owner <address>] [--prepare [--signers <n>]]
 ```
 
@@ -1206,7 +1206,7 @@ xrpl nft-burn <nft-id> [--owner <address>] [--prepare [--signers <n>]]
 
 Create an offer to buy or sell an NFT. By default creates a buy offer; use `--sell` for a sell offer. Wraps [`NFTokenCreateOffer`](https://xrpl.org/docs/references/protocol/transactions/types/nftokencreateoffer).
 
-```
+```bash
 xrpl nft-offer-create <nft-id> --amount <amount> --token <token> [--sell] [--owner <address>] [--destination <address>] [--expiration <iso-time>] [--prepare [--signers <n>]]
 ```
 
@@ -1224,7 +1224,7 @@ xrpl nft-offer-create <nft-id> --amount <amount> --token <token> [--sell] [--own
 
 Accept an offer to buy or sell an NFT. Provide one of `--buy-offer` / `--sell-offer`, or both for brokered mode. Wraps [`NFTokenAcceptOffer`](https://xrpl.org/docs/references/protocol/transactions/types/nftokenacceptoffer).
 
-```
+```bash
 xrpl nft-offer-accept [--buy-offer <offer-id>] [--sell-offer <offer-id>] [--broker-fee-amount <amount> --broker-fee-token <token>] [--prepare [--signers <n>]]
 ```
 
@@ -1239,7 +1239,7 @@ xrpl nft-offer-accept [--buy-offer <offer-id>] [--sell-offer <offer-id>] [--brok
 
 Cancel one or more NFT offers you own. Wraps [`NFTokenCancelOffer`](https://xrpl.org/docs/references/protocol/transactions/types/nftokencanceloffer).
 
-```
+```bash
 xrpl nft-offer-cancel <offer-id>... [--prepare [--signers <n>]]
 ```
 
@@ -1251,7 +1251,7 @@ xrpl nft-offer-cancel <offer-id>... [--prepare [--signers <n>]]
 
 Get buy offers for an NFT. Wraps [`nft_buy_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/nft_buy_offers).
 
-```
+```bash
 xrpl nft-buy-offers <nft-id> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -1266,7 +1266,7 @@ xrpl nft-buy-offers <nft-id> [--limit <n>] [--marker <marker>] [--ledger-index <
 
 Get sell offers for an NFT. Wraps [`nft_sell_offers`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/path-and-order-book-methods/nft_sell_offers).
 
-```
+```bash
 xrpl nft-sell-offers <nft-id> [--limit <n>] [--marker <marker>] [--ledger-index <index>]
 ```
 
@@ -1285,7 +1285,7 @@ Requires amendment: **Clawback**.
 
 Claw back tokens from a holder. For IOUs, the signer must be the token issuer and must have enabled `lsfAllowTrustLineClawback`. For MPTs, the issuer must have set `tfMPTCanClawback` at creation. Wraps [`Clawback`](https://xrpl.org/docs/references/protocol/transactions/types/clawback).
 
-```
+```bash
 xrpl clawback --amount <amount> --token <token> [--holder <address>] [--prepare [--signers <n>]]
 ```
 
@@ -1322,7 +1322,7 @@ xrpl multisign-submit --files sig1.json sig2.json sig3.json
 
 Add a signer's signature to a transaction for multi-signing. The transaction must have `SigningPubKey: ""` (set automatically by `--prepare` and `build`). Uses `Wallet.sign(tx, multisign)` under the hood.
 
-```
+```bash
 xrpl multisign [<tx-json>] --account <multisig-account> [--file <path>]
 ```
 
@@ -1338,7 +1338,7 @@ Returns the transaction with this signer's entry added to the `Signers` array.
 
 Combine multiple individually-signed transactions into a single submittable blob.
 
-```
+```bash
 xrpl multisign-combine [<signed-tx-json>...] [--files <path>...]
 ```
 
@@ -1353,7 +1353,7 @@ Merges all `Signers` arrays, sorts them by account address (as required by the p
 
 Combine signatures and submit in one step.
 
-```
+```bash
 xrpl multisign-submit [<signed-tx-json>...] [--files <path>...] [--fail-hard]
 ```
 
@@ -1369,7 +1369,7 @@ xrpl multisign-submit [<signed-tx-json>...] [--files <path>...] [--fail-hard]
 
 Generate a new random XRPL keypair. The account must be funded before it exists on the ledger.
 
-```
+```bash
 xrpl wallet generate [--algorithm <ed25519|secp256k1>]
 ```
 
@@ -1383,7 +1383,7 @@ Outputs address, public key, private key, and seed.
 
 Derive a wallet from an existing seed (e.g. `sEdV...`).
 
-```
+```bash
 xrpl wallet from-seed <seed> [--algorithm <ed25519|secp256k1>]
 ```
 
@@ -1396,7 +1396,7 @@ xrpl wallet from-seed <seed> [--algorithm <ed25519|secp256k1>]
 
 Derive a wallet from raw entropy (16 bytes).
 
-```
+```bash
 xrpl wallet from-entropy <hex-entropy> [--algorithm <ed25519|secp256k1>]
 ```
 
@@ -1409,7 +1409,7 @@ xrpl wallet from-entropy <hex-entropy> [--algorithm <ed25519|secp256k1>]
 
 Fund a wallet using the testnet/devnet faucet. Only works on testnet and devnet. If no account is specified, generates a new wallet and funds it.
 
-```
+```bash
 xrpl wallet fund [--account <account>] [--amount <amount>] [--faucet-host <host>] [--faucet-path <path>]
 ```
 
@@ -1426,7 +1426,7 @@ xrpl wallet fund [--account <account>] [--amount <amount>] [--faucet-host <host>
 
 Convert an XRP amount to drops (1 XRP = 1,000,000 drops). Offline.
 
-```
+```bash
 xrpl xrp-to-drops <amount>
 ```
 
@@ -1443,7 +1443,7 @@ xrpl xrp-to-drops 1.5
 
 Convert drops to XRP. Offline.
 
-```
+```bash
 xrpl drops-to-xrp <drops>
 ```
 
@@ -1460,7 +1460,7 @@ xrpl drops-to-xrp 1500000
 
 Convert between XRPL epoch timestamps (seconds since 2000-01-01T00:00:00Z) and ISO 8601. Offline.
 
-```
+```bash
 xrpl ripple-time --to-iso <ripple-timestamp>
 xrpl ripple-time --to-ripple <iso-time>
 ```
@@ -1478,7 +1478,7 @@ Exactly one of `--to-iso` or `--to-ripple` is required.
 
 Validate and decode an XRPL address. Supports both classic r-addresses and X-addresses. Offline.
 
-```
+```bash
 xrpl address-info <address>
 ```
 
@@ -1487,6 +1487,7 @@ xrpl address-info <address>
 | `<address>` | `string` | required | Classic r-address or X-address to inspect |
 
 Outputs:
+
 - Whether the address is valid
 - Address type: classic (`r...`) or X-address (`X...` / `T...`)
 - Account ID (hex)
@@ -1511,7 +1512,7 @@ xrpl address-info X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqh
 
 Convert a UTF-8 string to hex. Useful for memos, domains, and MPT metadata. Offline.
 
-```
+```bash
 xrpl to-hex <string>
 ```
 
@@ -1528,7 +1529,7 @@ xrpl to-hex "interchain_transfer"
 
 Convert hex to a UTF-8 string. Useful for reading memos, domains, and metadata from raw ledger data. Offline.
 
-```
+```bash
 xrpl from-hex <hex>
 ```
 
@@ -1545,7 +1546,7 @@ xrpl from-hex 696E746572636861696E5F7472616E73666572
 
 Decode a raw transaction blob into readable JSON. Uses `ripple-binary-codec` under the hood. Offline — does not require a network connection.
 
-```
+```bash
 xrpl decode-tx <tx-blob>
 ```
 
@@ -1557,7 +1558,7 @@ xrpl decode-tx <tx-blob>
 
 Send a raw WebSocket API request. This is the escape hatch for any API method not covered by a dedicated command.
 
-```
+```bash
 xrpl rpc <method> [<params>]
 ```
 
@@ -1575,7 +1576,7 @@ xrpl rpc vault_info '{"vault_id": "..."}'
 
 Subscribe to ledger events via WebSocket and print them as they arrive. Runs until interrupted (Ctrl+C). Wraps [`subscribe`](https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/subscription-methods/subscribe).
 
-```
+```bash
 xrpl subscribe [--streams <stream>...] [--accounts <address>...]
 ```
 
@@ -1600,7 +1601,7 @@ Confirm connectivity with the server. Takes no options.
 
 Generate shell completion scripts. Offline.
 
-```
+```bash
 xrpl completions <bash|zsh|fish>
 ```
 
@@ -1789,6 +1790,7 @@ pnpm test:e2e       # Run E2E tests against testnet (requires network access)
 ```
 
 **Unit tests** (fast, no network, run on every commit):
+
 - Token notation parsing (XRP, IOU with standard/hex currency codes, MPT)
 - Memo encoding (UTF-8, `hex:` prefix, mixed, edge cases)
 - Fee calculation for multi-signing
@@ -1797,6 +1799,7 @@ pnpm test:e2e       # Run E2E tests against testnet (requires network access)
 - Response formatting (human-readable vs `--json`)
 
 **E2E tests** (against testnet/devnet, run on PR/nightly):
+
 - Each E2E test funds fresh accounts via faucet to avoid interference
 - Tests are grouped by feature and can run in parallel (each uses its own accounts)
 - Devnet is used for amendment-gated features (MPTs, AMMs if needed)
@@ -1805,7 +1808,7 @@ pnpm test:e2e       # Run E2E tests against testnet (requires network access)
 
 ### Project Structure
 
-```
+```text
 src/
 ├── index.ts              # Entry point, registers all commands
 ├── commands/
