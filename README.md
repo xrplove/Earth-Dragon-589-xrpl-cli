@@ -1727,70 +1727,70 @@ xrpl rpc server_state
 
 Project setup, zero commands. Everything else builds on this.
 
-- [ ] Init TypeScript project (`tsconfig.json`, `package.json` with `bin` entry, ESLint, Prettier)
-- [ ] CLI framework setup ([Commander.js](https://github.com/tj/commander.js) or [yargs](https://yargs.js.org/))
-- [ ] Global options parsing (`--network`, `--rpc-url`, `--seed`, `--keyfile`, `--json`, `--quiet`, `--yes`)
-- [ ] XRPL client wrapper: connect/disconnect lifecycle, default RPC URLs per network
-- [ ] Wallet loading from `--seed`, `--keyfile`, `XRPL_SEED` env var
-- [ ] Config file loader (`~/.xrplrc` TOML parsing, alias resolution)
-- [ ] Token notation parser: `XRP` → drops, `CUR.rIssuer` → `{currency, issuer, value}`, `mpt:<id>` → `{mpt_issuance_id, value}`
-- [ ] Memo parser: UTF-8 auto hex-encoding, `hex:` prefix passthrough
-- [ ] Shared transaction flags: `--prepare`, `--signers`, `--memo`, `--ticket`
-- [ ] Output formatting: human-readable default, `--json` for structured output
-- [ ] Exit code handling (0–5)
-- [ ] **Unit tests**: token parser (all three types, edge cases for hex currency codes), memo parser (UTF-8, `hex:`, mixed, `0x`-prefixed data), config file parsing, alias resolution
+- [x] Init TypeScript project (`tsconfig.json`, `package.json` with `bin` entry, ESLint, Prettier)
+- [x] CLI framework setup ([Commander.js](https://github.com/tj/commander.js) or [yargs](https://yargs.js.org/))
+- [x] Global options parsing (`--network`, `--rpc-url`, `--seed`, `--keyfile`, `--json`, `--quiet`, `--yes`)
+- [x] XRPL client wrapper: connect/disconnect lifecycle, default RPC URLs per network
+- [x] Wallet loading from `--seed`, `--keyfile`, `XRPL_SEED` env var
+- [x] Config file loader (`~/.xrplrc` TOML parsing, alias resolution)
+- [x] Token notation parser: `XRP` → drops, `CUR.rIssuer` → `{currency, issuer, value}`, `mpt:<id>` → `{mpt_issuance_id, value}`
+- [x] Memo parser: UTF-8 auto hex-encoding, `hex:` prefix passthrough
+- [x] Shared transaction flags: `--prepare`, `--signers`, `--memo`, `--ticket`
+- [x] Output formatting: human-readable default, `--json` for structured output
+- [x] Exit code handling (0–5)
+- [x] **Unit tests**: token parser (all three types, edge cases for hex currency codes), memo parser (UTF-8, `hex:`, mixed, `0x`-prefixed data), config file parsing, alias resolution
 
 ### Phase 1: Read-Only Core
 
 Queries that don't require a wallet. This lets you start using the tool immediately.
 
-- [ ] `balance`
-- [ ] `account-info` (+ `info` alias)
-- [ ] `account-objects` (+ `objects` alias)
-- [ ] `account-lines` (+ `lines` alias)
-- [ ] `account-offers` (+ `offers` alias)
-- [ ] `account-tx`
-- [ ] `nonce`
-- [ ] `tx`
-- [ ] `ledger`
-- [ ] `ledger-index`
-- [ ] `fee`
-- [ ] `server-info`
-- [ ] `amendments`
-- [ ] `account-nfts` (+ `nfts` alias)
-- [ ] `rpc` (the raw escape hatch — unblocks all queries immediately)
-- [ ] `ping`
-- [ ] **Unit tests**: response formatting, `--json` output shape, alias routing
+- [x] `balance`
+- [x] `account-info` (+ `info` alias)
+- [x] `account-objects` (+ `objects` alias)
+- [x] `account-lines` (+ `lines` alias)
+- [x] `account-offers` (+ `offers` alias)
+- [x] `account-tx`
+- [x] `nonce`
+- [x] `tx`
+- [x] `ledger`
+- [x] `ledger-index`
+- [x] `fee`
+- [x] `server-info`
+- [x] `amendments`
+- [x] `account-nfts` (+ `nfts` alias)
+- [x] `rpc` (the raw escape hatch — unblocks all queries immediately)
+- [x] `ping`
+- [x] **Unit tests**: response formatting, `--json` output shape, alias routing
 - [ ] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `amendments --enabled` returns non-empty list, `rpc server_info` round-trips correctly
 
 ### Phase 2: Wallet & Signing
 
 Key management and the signing pipeline. Required before any transaction commands.
 
-- [ ] `wallet generate`
-- [ ] `wallet from-seed`
-- [ ] `wallet from-entropy`
-- [ ] `wallet fund` (testnet/devnet faucet)
-- [ ] `sign` (sign tx JSON, output blob + hash)
-- [ ] `submit` (submit raw blob)
-- [ ] `build` (autofill + output unsigned JSON, `--signers` fee calculation)
-- [ ] `decode-tx`
-- [ ] **Unit tests**: wallet generation (both algorithms), seed derivation determinism, sign produces valid blob, `--signers` fee math
+- [x] `wallet generate`
+- [x] `wallet from-seed`
+- [x] `wallet from-entropy`
+- [x] `wallet fund` (testnet/devnet faucet)
+- [x] `sign` (sign tx JSON, output blob + hash)
+- [x] `submit` (submit raw blob)
+- [x] `build` (autofill + output unsigned JSON, `--signers` fee calculation)
+- [x] `decode-tx`
+- [x] **Unit tests**: wallet generation (both algorithms), seed derivation determinism, sign produces valid blob, `--signers` fee math
 - [ ] **E2E tests**: `wallet generate` → `wallet fund` on testnet → `balance` shows funded amount. `build Payment` → `sign` → `submit` round-trip on testnet
 
 ### Phase 3: Payments & Trust Lines
 
 The core transaction commands that most users need first.
 
-- [ ] `send` (+ `pay`, `payment` aliases) — XRP, IOU, and MPT paths
-- [ ] `send --prepare` / `--signers` for multisig preparation
-- [ ] `send --memo` with full memo parser integration
-- [ ] `trust-set` (+ `--prepare`)
-- [ ] `xrp-to-drops`, `drops-to-xrp`
-- [ ] `ripple-time`
-- [ ] `address-info`
-- [ ] `to-hex`, `from-hex`
-- [ ] **Unit tests**: `send` builds correct Payment JSON for XRP/IOU/MPT, memo encoding, `--prepare` sets `SigningPubKey: ""` and correct fee
+- [x] `send` (+ `pay`, `payment` aliases) — XRP, IOU, and MPT paths
+- [x] `send --prepare` / `--signers` for multisig preparation
+- [x] `send --memo` with full memo parser integration
+- [x] `trust-set` (+ `--prepare`)
+- [x] `xrp-to-drops`, `drops-to-xrp`
+- [x] `ripple-time`
+- [x] `address-info`
+- [x] `to-hex`, `from-hex`
+- [x] **Unit tests**: `send` builds correct Payment JSON for XRP/IOU/MPT, memo encoding, `--prepare` sets `SigningPubKey: ""` and correct fee
 - [ ] **E2E tests**: fund two testnet accounts, `send` XRP between them, verify `balance` changed. `trust-set` + `send` IOU. `send --memo` and verify memos in `tx` output
 
 ### Phase 4: Multi-Signing
@@ -1815,10 +1815,10 @@ Account configuration commands.
 - [ ] `deposit-preauth`
 - [ ] `ticket-create`
 - [ ] `tickets`
-- [ ] `account-channels` (+ `channels` alias)
-- [ ] `account-currencies` (+ `currencies` alias)
-- [ ] `gateway-balances`
-- [ ] `noripple-check`
+- [x] `account-channels` (+ `channels` alias)
+- [x] `account-currencies` (+ `currencies` alias)
+- [x] `gateway-balances`
+- [x] `noripple-check`
 - [ ] `completions`
 - [ ] **E2E tests**: `account-set --domain` → `account-info` shows domain. `ticket-create 5` → `tickets` lists them. `deposit-preauth --authorize` → `deposit-authorized` confirms
 
