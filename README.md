@@ -11,6 +11,33 @@ $ xrpl --help
 > [!WARNING]
 > This project was vibe-coded and has **not** been audited. It is under active development — expect breaking changes. Use at your own risk, especially when signing transactions or handling seeds/keys. Always verify transactions before submitting to mainnet.
 
+## Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Quick Start](#quick-start)
+  - [Global Options](#global-options)
+  - [Token Notation](#token-notation)
+- [Commands](#commands)
+- [Configuration](#configuration)
+  - [Environment Variables](#environment-variables)
+  - [Configuration File](#configuration-file)
+  - [Exit Codes](#exit-codes)
+  - [Shell Completions](#shell-completions)
+- [Amendments](#amendments)
+- [Protocol Coverage](#protocol-coverage)
+- [Examples](#examples)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Building](#building)
+  - [Testing](#testing)
+  - [Project Structure](#project-structure)
+  - [Code Style](#code-style)
+- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+- [License](#license)
+
 ## Installation
 
 ```bash
