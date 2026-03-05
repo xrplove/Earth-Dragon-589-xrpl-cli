@@ -6,7 +6,7 @@ async function fundWallet() {
 	return { seed: result.seed as string, address: result.address as string };
 }
 
-describe("e2e: NFTs (Phase 9)", () => {
+describe("e2e: NFTs", () => {
 	it("mint NFT → account-nfts lists it → sell offer → accept → ownership transferred", async () => {
 		const minter = await fundWallet();
 		const buyer = await fundWallet();
@@ -86,7 +86,7 @@ describe("e2e: NFTs (Phase 9)", () => {
 	}, 180_000);
 });
 
-describe("e2e: AMMs (Phase 9)", () => {
+describe("e2e: AMMs", () => {
 	it("amm-create → amm-info shows pool", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();

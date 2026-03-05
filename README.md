@@ -1892,7 +1892,7 @@ The full multi-signing pipeline.
 - [x] `multisign-combine`
 - [x] `multisign-submit`
 - [x] **Unit tests**: `multisign` adds correct `Signers` entry, `multisign-combine` merges and sorts by address, fee validation
-- [ ] **E2E tests**: set up a 2-of-3 multisig on testnet, `send --prepare --signers 2` → `multisign` with two signers → `multisign-submit`, verify transaction succeeded
+- [x] **E2E tests**: set up a 2-of-3 multisig on testnet, `send --prepare --signers 2` → `multisign` with two signers → `multisign-submit`, verify transaction succeeded
 
 ### Phase 5: Account Management
 

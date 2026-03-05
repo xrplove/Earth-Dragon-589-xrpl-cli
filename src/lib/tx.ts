@@ -125,7 +125,13 @@ export function loadWalletForTx(
 	txOpts: TxOptions,
 	globalOpts: GlobalOptions,
 ): Wallet | null {
-	return txOpts.prepare || txOpts.signers != null
-		? null
-		: loadWallet(globalOpts);
+	if (txOpts.prepare || txOpts.signers != null) {
+		// Still load wallet to derive Account, but don't require it
+		try {
+			return loadWallet(globalOpts);
+		} catch {
+			return null;
+		}
+	}
+	return loadWallet(globalOpts);
 }

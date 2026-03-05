@@ -9,7 +9,7 @@ async function fundWallet() {
 	return { seed: result.seed as string, address: result.address as string };
 }
 
-describe("e2e: payments & trust lines (Phase 3)", () => {
+describe("e2e: payments & trust lines", () => {
 	it("send XRP between two accounts and verify balance changed", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
@@ -105,7 +105,7 @@ describe("e2e: payments & trust lines (Phase 3)", () => {
 	}, 60_000);
 });
 
-describe("e2e: account management (Phase 5)", () => {
+describe("e2e: account management", () => {
 	it("account-set --domain and verify via account-info", async () => {
 		const account = await fundWallet();
 

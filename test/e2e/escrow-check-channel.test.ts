@@ -6,7 +6,7 @@ async function fundWallet() {
 	return { seed: result.seed as string, address: result.address as string };
 }
 
-describe("e2e: Escrows, Checks, Payment Channels (Phase 8)", () => {
+describe("e2e: escrows, checks, payment channels", () => {
 	it("escrow-create with --finish-after, wait, escrow-finish releases funds", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();

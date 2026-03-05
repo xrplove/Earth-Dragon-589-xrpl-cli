@@ -11,7 +11,7 @@ async function fundWallet() {
 	return { seed: result.seed as string, address: result.address as string };
 }
 
-describe("e2e: MPTs (Phase 7)", () => {
+describe("e2e: MPTs", () => {
 	it("full MPT lifecycle: create → authorize → send → destroy", async () => {
 		const issuer = await fundWallet();
 		const holder = await fundWallet();

@@ -9,7 +9,7 @@ async function fundWallet() {
 	return { seed: result.seed as string, address: result.address as string };
 }
 
-describe("e2e: DEX (Phase 6)", () => {
+describe("e2e: DEX", () => {
 	it("offer-create, account-offers shows it, offer-cancel removes it", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();
