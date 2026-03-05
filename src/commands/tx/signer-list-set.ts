@@ -1,11 +1,13 @@
 import type { Command } from "commander";
 import type { Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
-import { output } from "../../lib/output.js";
 import { signerEntry } from "../../lib/schemas.js";
-import { submitOrPrepare } from "../../lib/tx.js";
+import {
+	loadWalletForTx,
+	outputResult,
+	submitOrPrepare,
+} from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-import { loadWallet } from "../../lib/wallet.js";
 
 interface SignerListSetOpts extends TxOptions {
 	quorum: number;
@@ -16,7 +18,7 @@ async function setSignerList(
 	opts: SignerListSetOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = opts.prepare ? null : loadWallet(globalOpts);
+	const wallet = loadWalletForTx(opts, globalOpts);
 	const signerEntries = opts.signer.map((s) => signerEntry.parse(s));
 
 	const tx: Transaction = {
@@ -32,8 +34,8 @@ async function setSignerList(
 				"Account is required in --prepare mode. Use --seed, --keyfile, or set XRPL_SEED.",
 			);
 		}
-		const result = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
-		output(result.mode === "prepared" ? result.tx : result.result, globalOpts);
+		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
+		outputResult(outcome, globalOpts);
 	});
 }
 
@@ -48,18 +50,9 @@ export function registerSignerListSet(program: Command) {
 			(val: string, prev: string[]) => [...prev, val],
 			[] as string[],
 		)
-		.option(
-			"--prepare",
-			"Output unsigned transaction JSON instead of submitting",
-			false,
-		)
+		.option("--prepare", "Output unsigned JSON instead of submitting", false)
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option(
-			"--memo <memo>",
-			"Attach memo (repeatable)",
-			(val: string, prev: string[]) => [...prev, val],
-			[] as string[],
-		)
+		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
 		.option("--ticket <seq>", "Use a ticket instead of sequence number", Number)
 		.action((opts: SignerListSetOpts) =>
 			setSignerList(opts, program.opts() as GlobalOptions),

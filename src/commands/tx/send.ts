@@ -2,11 +2,13 @@ import type { Command } from "commander";
 import type { Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
-import { output } from "../../lib/output.js";
 import { parseToken, toXrplAmount } from "../../lib/tokens.js";
-import { submitOrPrepare } from "../../lib/tx.js";
+import {
+	loadWalletForTx,
+	outputResult,
+	submitOrPrepare,
+} from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-import { loadWallet } from "../../lib/wallet.js";
 
 const TF_PARTIAL_PAYMENT = 0x00020000;
 const TF_NO_RIPPLE_DIRECT = 0x00010000;
@@ -36,27 +38,17 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 		Amount: toXrplAmount(token, opts.amount),
 	};
 
-	if (opts.tag != null) {
-		tx.DestinationTag = opts.tag;
-	}
-
+	if (opts.tag != null) tx.DestinationTag = opts.tag;
 	if (opts.sendMax) {
 		const sendMaxToken = parseToken(opts.sendMax[1]);
 		tx.SendMax = toXrplAmount(sendMaxToken, opts.sendMax[0]);
 	}
-
 	if (opts.deliverMin) {
 		const deliverMinToken = parseToken(opts.deliverMin[1]);
 		tx.DeliverMin = toXrplAmount(deliverMinToken, opts.deliverMin[0]);
 	}
-
-	if (opts.paths) {
-		tx.Paths = JSON.parse(opts.paths);
-	}
-
-	if (opts.invoiceId) {
-		tx.InvoiceID = opts.invoiceId;
-	}
+	if (opts.paths) tx.Paths = JSON.parse(opts.paths);
+	if (opts.invoiceId) tx.InvoiceID = opts.invoiceId;
 
 	let flags = 0;
 	if (opts.partial) flags |= TF_PARTIAL_PAYMENT;
@@ -64,8 +56,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	if (opts.limitQuality) flags |= TF_LIMIT_QUALITY;
 	if (flags) tx.Flags = flags;
 
-	const wallet =
-		opts.prepare || opts.signers != null ? null : loadWallet(globalOpts);
+	const wallet = loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(
@@ -75,11 +66,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 			opts,
 			globalOpts,
 		);
-		if (outcome.mode === "prepared") {
-			output(outcome.tx, globalOpts);
-		} else {
-			output(outcome.result, globalOpts);
-		}
+		outputResult(outcome, globalOpts);
 	});
 }
 

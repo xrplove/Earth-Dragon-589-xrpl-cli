@@ -1,23 +1,9 @@
-import { readFileSync } from "node:fs";
 import type { Command } from "commander";
-import type { Transaction } from "xrpl";
 import { decode } from "xrpl";
 import { output } from "../../lib/output.js";
+import { readTx } from "../../lib/tx-input.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
-
-function readTx(
-	txJson: string | undefined,
-	file: string | undefined,
-): Transaction {
-	if (file) {
-		return JSON.parse(readFileSync(file, "utf-8"));
-	}
-	if (txJson) {
-		return JSON.parse(txJson);
-	}
-	throw new Error("Provide transaction JSON as an argument or use --file.");
-}
 
 async function multisignTransaction(
 	txJson: string | undefined,

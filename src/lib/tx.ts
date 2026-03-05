@@ -1,8 +1,9 @@
 import type { Client, Transaction, Wallet } from "xrpl";
 import { parseMemos } from "./memo.js";
-import { info } from "./output.js";
+import { info, output } from "./output.js";
 import type { GlobalOptions, TxOptions } from "./types.js";
 import { EXIT_CODES } from "./types.js";
+import { loadWallet } from "./wallet.js";
 
 export async function calcSignersFee(
 	client: Client,
@@ -89,4 +90,17 @@ export async function submitOrPrepare(
 	}
 
 	return { mode: "submitted", result: response.result };
+}
+
+export function outputResult(outcome: TxOutcome, globalOpts: GlobalOptions) {
+	output(outcome.mode === "prepared" ? outcome.tx : outcome.result, globalOpts);
+}
+
+export function loadWalletForTx(
+	txOpts: TxOptions,
+	globalOpts: GlobalOptions,
+): Wallet | null {
+	return txOpts.prepare || txOpts.signers != null
+		? null
+		: loadWallet(globalOpts);
 }

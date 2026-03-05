@@ -1,13 +1,15 @@
 import type { Command } from "commander";
 import type { Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
-import { output } from "../../lib/output.js";
-import { submitOrPrepare } from "../../lib/tx.js";
+import {
+	loadWalletForTx,
+	outputResult,
+	submitOrPrepare,
+} from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
-import { loadWallet } from "../../lib/wallet.js";
 
 async function deleteSignerList(opts: TxOptions, globalOpts: GlobalOptions) {
-	const wallet = opts.prepare ? null : loadWallet(globalOpts);
+	const wallet = loadWalletForTx(opts, globalOpts);
 
 	const tx: Transaction = {
 		TransactionType: "SignerListSet",
@@ -22,8 +24,8 @@ async function deleteSignerList(opts: TxOptions, globalOpts: GlobalOptions) {
 				"Account is required in --prepare mode. Use --seed, --keyfile, or set XRPL_SEED.",
 			);
 		}
-		const result = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
-		output(result.mode === "prepared" ? result.tx : result.result, globalOpts);
+		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);
+		outputResult(outcome, globalOpts);
 	});
 }
 
@@ -31,18 +33,9 @@ export function registerSignerListDelete(program: Command) {
 	program
 		.command("signer-list-delete")
 		.description("Remove the signer list from an account")
-		.option(
-			"--prepare",
-			"Output unsigned transaction JSON instead of submitting",
-			false,
-		)
+		.option("--prepare", "Output unsigned JSON instead of submitting", false)
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
-		.option(
-			"--memo <memo>",
-			"Attach memo (repeatable)",
-			(val: string, prev: string[]) => [...prev, val],
-			[] as string[],
-		)
+		.option("--memo <memo...>", "Memo in type:data format (repeatable)")
 		.option("--ticket <seq>", "Use a ticket instead of sequence number", Number)
 		.action((opts: TxOptions) =>
 			deleteSignerList(opts, program.opts() as GlobalOptions),
