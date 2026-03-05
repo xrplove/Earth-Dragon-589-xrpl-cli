@@ -1,11 +1,11 @@
 import { Command } from "commander";
-import { registerAccountCommands } from "./commands/account.js";
+import { registerAccountCommands } from "./commands/account/index.js";
 import { registerLedgerCommands } from "./commands/ledger.js";
 import { registerSendCommand } from "./commands/send.js";
-import { registerSigningCommands } from "./commands/signing.js";
+import { registerSigningCommands } from "./commands/signing/index.js";
 import { registerTrustSetCommand } from "./commands/trust-set.js";
-import { registerUtilityCommands } from "./commands/utility.js";
-import { registerWalletCommands } from "./commands/wallet.js";
+import { registerUtilityCommands } from "./commands/utility/index.js";
+import { registerWalletCommands } from "./commands/wallet/index.js";
 import { loadConfig } from "./lib/config.js";
 import { EXIT_CODES } from "./lib/types.js";
 
