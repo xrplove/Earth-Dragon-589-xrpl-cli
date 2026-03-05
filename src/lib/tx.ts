@@ -8,7 +8,7 @@ import type {
 	Wallet,
 } from "xrpl";
 import { parseMemos } from "./memo.js";
-import { info, output } from "./output.js";
+import { highlightJson, info, output } from "./output.js";
 import type { GlobalOptions, TxOptions } from "./types.js";
 import { EXIT_CODES } from "./types.js";
 import { loadWallet } from "./wallet.js";
@@ -103,7 +103,10 @@ export async function submitOrPrepare(
 	}
 
 	if (!globalOpts.yes) {
-		info(`\n${JSON.stringify(autofilled, null, 2)}\n`, globalOpts);
+		info(
+			`\n${highlightJson(JSON.stringify(autofilled, null, 2))}\n`,
+			globalOpts,
+		);
 		const confirmed = await confirm("Submit this transaction?");
 		if (!confirmed) {
 			process.exit(0);
@@ -136,7 +139,7 @@ function confirm(question: string): Promise<boolean> {
 		output: process.stderr,
 	});
 	return new Promise((resolve) => {
-		rl.question(`${question} (y/N) `, (answer) => {
+		rl.question(`${question} (\x1b[32my\x1b[0m/\x1b[31mN\x1b[0m) `, (answer) => {
 			rl.close();
 			resolve(answer.trim().toLowerCase() === "y");
 		});
