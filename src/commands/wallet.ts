@@ -2,7 +2,7 @@ import type { Command } from "commander";
 import { type ECDSA, Wallet } from "xrpl";
 import { withClient } from "../lib/client.js";
 import { output } from "../lib/output.js";
-import type { GlobalOptions } from "../lib/types.js";
+import { BASE_RESERVE_XRP, type GlobalOptions } from "../lib/types.js";
 
 const ALGORITHMS: Record<string, ECDSA> = {
 	ed25519: "ed25519" as ECDSA,
@@ -142,7 +142,9 @@ export function registerWalletCommands(program: Command) {
 								TransactionType: "Payment",
 								Account: result.wallet.address,
 								Destination: opts.account,
-								Amount: String(Math.floor((result.balance - 10) * 1_000_000)),
+								Amount: String(
+									Math.floor((result.balance - BASE_RESERVE_XRP) * 1_000_000),
+								),
 							},
 							{ autofill: true, wallet: result.wallet },
 						);

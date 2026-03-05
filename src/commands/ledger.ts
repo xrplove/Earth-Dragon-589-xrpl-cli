@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { withClient } from "../lib/client.js";
 import { output } from "../lib/output.js";
+import { parseLedgerIndex } from "../lib/parsing.js";
 import type { GlobalOptions } from "../lib/types.js";
 
 export function registerLedgerCommands(program: Command) {
@@ -28,12 +29,7 @@ export function registerLedgerCommands(program: Command) {
 					if (opts.hash) {
 						req.ledger_hash = opts.hash;
 					} else {
-						const idx = opts.index;
-						if (["validated", "closed", "current"].includes(idx)) {
-							req.ledger_index = idx;
-						} else {
-							req.ledger_index = Number(idx);
-						}
+						req.ledger_index = parseLedgerIndex(opts.index);
 					}
 					const resp = await client.request(req as never);
 					output(resp.result, globalOpts);

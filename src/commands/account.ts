@@ -2,6 +2,7 @@ import type { Command } from "commander";
 import { withClient } from "../lib/client.js";
 import { loadConfig, resolveAlias } from "../lib/config.js";
 import { output } from "../lib/output.js";
+import { parseLedgerIndex } from "../lib/parsing.js";
 import { parseToken } from "../lib/tokens.js";
 import type { GlobalOptions } from "../lib/types.js";
 
@@ -9,14 +10,6 @@ const { aliases } = loadConfig();
 
 function resolve(address: string): string {
 	return resolveAlias(address, aliases);
-}
-
-function parseLedgerIndex(value?: string): string | number | undefined {
-	if (value === undefined) return undefined;
-	if (["validated", "closed", "current"].includes(value)) return value;
-	const num = Number(value);
-	if (Number.isInteger(num) && num >= 0) return num;
-	return value;
 }
 
 export function registerAccountCommands(program: Command) {

@@ -4,6 +4,19 @@ import { info } from "./output.js";
 import type { GlobalOptions, TxOptions } from "./types.js";
 import { EXIT_CODES } from "./types.js";
 
+export async function calcSignersFee(
+	client: Client,
+	existingFee: string | undefined,
+	signers: number,
+): Promise<string> {
+	const baseFee = Number(
+		existingFee ??
+			(await client.request({ command: "fee" })).result.drops.base_fee ??
+			"10",
+	);
+	return String(baseFee * (signers + 1));
+}
+
 /**
  * Apply shared transaction options (--prepare, --signers, --memo, --ticket)
  * to a transaction object before signing/submitting.
@@ -39,12 +52,7 @@ export async function submitOrPrepare(
 	globalOpts: GlobalOptions,
 ): Promise<{ prepared?: Transaction; result?: unknown }> {
 	if (txOpts.signers != null) {
-		const baseFee = Number(
-			tx.Fee ??
-				(await client.request({ command: "fee" })).result.drops.base_fee ??
-				"10",
-		);
-		tx.Fee = String(baseFee * (txOpts.signers + 1));
+		tx.Fee = await calcSignersFee(client, tx.Fee, txOpts.signers);
 	}
 
 	const autofilled = await client.autofill(tx);

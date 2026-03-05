@@ -1,5 +1,5 @@
 import { Client } from "xrpl";
-import type { GlobalOptions, Network } from "./types.js";
+import type { GlobalOptions } from "./types.js";
 import { RPC_URLS } from "./types.js";
 
 const VALID_NETWORKS = new Set<string>(["mainnet", "testnet", "devnet"]);
@@ -26,8 +26,4 @@ export async function withClient<T>(
 	} finally {
 		await client.disconnect();
 	}
-}
-
-export function getNetwork(opts: GlobalOptions): Network {
-	return opts.network;
 }

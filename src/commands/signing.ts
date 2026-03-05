@@ -3,6 +3,8 @@ import type { Command } from "commander";
 import { decode, type Transaction } from "xrpl";
 import { withClient } from "../lib/client.js";
 import { output } from "../lib/output.js";
+import { parseFields } from "../lib/parsing.js";
+import { calcSignersFee } from "../lib/tx.js";
 import type { GlobalOptions } from "../lib/types.js";
 import { loadWallet } from "../lib/wallet.js";
 
@@ -83,47 +85,18 @@ export function registerSigningCommands(program: Command) {
 			async (txType: string, opts: { signers?: number }, cmd: Command) => {
 				const globalOpts = program.opts() as GlobalOptions;
 
-				// Parse remaining unknown options as transaction fields
 				const rawArgs = cmd.parseOptions(cmd.args).unknown;
-
 				const fields: Record<string, unknown> = {
 					TransactionType: txType,
+					...parseFields(rawArgs),
 				};
 
-				// We need an Account for autofill — try from wallet
-				try {
-					const wallet = loadWallet(globalOpts);
-					fields.Account = wallet.address;
-				} catch {
-					// Account must be in the fields
-				}
-
-				// Parse --Key value pairs from unknown args
-				for (let i = 0; i < rawArgs.length; i++) {
-					const arg = rawArgs[i];
-					if (arg.startsWith("--")) {
-						const key = arg.slice(2);
-						const value = rawArgs[i + 1];
-						if (value === undefined || value.startsWith("--")) {
-							fields[key] = true;
-						} else {
-							// Parse JSON objects/arrays; keep everything else as strings
-							if (
-								value.startsWith("{") ||
-								value.startsWith("[") ||
-								value === "true" ||
-								value === "false"
-							) {
-								try {
-									fields[key] = JSON.parse(value);
-								} catch {
-									fields[key] = value;
-								}
-							} else {
-								fields[key] = value;
-							}
-							i++;
-						}
+				// Default Account from wallet if not explicitly provided
+				if (!fields.Account) {
+					try {
+						fields.Account = loadWallet(globalOpts).address;
+					} catch {
+						// Account must be in the fields
 					}
 				}
 
@@ -131,11 +104,7 @@ export function registerSigningCommands(program: Command) {
 					const tx = fields as unknown as Transaction;
 
 					if (opts.signers != null) {
-						const baseFee = Number(
-							(await client.request({ command: "fee" })).result.drops
-								.base_fee ?? "10",
-						);
-						tx.Fee = String(baseFee * (opts.signers + 1));
+						tx.Fee = await calcSignersFee(client, tx.Fee, opts.signers);
 					}
 
 					const autofilled = (await client.autofill(tx as never)) as Record<

@@ -23,6 +23,8 @@ export const RPC_URLS: Record<Network, string> = {
 	devnet: "wss://s.devnet.rippletest.net:51233",
 };
 
+export const BASE_RESERVE_XRP = 10;
+
 export const EXIT_CODES = {
 	SUCCESS: 0,
 	GENERAL_ERROR: 1,
