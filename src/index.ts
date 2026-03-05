@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import { ZodError } from "zod";
 import { registerAccountCommands } from "./commands/account/index.js";
 import { registerLedgerCommands } from "./commands/ledger.js";
 import { registerSigningCommands } from "./commands/signing/index.js";
@@ -45,8 +46,14 @@ async function main() {
 	try {
 		await program.parseAsync(process.argv);
 	} catch (err) {
-		const message = err instanceof Error ? err.message : String(err);
-		console.error(`Error: ${message}`);
+		if (err instanceof ZodError) {
+			for (const issue of err.issues) {
+				console.error(`Error: ${issue.message}`);
+			}
+		} else {
+			const message = err instanceof Error ? err.message : String(err);
+			console.error(`Error: ${message}`);
+		}
 		process.exit(EXIT_CODES.GENERAL_ERROR);
 	}
 }

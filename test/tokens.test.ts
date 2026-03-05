@@ -42,11 +42,11 @@ describe("parseToken", () => {
 	});
 
 	it("rejects completely invalid notation", () => {
-		expect(() => parseToken("nonsense")).toThrow("Invalid token notation");
+		expect(() => parseToken("nonsense")).toThrow("Invalid token");
 	});
 
 	it("rejects mpt with wrong length", () => {
-		expect(() => parseToken("mpt:ABC123")).toThrow("Invalid token notation");
+		expect(() => parseToken("mpt:ABC123")).toThrow("Invalid token");
 	});
 });
 

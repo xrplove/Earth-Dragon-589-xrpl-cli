@@ -2,6 +2,7 @@ import type { Command } from "commander";
 import type { Transaction } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
+import { signerEntry } from "../../lib/schemas.js";
 import { submitOrPrepare } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
@@ -11,28 +12,12 @@ interface SignerListSetOpts extends TxOptions {
 	signer: string[];
 }
 
-function parseSignerEntry(entry: string) {
-	const [address, weightStr] = entry.split(":");
-	if (!address || !weightStr) {
-		throw new Error(
-			`Invalid signer format: "${entry}". Expected <address>:<weight>.`,
-		);
-	}
-	const weight = Number(weightStr);
-	if (!Number.isInteger(weight) || weight < 1) {
-		throw new Error(
-			`Invalid signer weight: "${weightStr}". Must be a positive integer.`,
-		);
-	}
-	return { SignerEntry: { Account: address, SignerWeight: weight } };
-}
-
 async function setSignerList(
 	opts: SignerListSetOpts,
 	globalOpts: GlobalOptions,
 ) {
 	const wallet = opts.prepare ? null : loadWallet(globalOpts);
-	const signerEntries = opts.signer.map(parseSignerEntry);
+	const signerEntries = opts.signer.map((s) => signerEntry.parse(s));
 
 	const tx: Transaction = {
 		TransactionType: "SignerListSet",

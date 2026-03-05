@@ -1,4 +1,5 @@
 import { xrpToDrops } from "xrpl";
+import { tokenSpec } from "./schemas.js";
 
 export interface XrpAmount {
 	type: "xrp";
@@ -23,6 +24,8 @@ const MPT_RE = /^mpt:([0-9A-Fa-f]{48})$/;
 const IOU_RE = /^(.+)\.([r][1-9A-HJ-NP-Za-km-z]{24,34})$/;
 
 export function parseToken(token: string): ParsedToken {
+	tokenSpec.parse(token);
+
 	if (token.toUpperCase() === "XRP") {
 		return { type: "xrp" };
 	}

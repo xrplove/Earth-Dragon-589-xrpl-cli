@@ -1,9 +1,8 @@
+import { ledgerIndex } from "./schemas.js";
+
 export function parseLedgerIndex(value?: string): string | number | undefined {
 	if (value === undefined) return undefined;
-	if (["validated", "closed", "current"].includes(value)) return value;
-	const num = Number(value);
-	if (Number.isInteger(num) && num >= 0) return num;
-	return value;
+	return ledgerIndex.parse(value);
 }
 
 /**

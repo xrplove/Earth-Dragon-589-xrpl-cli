@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { Wallet } from "xrpl";
 import { output } from "../../lib/output.js";
+import { entropy } from "../../lib/schemas.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { formatWallet, parseAlgorithm } from "./shared.js";
 
@@ -9,9 +10,7 @@ async function deriveFromEntropy(
 	opts: { algorithm: string; masterAddress?: string },
 	globalOpts: GlobalOptions,
 ) {
-	if (!/^[0-9A-Fa-f]{32}$/.test(hexEntropy)) {
-		throw new Error("Entropy must be exactly 32 hex characters (16 bytes).");
-	}
+	entropy.parse(hexEntropy);
 	const pairs = hexEntropy.match(/.{2}/g) ?? [];
 	const bytes = Uint8Array.from(pairs.map((b) => Number.parseInt(b, 16)));
 	const w = Wallet.fromEntropy(bytes, {

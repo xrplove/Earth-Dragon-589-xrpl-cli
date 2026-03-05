@@ -29,7 +29,8 @@
 	"dependencies": {
 		"commander": "^14.0.3",
 		"smol-toml": "^1.6.0",
-		"xrpl": "^4.6.0"
+		"xrpl": "^4.6.0",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.5",
