@@ -3,6 +3,7 @@ import { xrpToDrops } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
+import { validateHex64, validateXrpAmount } from "../../lib/validate.js";
 
 interface ChannelVerifyOpts {
 	amount: string;
@@ -15,6 +16,9 @@ async function channelVerify(
 	opts: ChannelVerifyOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(channelId, "channel ID");
+	validateXrpAmount(opts.amount, "amount");
+
 	await withClient(globalOpts, async (client) => {
 		const resp = await client.request({
 			command: "channel_verify",

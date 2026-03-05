@@ -10,6 +10,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateOptionalRange } from "../../lib/validate.js";
 
 interface NftMintOpts extends TxOptions {
 	taxon: number;
@@ -28,6 +29,8 @@ interface NftMintOpts extends TxOptions {
 }
 
 async function nftMint(opts: NftMintOpts, globalOpts: GlobalOptions) {
+	validateOptionalRange(opts.transferFee, 0, 50000, "transfer-fee");
+
 	const tx: Omit<NFTokenMint, "Account"> = {
 		TransactionType: "NFTokenMint",
 		NFTokenTaxon: opts.taxon,

@@ -8,15 +8,14 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateRange } from "../../lib/validate.js";
 
 async function ticketCreate(
 	count: number,
 	opts: TxOptions,
 	globalOpts: GlobalOptions,
 ) {
-	if (count < 1 || count > 250 || !Number.isInteger(count)) {
-		throw new Error("Ticket count must be an integer between 1 and 250.");
-	}
+	validateRange(count, 1, 250, "ticket count");
 
 	const wallet = loadWalletForTx(opts, globalOpts);
 

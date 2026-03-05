@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateRange } from "../../lib/validate.js";
 
 interface AmmCreateOpts extends TxOptions {
 	amount1: string;
@@ -19,6 +20,8 @@ interface AmmCreateOpts extends TxOptions {
 }
 
 async function ammCreate(opts: AmmCreateOpts, globalOpts: GlobalOptions) {
+	validateRange(opts.tradingFee, 0, 1000, "trading-fee");
+
 	const tx: Omit<AMMCreate, "Account"> = {
 		TransactionType: "AMMCreate",
 		Amount: toXrplAmount(parseToken(opts.token1), opts.amount1) as Amount,

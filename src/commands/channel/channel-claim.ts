@@ -12,6 +12,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64, validateOptionalHex } from "../../lib/validate.js";
 
 interface ChannelClaimOpts extends TxOptions {
 	balance?: string;
@@ -27,6 +28,10 @@ async function channelClaim(
 	opts: ChannelClaimOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(channelId, "channel ID");
+	validateOptionalHex(opts.signature, "signature");
+	validateOptionalHex(opts.publicKey, "public-key");
+
 	const tx: Omit<PaymentChannelClaim, "Account"> = {
 		TransactionType: "PaymentChannelClaim",
 		Channel: channelId,

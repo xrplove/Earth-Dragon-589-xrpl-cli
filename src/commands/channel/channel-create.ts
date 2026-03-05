@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateXrpAmount } from "../../lib/validate.js";
 
 interface ChannelCreateOpts extends TxOptions {
 	destination: string;
@@ -20,6 +21,8 @@ interface ChannelCreateOpts extends TxOptions {
 }
 
 async function channelCreate(opts: ChannelCreateOpts, globalOpts: GlobalOptions) {
+	validateXrpAmount(opts.amount, "amount");
+
 	const tx: Omit<PaymentChannelCreate, "Account"> = {
 		TransactionType: "PaymentChannelCreate",
 		Destination: resolve(opts.destination),

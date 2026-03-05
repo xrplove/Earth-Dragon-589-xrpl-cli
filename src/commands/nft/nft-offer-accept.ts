@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface NftOfferAcceptOpts extends TxOptions {
 	sellOffer?: string;
@@ -21,6 +22,9 @@ async function nftOfferAccept(
 	opts: NftOfferAcceptOpts,
 	globalOpts: GlobalOptions,
 ) {
+	if (opts.sellOffer) validateHex64(opts.sellOffer, "sell offer ID");
+	if (opts.buyOffer) validateHex64(opts.buyOffer, "buy offer ID");
+
 	const tx: Omit<NFTokenAcceptOffer, "Account"> = {
 		TransactionType: "NFTokenAcceptOffer",
 	};

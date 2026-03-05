@@ -3,12 +3,15 @@ import type { TxRequest } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
+import { validateTxHash } from "../../lib/validate.js";
 
 async function fetchTx(
 	hash: string,
 	opts: { ctid: boolean },
 	globalOpts: GlobalOptions,
 ) {
+	if (!opts.ctid) validateTxHash(hash, "transaction hash");
+
 	await withClient(globalOpts, async (client) => {
 		const req: TxRequest = { command: "tx" };
 		if (opts.ctid) {

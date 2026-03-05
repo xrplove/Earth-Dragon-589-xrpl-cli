@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateMptId, validateOptionalAddress } from "../../lib/validate.js";
 
 interface MptAuthorizeOpts extends TxOptions {
 	holder?: string;
@@ -20,6 +21,9 @@ async function mptAuthorize(
 	opts: MptAuthorizeOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateMptId(mptIssuanceId, "MPT issuance ID");
+	validateOptionalAddress(opts.holder, "holder");
+
 	const tx: Omit<MPTokenAuthorize, "Account"> = {
 		TransactionType: "MPTokenAuthorize",
 		MPTokenIssuanceID: mptIssuanceId,

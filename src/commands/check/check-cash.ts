@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface CheckCashOpts extends TxOptions {
 	amount?: string;
@@ -22,6 +23,8 @@ async function checkCash(
 	opts: CheckCashOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(checkId, "check ID");
+
 	const tx: Omit<CheckCash, "Account"> = {
 		TransactionType: "CheckCash",
 		CheckID: checkId,

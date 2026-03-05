@@ -4,7 +4,10 @@ import { z } from "zod";
 
 export const xrplAddress = z
 	.string()
-	.regex(/^r[1-9A-HJ-NP-Za-km-z]{24,34}$/, "Invalid XRPL address");
+	.regex(
+		/^(r[1-9A-HJ-NP-Za-km-z]{24,34}|[XT][1-9A-HJ-NP-Za-km-z]{46})$/,
+		"Invalid XRPL address (expected r-address or X-address)",
+	);
 
 export const hexString = (length?: number) =>
 	length
@@ -25,6 +28,13 @@ export const nonNegativeInt = z
 	.number()
 	.int()
 	.min(0, "Must be a non-negative integer");
+
+export const intRange = (min: number, max: number) =>
+	z
+		.number()
+		.int()
+		.min(min, `Must be at least ${min}`)
+		.max(max, `Must be at most ${max}`);
 
 export const xrpAmount = z
 	.string()

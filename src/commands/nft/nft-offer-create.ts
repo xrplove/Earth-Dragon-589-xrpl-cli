@@ -14,6 +14,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface NftOfferCreateOpts extends TxOptions {
 	amount: string;
@@ -29,6 +30,8 @@ async function nftOfferCreate(
 	opts: NftOfferCreateOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(nftokenId, "NFToken ID");
+
 	const tx: Omit<NFTokenCreateOffer, "Account"> = {
 		TransactionType: "NFTokenCreateOffer",
 		NFTokenID: nftokenId,

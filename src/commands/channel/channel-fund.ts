@@ -8,6 +8,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64, validateXrpAmount } from "../../lib/validate.js";
 
 interface ChannelFundOpts extends TxOptions {
 	amount: string;
@@ -19,6 +20,9 @@ async function channelFund(
 	opts: ChannelFundOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(channelId, "channel ID");
+	validateXrpAmount(opts.amount, "amount");
+
 	const tx: Omit<PaymentChannelFund, "Account"> = {
 		TransactionType: "PaymentChannelFund",
 		Channel: channelId,

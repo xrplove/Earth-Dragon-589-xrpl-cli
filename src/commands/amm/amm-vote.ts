@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateRange } from "../../lib/validate.js";
 
 interface AmmVoteOpts extends TxOptions {
 	asset: string;
@@ -17,6 +18,8 @@ interface AmmVoteOpts extends TxOptions {
 }
 
 async function ammVote(opts: AmmVoteOpts, globalOpts: GlobalOptions) {
+	validateRange(opts.tradingFee, 0, 1000, "trading-fee");
+
 	const tx: Omit<AMMVote, "Account"> = {
 		TransactionType: "AMMVote",
 		Asset: toCurrency(opts.asset),

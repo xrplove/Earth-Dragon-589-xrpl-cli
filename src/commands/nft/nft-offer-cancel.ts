@@ -8,12 +8,15 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 async function nftOfferCancel(
 	offerIds: string[],
 	opts: TxOptions,
 	globalOpts: GlobalOptions,
 ) {
+	offerIds.forEach((id) => validateHex64(id, "offer ID"));
+
 	const tx: Omit<NFTokenCancelOffer, "Account"> = {
 		TransactionType: "NFTokenCancelOffer",
 		NFTokenOffers: offerIds,

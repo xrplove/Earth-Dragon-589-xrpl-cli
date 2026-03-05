@@ -46,11 +46,11 @@ describe("parseAsfFlag", () => {
 
 describe("parseCredentials", () => {
 	it("parses a single credential", () => {
-		const result = parseCredentials(["rIssuer123:KYC"]);
+		const result = parseCredentials(["rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY:KYC"]);
 		expect(result).toEqual([
 			{
 				Credential: {
-					Issuer: "rIssuer123",
+					Issuer: "rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY",
 					CredentialType: "KYC",
 				},
 			},
@@ -58,16 +58,19 @@ describe("parseCredentials", () => {
 	});
 
 	it("parses multiple credentials", () => {
-		const result = parseCredentials(["rAddr1:KYC", "rAddr2:AML"]);
+		const result = parseCredentials([
+			"rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY:KYC",
+			"rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh:AML",
+		]);
 		expect(result).toHaveLength(2);
 		expect(result[0].Credential.CredentialType).toBe("KYC");
 		expect(result[1].Credential.CredentialType).toBe("AML");
 	});
 
-	it("handles credential type containing colons", () => {
-		const result = parseCredentials(["rIssuer:type:with:colons"]);
-		expect(result[0].Credential.Issuer).toBe("rIssuer:type:with");
-		expect(result[0].Credential.CredentialType).toBe("colons");
+	it("splits on the last colon", () => {
+		const result = parseCredentials(["rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY:KYC_LEVEL_2"]);
+		expect(result[0].Credential.Issuer).toBe("rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY");
+		expect(result[0].Credential.CredentialType).toBe("KYC_LEVEL_2");
 	});
 
 	it("throws on missing colon", () => {

@@ -11,6 +11,10 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import {
+	validateOptionalRange,
+	validateOptionalHex,
+} from "../../lib/validate.js";
 
 interface MptCreateOpts extends TxOptions {
 	assetScale?: number;
@@ -26,6 +30,10 @@ interface MptCreateOpts extends TxOptions {
 }
 
 async function mptCreate(opts: MptCreateOpts, globalOpts: GlobalOptions) {
+	validateOptionalRange(opts.assetScale, 0, 255, "asset-scale");
+	validateOptionalRange(opts.transferFee, 0, 50000, "transfer-fee");
+	validateOptionalHex(opts.metadata, "metadata");
+
 	const tx: Omit<MPTokenIssuanceCreate, "Account"> = {
 		TransactionType: "MPTokenIssuanceCreate",
 	};

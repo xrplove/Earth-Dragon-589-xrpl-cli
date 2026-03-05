@@ -8,12 +8,15 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 async function checkCancel(
 	checkId: string,
 	opts: TxOptions,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(checkId, "check ID");
+
 	const tx: Omit<CheckCancel, "Account"> = {
 		TransactionType: "CheckCancel",
 		CheckID: checkId,

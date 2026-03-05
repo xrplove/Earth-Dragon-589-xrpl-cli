@@ -3,6 +3,7 @@ import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface NftBuyOffersOpts {
 	limit?: number;
@@ -15,6 +16,8 @@ async function nftBuyOffers(
 	opts: NftBuyOffersOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(nftokenId, "NFToken ID");
+
 	await withClient(globalOpts, async (client) => {
 		const resp = await client.request({
 			command: "nft_buy_offers",

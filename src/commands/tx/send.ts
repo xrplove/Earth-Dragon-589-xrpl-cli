@@ -10,6 +10,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface SendOpts extends TxOptions {
 	to: string;
@@ -28,6 +29,8 @@ interface SendOpts extends TxOptions {
 }
 
 async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
+	if (opts.invoiceId) validateHex64(opts.invoiceId, "invoice ID");
+
 	const token = parseToken(opts.token);
 	const destination = resolve(opts.to);
 

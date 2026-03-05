@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateXrpAmount, validateOptionalHex } from "../../lib/validate.js";
 
 interface EscrowCreateOpts extends TxOptions {
 	destination: string;
@@ -20,6 +21,9 @@ interface EscrowCreateOpts extends TxOptions {
 }
 
 async function escrowCreate(opts: EscrowCreateOpts, globalOpts: GlobalOptions) {
+	validateXrpAmount(opts.amount, "amount");
+	validateOptionalHex(opts.condition, "condition");
+
 	const tx: Omit<EscrowCreate, "Account"> = {
 		TransactionType: "EscrowCreate",
 		Destination: resolve(opts.destination),

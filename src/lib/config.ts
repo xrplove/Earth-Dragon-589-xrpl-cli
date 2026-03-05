@@ -38,6 +38,15 @@ export function resolveAlias(
 
 const _config = loadConfig();
 
-export function resolve(address: string): string {
-	return resolveAlias(address, _config.aliases);
+/**
+ * Resolve an alias to an address. If it's not an alias, validate as an XRPL address.
+ */
+export function resolve(addressOrAlias: string): string {
+	const resolved = resolveAlias(addressOrAlias, _config.aliases);
+	// If it was an alias, the resolved value is an address — validate it.
+	// If it wasn't an alias, the input itself should be an address.
+	if (!/^(r[1-9A-HJ-NP-Za-km-z]{24,34}|[XT][1-9A-HJ-NP-Za-km-z]{46})$/.test(resolved)) {
+		throw new Error(`Invalid address: "${addressOrAlias}". Expected an r-address, X-address, or configured alias.`);
+	}
+	return resolved;
 }

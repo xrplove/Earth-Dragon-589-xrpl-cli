@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateOptionalHex } from "../../lib/validate.js";
 
 interface EscrowFinishOpts extends TxOptions {
 	condition?: string;
@@ -21,6 +22,9 @@ async function escrowFinish(
 	opts: EscrowFinishOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateOptionalHex(opts.condition, "condition");
+	validateOptionalHex(opts.fulfillment, "fulfillment");
+
 	const tx: Omit<EscrowFinish, "Account"> = {
 		TransactionType: "EscrowFinish",
 		Owner: resolve(owner),

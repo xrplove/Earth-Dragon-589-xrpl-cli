@@ -10,6 +10,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 import type { Amount } from "xrpl";
 
 interface CheckCreateOpts extends TxOptions {
@@ -22,6 +23,8 @@ interface CheckCreateOpts extends TxOptions {
 }
 
 async function checkCreate(opts: CheckCreateOpts, globalOpts: GlobalOptions) {
+	if (opts.invoiceId) validateHex64(opts.invoiceId, "invoice ID");
+
 	const token = parseToken(opts.sendMaxToken);
 
 	const tx: Omit<CheckCreate, "Account"> = {

@@ -8,6 +8,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validatePositiveInt } from "../../lib/validate.js";
 
 interface OfferCancelOpts extends TxOptions {}
 
@@ -16,6 +17,8 @@ async function offerCancel(
 	opts: OfferCancelOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validatePositiveInt(offerSequence, "offer-sequence");
+
 	const tx: Omit<OfferCancel, "Account"> = {
 		TransactionType: "OfferCancel",
 		OfferSequence: offerSequence,

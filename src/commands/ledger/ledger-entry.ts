@@ -3,6 +3,7 @@ import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
 import { parseLedgerIndex } from "../../lib/parsing.js";
 import type { GlobalOptions } from "../../lib/types.js";
+import { validateHex64 } from "../../lib/validate.js";
 
 interface LedgerEntryOpts {
 	ledgerIndex: string;
@@ -13,6 +14,8 @@ async function ledgerEntry(
 	opts: LedgerEntryOpts,
 	globalOpts: GlobalOptions,
 ) {
+	validateHex64(index, "ledger entry index");
+
 	await withClient(globalOpts, async (client) => {
 		const resp = await client.request({
 			command: "ledger_entry",

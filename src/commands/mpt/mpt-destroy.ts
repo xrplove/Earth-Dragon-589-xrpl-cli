@@ -8,12 +8,15 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { validateMptId } from "../../lib/validate.js";
 
 async function mptDestroy(
 	mptIssuanceId: string,
 	opts: TxOptions,
 	globalOpts: GlobalOptions,
 ) {
+	validateMptId(mptIssuanceId, "MPT issuance ID");
+
 	const tx: Omit<MPTokenIssuanceDestroy, "Account"> = {
 		TransactionType: "MPTokenIssuanceDestroy",
 		MPTokenIssuanceID: mptIssuanceId,
