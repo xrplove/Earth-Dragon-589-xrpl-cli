@@ -1837,12 +1837,12 @@ Order book and offer commands.
 
 Multi-Purpose Token lifecycle.
 
-- [ ] `mpt-create`
-- [ ] `mpt-authorize`
-- [ ] `mpt-set`
-- [ ] `mpt-destroy`
-- [ ] Verify `send` with `mpt:` token notation end-to-end
-- [ ] **E2E tests** (devnet, since MPTokensV1 may not be on testnet): `mpt-create` → `mpt-authorize` → `send` MPT → `balance --token mpt:...` → `mpt-destroy`
+- [x] `mpt-create`
+- [x] `mpt-authorize`
+- [x] `mpt-set`
+- [x] `mpt-destroy`
+- [x] Verify `send` with `mpt:` token notation end-to-end
+- [x] **E2E tests** (devnet, since MPTokensV1 may not be on testnet): `mpt-create` → `mpt-authorize` → `send` MPT → `balance --token mpt:...` → `mpt-destroy`
 
 ### Phase 8: Escrows, Payment Channels, Checks
 
