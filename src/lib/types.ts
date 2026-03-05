@@ -17,14 +17,6 @@ export interface TxOptions {
 	ticket?: number;
 }
 
-export const RPC_URLS: Record<Network, string> = {
-	mainnet: "wss://xrplcluster.com",
-	testnet: "wss://s.altnet.rippletest.net:51233",
-	devnet: "wss://s.devnet.rippletest.net:51233",
-};
-
-export const BASE_RESERVE_XRP = 10;
-
 export const EXIT_CODES = {
 	SUCCESS: 0,
 	GENERAL_ERROR: 1,

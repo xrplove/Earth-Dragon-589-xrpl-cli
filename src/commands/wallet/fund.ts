@@ -1,7 +1,9 @@
 import type { Command } from "commander";
 import { withClient } from "../../lib/client.js";
 import { output } from "../../lib/output.js";
-import { BASE_RESERVE_XRP, type GlobalOptions } from "../../lib/types.js";
+import type { GlobalOptions } from "../../lib/types.js";
+
+const BASE_RESERVE_XRP = 10;
 
 interface FundOpts {
 	account?: string;

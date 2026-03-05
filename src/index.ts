@@ -1,5 +1,10 @@
+import { createRequire } from "node:module";
 import { Command } from "commander";
 import { ZodError } from "zod";
+
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json") as { name: string; version: string };
+
 import { registerAccountCommands } from "./commands/account/index.js";
 import { registerLedgerCommands } from "./commands/ledger.js";
 import { registerSigningCommands } from "./commands/signing/index.js";
@@ -13,11 +18,11 @@ import { EXIT_CODES } from "./lib/types.js";
 const config = loadConfig();
 
 const program = new Command()
-	.name("xrpl")
+	.name(pkg.name)
 	.description(
 		"A Swiss Army knife for interacting with the XRP Ledger from the command line.",
 	)
-	.version("0.0.1")
+	.version(pkg.version)
 	.option(
 		"-n, --network <network>",
 		"Network to connect to: mainnet, testnet, devnet",

@@ -1,12 +1,15 @@
 import { Client } from "xrpl";
-import type { GlobalOptions } from "./types.js";
-import { RPC_URLS } from "./types.js";
+import type { GlobalOptions, Network } from "./types.js";
 
-const VALID_NETWORKS = new Set<string>(["mainnet", "testnet", "devnet"]);
+const RPC_URLS: Record<Network, string> = {
+	mainnet: "wss://xrplcluster.com",
+	testnet: "wss://s.altnet.rippletest.net:51233",
+	devnet: "wss://s.devnet.rippletest.net:51233",
+};
 
 export function getRpcUrl(opts: GlobalOptions): string {
 	if (opts.rpcUrl) return opts.rpcUrl;
-	if (!VALID_NETWORKS.has(opts.network)) {
+	if (!(opts.network in RPC_URLS)) {
 		throw new Error(
 			`Unknown network "${opts.network}". Expected: mainnet, testnet, devnet`,
 		);
