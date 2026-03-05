@@ -9,7 +9,7 @@ export function run(
 	return new Promise((resolve) => {
 		execFile(
 			"node",
-			[CLI, ...args],
+			[CLI, "--yes", ...args],
 			{ timeout: 120_000 },
 			(err, stdout, stderr) => {
 				resolve({

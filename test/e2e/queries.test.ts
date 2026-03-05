@@ -26,8 +26,8 @@ describe("e2e: read-only queries", () => {
 		expect(Number(drops.base_fee)).toBeGreaterThan(0);
 	});
 
-	it("amendments --enabled returns non-empty list", async () => {
-		const result = await runJson(...TESTNET_ARGS, "amendments", "--enabled");
+	it("feature --enabled returns non-empty list", async () => {
+		const result = await runJson(...TESTNET_ARGS, "feature", "--enabled");
 		const keys = Object.keys(result);
 		expect(keys.length).toBeGreaterThan(0);
 	});
