@@ -16,8 +16,10 @@ interface SendOpts extends TxOptions {
 	amount: string;
 	token: string;
 	tag?: number;
-	sendMax?: string[];
-	deliverMin?: string[];
+	sendMaxAmount?: string;
+	sendMaxToken?: string;
+	deliverMinAmount?: string;
+	deliverMinToken?: string;
 	paths?: string;
 	invoiceId?: string;
 	partial: boolean;
@@ -36,13 +38,11 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	};
 
 	if (opts.tag != null) tx.DestinationTag = opts.tag;
-	if (opts.sendMax) {
-		const sendMaxToken = parseToken(opts.sendMax[1]);
-		tx.SendMax = toXrplAmount(sendMaxToken, opts.sendMax[0]);
+	if (opts.sendMaxAmount && opts.sendMaxToken) {
+		tx.SendMax = toXrplAmount(parseToken(opts.sendMaxToken), opts.sendMaxAmount);
 	}
-	if (opts.deliverMin) {
-		const deliverMinToken = parseToken(opts.deliverMin[1]);
-		tx.DeliverMin = toXrplAmount(deliverMinToken, opts.deliverMin[0]);
+	if (opts.deliverMinAmount && opts.deliverMinToken) {
+		tx.DeliverMin = toXrplAmount(parseToken(opts.deliverMinToken), opts.deliverMinAmount);
 	}
 	if (opts.paths) tx.Paths = JSON.parse(opts.paths);
 	if (opts.invoiceId) tx.InvoiceID = opts.invoiceId;
@@ -77,16 +77,15 @@ export function registerSendCommand(program: Command) {
 			"Token: XRP, <currency>.<issuer>, or mpt:<id>",
 		)
 		.option("--tag <tag>", "Destination tag", Number)
-		.option(
-			"--send-max <amount> <token>",
-			"Max source amount for cross-currency",
-		)
+		.option("--send-max-amount <amount>", "Max source amount for cross-currency")
+		.option("--send-max-token <token>", "Token for --send-max-amount")
 		.addOption(
 			new Option(
-				"--deliver-min <amount> <token>",
+				"--deliver-min-amount <amount>",
 				"Min delivered amount",
 			).implies({ partial: true }),
 		)
+		.option("--deliver-min-token <token>", "Token for --deliver-min-amount")
 		.option("--paths <json>", "Payment paths as JSON array")
 		.option("--invoice-id <hex>", "256-bit invoice ID (64-char hex)")
 		.option("--partial", "Allow partial payments", false)

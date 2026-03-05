@@ -7,7 +7,8 @@ import { parseToken, toXrplAmount } from "../../lib/tokens.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface PathFindOpts {
-	sendMax?: string[];
+	sendMaxAmount?: string;
+	sendMaxToken?: string;
 }
 
 async function pathFind(
@@ -27,9 +28,11 @@ async function pathFind(
 		destination_amount: toXrplAmount(parsedToken, amount) as Amount,
 	};
 
-	if (opts.sendMax) {
-		const sendMaxToken = parseToken(opts.sendMax[1]);
-		req.send_max = toXrplAmount(sendMaxToken, opts.sendMax[0]) as Amount;
+	if (opts.sendMaxAmount && opts.sendMaxToken) {
+		req.send_max = toXrplAmount(
+			parseToken(opts.sendMaxToken),
+			opts.sendMaxAmount,
+		) as Amount;
 	}
 
 	await withClient(globalOpts, async (client) => {
@@ -47,7 +50,8 @@ export function registerPathFind(program: Command) {
 		.argument("<destination>", "Destination account address or alias")
 		.argument("<amount>", "Destination amount")
 		.argument("<token>", "Token: XRP, <currency>.<issuer>, or mpt:<id>")
-		.option("--send-max <amount> <token>", "Max source amount to spend")
+		.option("--send-max-amount <amount>", "Max source amount to spend")
+		.option("--send-max-token <token>", "Token for --send-max-amount")
 		.action(
 			(
 				source: string,
