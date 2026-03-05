@@ -1761,7 +1761,7 @@ Queries that don't require a wallet. This lets you start using the tool immediat
 - [x] `rpc` (the raw escape hatch — unblocks all queries immediately)
 - [x] `ping`
 - [x] **Unit tests**: response formatting, `--json` output shape, alias routing
-- [ ] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `amendments --enabled` returns non-empty list, `rpc server_info` round-trips correctly
+- [x] **E2E tests**: connect to testnet, `balance` on a known funded account, `ledger-index` returns a number, `server-info` returns valid JSON, `amendments --enabled` returns non-empty list, `rpc server_info` round-trips correctly
 
 ### Phase 2: Wallet & Signing
 
@@ -1776,7 +1776,7 @@ Key management and the signing pipeline. Required before any transaction command
 - [x] `build` (autofill + output unsigned JSON, `--signers` fee calculation)
 - [x] `decode-tx`
 - [x] **Unit tests**: wallet generation (both algorithms), seed derivation determinism, sign produces valid blob, `--signers` fee math
-- [ ] **E2E tests**: `wallet generate` → `wallet fund` on testnet → `balance` shows funded amount. `build Payment` → `sign` → `submit` round-trip on testnet
+- [x] **E2E tests**: `wallet generate` → `wallet fund` on testnet → `balance` shows funded amount. `build Payment` → `sign` → `submit` round-trip on testnet
 
 ### Phase 3: Payments & Trust Lines
 
@@ -1791,7 +1791,7 @@ The core transaction commands that most users need first.
 - [x] `address-info`
 - [x] `to-hex`, `from-hex`
 - [x] **Unit tests**: `send` builds correct Payment JSON for XRP/IOU/MPT, memo encoding, `--prepare` sets `SigningPubKey: ""` and correct fee
-- [ ] **E2E tests**: fund two testnet accounts, `send` XRP between them, verify `balance` changed. `trust-set` + `send` IOU. `send --memo` and verify memos in `tx` output
+- [x] **E2E tests**: fund two testnet accounts, `send` XRP between them, verify `balance` changed. `trust-set` + `send` IOU. `send --memo` and verify memos in `tx` output
 
 ### Phase 4: Multi-Signing
 
@@ -1820,7 +1820,7 @@ Account configuration commands.
 - [x] `gateway-balances`
 - [x] `noripple-check`
 - [ ] `completions`
-- [ ] **E2E tests**: `account-set --domain` → `account-info` shows domain. `ticket-create 5` → `tickets` lists them. `deposit-preauth --authorize` → `deposit-authorized` confirms
+- [x] **E2E tests**: `account-set --domain` → `account-info` shows domain. `ticket-create 5` → `tickets` lists them. `deposit-preauth --authorize` → `deposit-authorized` confirms
 
 ### Phase 6: DEX
 
