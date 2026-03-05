@@ -139,10 +139,13 @@ function confirm(question: string): Promise<boolean> {
 		output: process.stderr,
 	});
 	return new Promise((resolve) => {
-		rl.question(`${question} (\x1b[32my\x1b[0m/\x1b[31mN\x1b[0m) `, (answer) => {
-			rl.close();
-			resolve(answer.trim().toLowerCase() === "y");
-		});
+		rl.question(
+			`${question} (\x1b[32my\x1b[0m/\x1b[31mN\x1b[0m) `,
+			(answer) => {
+				rl.close();
+				resolve(answer.trim().toLowerCase() === "y");
+			},
+		);
 	});
 }
 
