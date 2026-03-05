@@ -13,7 +13,9 @@ async function fetchAmendments(
 			command: "feature",
 			feature: amendment,
 		} as never);
-		let features = resp.result as Record<string, Record<string, unknown>>;
+		let features = (
+			resp.result as { features?: Record<string, Record<string, unknown>> }
+		).features as Record<string, Record<string, unknown>>;
 
 		if (opts.enabled) {
 			features = Object.fromEntries(
