@@ -1819,7 +1819,7 @@ Account configuration commands.
 - [x] `account-currencies` (+ `currencies` alias)
 - [x] `gateway-balances`
 - [x] `noripple-check`
-- [ ] `completions`
+- [x] `completions`
 - [x] **E2E tests**: `account-set --domain` → `account-info` shows domain. `ticket-create 5` → `tickets` lists them. `deposit-preauth --authorize` → `deposit-authorized` confirms
 
 ### Phase 6: DEX
@@ -1871,9 +1871,9 @@ Higher-level DeFi and NFT features.
 ### Phase 10: Polish
 
 - [ ] `--help` text for every command with amendment requirements noted
-- [ ] Shell completions (`bash`, `zsh`, `fish`)
-- [ ] CI pipeline (lint, unit tests, e2e tests against testnet on every PR)
-- [ ] npm publish setup
+- [x] Shell completions (`bash`, `zsh`, `fish`)
+- [x] CI pipeline (lint, unit tests, e2e tests against testnet on every PR)
+- [x] npm publish setup
 - [ ] README examples verified against live testnet
 - [ ] Man page generation (optional)
 

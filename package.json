@@ -14,7 +14,8 @@
 		"format": "biome format --write .",
 		"test": "vitest run",
 		"test:e2e": "vitest run --config vitest.config.e2e.ts",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"prepublishOnly": "pnpm build"
 	},
 	"keywords": [
 		"xrpl",
@@ -23,7 +24,15 @@
 		"cli",
 		"blockchain"
 	],
+	"author": "Nikolaos Kamarinakis",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/k4m4/xrpl-cli"
+	},
 	"license": "MIT",
+	"files": [
+		"dist"
+	],
 	"engines": {
 		"node": ">=20"
 	},
