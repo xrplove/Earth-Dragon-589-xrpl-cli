@@ -18,7 +18,7 @@ import { EXIT_CODES } from "./lib/types.js";
 const config = loadConfig();
 
 const program = new Command()
-	.name(pkg.name)
+	.name("xrpl")
 	.description(
 		"A Swiss Army knife for interacting with the XRP Ledger from the command line.",
 	)
