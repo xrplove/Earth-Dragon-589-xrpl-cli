@@ -50,19 +50,17 @@ describe("collectSigners", () => {
 		});
 
 	it("merges signers from multiple transaction args", () => {
+		// Two valid addresses; rJZK... sorts after rGsJ... by decoded account ID
+		const addrLow = "rGsJLUuJcWoLiJNqaRQWwYpRtTQFqDPzqn";
+		const addrHigh = "rJZK7mqFbFdvLwFef5PQNsFpS6v82CSB3J";
 		const { signers } = collectSigners(
-			[
-				makeTx("rBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-				makeTx("rAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-			],
+			[makeTx(addrHigh), makeTx(addrLow)],
 			undefined,
 		);
 		expect(signers).toHaveLength(2);
-		// Must be sorted by account
-		expect(signers[0].Signer.Account).toBe(
-			"rAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		);
-		expect(signers[1].Signer.Account).toBe("rBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+		// Must be sorted by decoded account ID
+		expect(signers[0].Signer.Account).toBe(addrLow);
+		expect(signers[1].Signer.Account).toBe(addrHigh);
 	});
 
 	it("throws when no transactions provided", () => {
