@@ -102,7 +102,7 @@ The XRPL has three kinds of fungible tokens: native XRP, IOU trust line tokens, 
 | XRP  | `XRP`                                 | `--token XRP`                                        |
 | IOU  | `<currency>.<issuer>`                 | `--token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`     |
 | IOU  | `<name>.<issuer>` (non-standard)      | `--token NONST.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`   |
-| IOU  | `<hex>.<issuer>` (raw hex)            | `--token 0158415500000000C1F76FF6ECB0BAC600000000.rIssuer` |
+| IOU  | `<hex>.<issuer>` (raw hex)            | `--token 0158415500000000C1F76FF6ECB0BAC600000000.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B` |
 | MPT  | `mpt:<issuance-id>`                   | `--token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578` |
 
 - **XRP**: amounts are specified in XRP (not drops) — the CLI converts internally.
@@ -1773,6 +1773,8 @@ pnpm build          # Build with tsup (ESM, node20 target)
 pnpm dev -- <args>  # Run from source via tsx (e.g. pnpm dev -- balance rAddr)
 pnpm lint           # Check with Biome (linting + formatting)
 pnpm lint:fix       # Auto-fix lint and formatting issues
+pnpm lint:md        # Check Markdown with markdownlint
+pnpm lint:md:fix    # Auto-fix Markdown lint issues
 pnpm format         # Format with Biome
 ```
 
