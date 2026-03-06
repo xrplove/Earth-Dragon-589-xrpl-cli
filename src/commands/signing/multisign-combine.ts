@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import type { Command } from "commander";
+import { decodeAccountID } from "xrpl";
 import type { Signer } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
@@ -37,8 +38,12 @@ function collectSigners(
 		signers.push(...tx.Signers);
 	}
 
-	// Sort by signer account address (protocol requirement)
-	signers.sort((a, b) => a.Signer.Account.localeCompare(b.Signer.Account));
+	// Sort by numeric account ID (protocol requirement)
+	signers.sort((a, b) => {
+		const aId = Buffer.from(decodeAccountID(a.Signer.Account));
+		const bId = Buffer.from(decodeAccountID(b.Signer.Account));
+		return Buffer.compare(aId, bId);
+	});
 
 	// Use the first tx as the base, replacing Signers with the merged set
 	const { Signers: _, ...baseTx } = txs[0];

@@ -34,3 +34,26 @@ export function runJson(...args: string[]): Promise<Record<string, unknown>> {
 }
 
 export const TESTNET_ARGS = ["-n", "testnet"];
+export const DEVNET_ARGS = ["-n", "devnet"];
+
+export async function fundWallet(
+	network = "testnet",
+): Promise<{ seed: string; address: string }> {
+	for (let attempt = 0; attempt < 8; attempt++) {
+		const r = await run("--json", "-n", network, "wallet", "fund");
+		if (r.stdout) {
+			const result = JSON.parse(r.stdout);
+			return {
+				seed: result.seed as string,
+				address: result.address as string,
+			};
+		}
+		if (r.stderr.includes("429") || r.stderr.includes("Too Many")) {
+			const delay = 3000 * 2 ** attempt;
+			await new Promise((resolve) => setTimeout(resolve, delay));
+			continue;
+		}
+		throw new Error(`fundWallet failed: ${r.stderr}`);
+	}
+	throw new Error("fundWallet: faucet rate limit after 8 retries");
+}

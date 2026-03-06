@@ -1,13 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { runJson, TESTNET_ARGS } from "./helpers.js";
-
-async function fundWallet() {
-	const result = await runJson(...TESTNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+import { fundWallet, runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: NFTs", () => {
-	it("mint NFT → account-nfts lists it → sell offer → accept → ownership transferred", async () => {
+	it.concurrent("mint NFT → account-nfts lists it → sell offer → accept → ownership transferred", async () => {
 		const minter = await fundWallet();
 		const buyer = await fundWallet();
 
@@ -83,11 +78,11 @@ describe("e2e: NFTs", () => {
 			Record<string, unknown>
 		>;
 		expect(minterNftList.some((n) => n.NFTokenID === nftokenId)).toBe(false);
-	}, 180_000);
+	});
 });
 
 describe("e2e: AMMs", () => {
-	it("amm-create → amm-info shows pool", async () => {
+	it.concurrent("amm-create → amm-info shows pool", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();
 
@@ -172,5 +167,5 @@ describe("e2e: AMMs", () => {
 			const amm = info.amm as Record<string, unknown>;
 			expect(amm.trading_fee).toBe(500);
 		}
-	}, 180_000);
+	});
 });

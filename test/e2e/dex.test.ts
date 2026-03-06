@@ -1,16 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { runJson, TESTNET_ARGS } from "./helpers.js";
-
-/**
- * Helper: fund a fresh testnet wallet and return its seed + address.
- */
-async function fundWallet() {
-	const result = await runJson(...TESTNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+import { fundWallet, runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: DEX", () => {
-	it("offer-create, account-offers shows it, offer-cancel removes it", async () => {
+	it.concurrent("offer-create, account-offers shows it, offer-cancel removes it", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();
 
@@ -75,9 +67,9 @@ describe("e2e: DEX", () => {
 			Record<string, unknown>
 		>;
 		expect(remainingOffers.length).toBe(0);
-	}, 120_000);
+	});
 
-	it("book-offers returns order book", async () => {
+	it.concurrent("book-offers returns order book", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();
 
@@ -118,9 +110,9 @@ describe("e2e: DEX", () => {
 		expect(bookResult.offers).toBeDefined();
 		const bookOffers = bookResult.offers as Array<Record<string, unknown>>;
 		expect(bookOffers.length).toBeGreaterThan(0);
-	}, 120_000);
+	});
 
-	it("deposit-authorized checks authorization", async () => {
+	it.concurrent("deposit-authorized checks authorization", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -131,5 +123,5 @@ describe("e2e: DEX", () => {
 			receiver.address,
 		);
 		expect(result.deposit_authorized).toBe(true);
-	}, 60_000);
+	});
 });

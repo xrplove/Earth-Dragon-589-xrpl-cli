@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { runJson, TESTNET_ARGS } from "./helpers.js";
-
-async function fundWallet() {
-	const result = await runJson(...TESTNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+import { fundWallet, runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: multi-signing", () => {
 	it("2-of-3 multisig: signer-list-set → send --prepare → multisign → multisign-submit", async () => {
@@ -119,5 +114,5 @@ describe("e2e: multi-signing", () => {
 		const after = Number(afterBalance.balance);
 		// Receiver was funded with some XRP + should have received 5 XRP
 		expect(after).toBeGreaterThan(5_000_000);
-	}, 120_000);
+	});
 });

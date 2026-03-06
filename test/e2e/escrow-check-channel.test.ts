@@ -1,13 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { runJson, TESTNET_ARGS } from "./helpers.js";
-
-async function fundWallet() {
-	const result = await runJson(...TESTNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+import { fundWallet, runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: escrows, checks, payment channels", () => {
-	it("escrow-create with --finish-after, wait, escrow-finish releases funds", async () => {
+	it.concurrent("escrow-create with --finish-after, wait, escrow-finish releases funds", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -49,9 +44,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 			String(sequence),
 		);
 		expect(finishResult).toBeDefined();
-	}, 120_000);
+	});
 
-	it("check-create and check-cash round-trip", async () => {
+	it.concurrent("check-create and check-cash round-trip", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -99,9 +94,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 			"XRP",
 		);
 		expect(cashResult).toBeDefined();
-	}, 120_000);
+	});
 
-	it("channel-create and channel-fund round-trip", async () => {
+	it.concurrent("channel-create and channel-fund round-trip", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -160,5 +155,5 @@ describe("e2e: escrows, checks, payment channels", () => {
 		const updated = updatedChannels.find((c) => c.channel_id === channelId);
 		// 10 + 5 = 15 XRP = 15000000 drops
 		expect(updated?.amount).toBe("15000000");
-	}, 120_000);
+	});
 });

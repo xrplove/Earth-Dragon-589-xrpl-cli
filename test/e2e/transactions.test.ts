@@ -1,16 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { runJson, TESTNET_ARGS } from "./helpers.js";
-
-/**
- * Helper: fund a fresh testnet wallet and return its seed + address.
- */
-async function fundWallet() {
-	const result = await runJson(...TESTNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+import { fundWallet, runJson, TESTNET_ARGS } from "./helpers.js";
 
 describe("e2e: payments & trust lines", () => {
-	it("send XRP between two accounts and verify balance changed", async () => {
+	it.concurrent("send XRP between two accounts and verify balance changed", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -43,9 +35,9 @@ describe("e2e: payments & trust lines", () => {
 
 		// Receiver should have gained 10 XRP (10_000_000 drops)
 		expect(after - before).toBe(10_000_000);
-	}, 60_000);
+	});
 
-	it("send with --memo attaches memos to the transaction", async () => {
+	it.concurrent("send with --memo attaches memos to the transaction", async () => {
 		const sender = await fundWallet();
 		const receiver = await fundWallet();
 
@@ -71,12 +63,13 @@ describe("e2e: payments & trust lines", () => {
 		expect(hash).toBeTypeOf("string");
 
 		const txResult = await runJson(...TESTNET_ARGS, "tx", hash);
-		expect(txResult.Memos).toBeDefined();
-		const memos = txResult.Memos as Array<Record<string, unknown>>;
+		const txJson = (txResult.tx_json ?? txResult) as Record<string, unknown>;
+		expect(txJson.Memos).toBeDefined();
+		const memos = txJson.Memos as Array<Record<string, unknown>>;
 		expect(memos.length).toBeGreaterThan(0);
-	}, 60_000);
+	});
 
-	it("trust-set creates a trust line", async () => {
+	it.concurrent("trust-set creates a trust line", async () => {
 		const account = await fundWallet();
 		const issuer = await fundWallet();
 
@@ -102,11 +95,11 @@ describe("e2e: payments & trust lines", () => {
 		);
 		expect(usdLine).toBeDefined();
 		expect(usdLine?.limit).toBe("1000");
-	}, 60_000);
+	});
 });
 
 describe("e2e: account management", () => {
-	it("account-set --domain and verify via account-info", async () => {
+	it.concurrent("account-set --domain and verify via account-info", async () => {
 		const account = await fundWallet();
 
 		await runJson(
@@ -129,9 +122,9 @@ describe("e2e: account management", () => {
 			.toString("hex")
 			.toUpperCase();
 		expect(data.Domain).toBe(expectedHex);
-	}, 60_000);
+	});
 
-	it("ticket-create and tickets round-trip", async () => {
+	it.concurrent("ticket-create and tickets round-trip", async () => {
 		const account = await fundWallet();
 
 		await runJson(...TESTNET_ARGS, "-s", account.seed, "ticket-create", "3");
@@ -139,9 +132,9 @@ describe("e2e: account management", () => {
 		const tickets = await runJson(...TESTNET_ARGS, "tickets", account.address);
 		const ticketList = tickets as unknown as Array<Record<string, unknown>>;
 		expect(ticketList.length).toBe(3);
-	}, 60_000);
+	});
 
-	it("set-regular-key assigns a regular key", async () => {
+	it.concurrent("set-regular-key assigns a regular key", async () => {
 		const account = await fundWallet();
 		const regularKey = await runJson("wallet", "generate");
 
@@ -162,5 +155,5 @@ describe("e2e: account management", () => {
 		);
 		const data = info.account_data as Record<string, unknown>;
 		expect(data.RegularKey).toBe(regularKey.address);
-	}, 60_000);
+	});
 });

@@ -1,15 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { runJson } from "./helpers.js";
+import {
+	DEVNET_ARGS,
+	fundWallet as fundWalletBase,
+	runJson,
+} from "./helpers.js";
 
-const DEVNET_ARGS = ["-n", "devnet"];
-
-/**
- * Helper: fund a fresh devnet wallet and return its seed + address.
- */
-async function fundWallet() {
-	const result = await runJson(...DEVNET_ARGS, "wallet", "fund");
-	return { seed: result.seed as string, address: result.address as string };
-}
+const fundWallet = () => fundWalletBase("devnet");
 
 describe("e2e: MPTs", () => {
 	it("full MPT lifecycle: create → authorize → send → destroy", async () => {
@@ -86,5 +82,5 @@ describe("e2e: MPTs", () => {
 			mptId,
 		);
 		expect(destroyResult).toBeDefined();
-	}, 180_000);
+	});
 });
