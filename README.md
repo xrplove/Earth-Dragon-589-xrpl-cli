@@ -71,15 +71,15 @@ xrpl wallet generate
 
 These options apply to all commands that interact with the network:
 
-```text
---network <network>     Network to connect to: mainnet, testnet, devnet (default: mainnet)
---rpc-url <url>         Custom WebSocket RPC URL (overrides --network)
---seed <seed>           Wallet seed for signing (or set XRPL_SEED env var)
---keyfile <path>        Path to a JSON keyfile containing the seed
---json                  Output as JSON
---quiet                 Suppress non-essential output
---yes, -y               Skip confirmation prompts
-```
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--network` | `string` | `mainnet` | Network to connect to: `mainnet`, `testnet`, `devnet` |
+| `--rpc-url` | `string` | — | Custom WebSocket RPC URL (overrides `--network`) |
+| `--seed` | `string` | — | Wallet seed for signing (or set `XRPL_SEED` env var) |
+| `--keyfile` | `string` | — | Path to a JSON keyfile containing the seed |
+| `--json` | `boolean` | `false` | Output as JSON |
+| `--quiet` | `boolean` | `false` | Suppress non-essential output |
+| `--yes`, `-y` | `boolean` | `false` | Skip confirmation prompts |
 
 #### RPC URL
 
@@ -407,14 +407,12 @@ Commands for building, signing, and submitting transactions.
 
 All transaction commands (`send`, `trust-set`, `offer-create`, `account-set`, `escrow-create`, etc.) accept the following shared flags:
 
-```text
---prepare              Output unsigned JSON instead of signing and submitting.
-                       Sets SigningPubKey to "" for multi-signing. See Multi-Signing Commands.
---signers <n>          Set fee to (n+1) * base_fee for multi-signing. Implies --prepare.
---memo <type>:<data>   Add a memo. Can be repeated. Values are UTF-8 strings, hex-encoded
-                       automatically. Prefix a value with hex: to pass raw hex through as-is.
---ticket <sequence>    Use a ticket instead of the account's sequence number.
-```
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--prepare` | `boolean` | `false` | Output unsigned JSON instead of signing and submitting. Sets `SigningPubKey` to `""` for multi-signing. See Multi-Signing Commands |
+| `--signers` | `number` | — | Set fee to `(n+1) * base_fee` for multi-signing. Implies `--prepare` |
+| `--memo` | `string` | — | Add a memo as `<type>:<data>`. Can be repeated. Values are UTF-8 strings, hex-encoded automatically. Prefix a value with `hex:` to pass raw hex through as-is |
+| `--ticket` | `number` | — | Use a ticket instead of the account's sequence number |
 
 #### `tx`
 
@@ -1347,7 +1345,7 @@ xrpl multisign-combine [<signed-tx-json>...] [--files <path>...]
 | `<signed-tx-json>` | `json` | — | One or more signed transaction JSON strings |
 | `--files` | `string[]` | — | Paths to JSON files, each containing a signed transaction with a `Signers` entry |
 
-Merges all `Signers` arrays, sorts them by account address (as required by the protocol), and outputs the combined transaction JSON.
+Merges all `Signers` arrays, sorts them by decoded account ID (as required by the protocol), and outputs the combined transaction JSON.
 
 #### `multisign-submit`
 
@@ -1609,6 +1607,19 @@ xrpl completions <bash|zsh|fish>
 |--------|------|---------|-------------|
 | `<bash\|zsh\|fish>` | `string` | required | Shell to generate completions for |
 
+```bash
+# Bash
+xrpl completions bash > ~/.local/share/bash-completion/completions/xrpl
+
+# Zsh (make sure ~/.zfunc is in your fpath)
+xrpl completions zsh > ~/.zfunc/_xrpl
+
+# Fish
+xrpl completions fish > ~/.config/fish/completions/xrpl.fish
+```
+
+Restart your shell or source the file for completions to take effect.
+
 ## Configuration
 
 ### Environment Variables
@@ -1655,22 +1666,7 @@ xrpl send --to gateway --amount 10 --token XRP
 
 ### Shell Completions
 
-Generate shell completion scripts for tab-completing commands and options:
-
-```bash
-# Bash
-xrpl completions bash > ~/.local/share/bash-completion/completions/xrpl
-# or: xrpl completions bash >> ~/.bashrc
-
-# Zsh
-xrpl completions zsh > ~/.zfunc/_xrpl
-# Make sure ~/.zfunc is in your fpath (add to ~/.zshrc: fpath=(~/.zfunc $fpath))
-
-# Fish
-xrpl completions fish > ~/.config/fish/completions/xrpl.fish
-```
-
-Restart your shell or source the file for completions to take effect.
+See [`completions`](#completions) for generating shell completion scripts.
 
 ## Amendments
 
@@ -1730,7 +1726,7 @@ xrpl trust-set USD rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --limit 1000000
 xrpl send --to rSomeAddr --amount 50 --token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 
 # Issue and send an MPT
-xrpl mpt-create --scale 2 --transferable --metadata '{"name":"MyToken","symbol":"MTK"}'
+xrpl mpt-create --asset-scale 2 --can-transfer --metadata 4D79546F6B656E
 xrpl mpt-authorize 00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
 xrpl send --to rHolder --amount 100 --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
 
@@ -1740,11 +1736,11 @@ xrpl account-nfts rMyAccount
 xrpl nft-offer-create 000800006... --amount 10 --token XRP --sell
 
 # Create and use an AMM
-xrpl amm-create --amount 1000 XRP --amount2 1000 USD.rIssuer --trading-fee 500
+xrpl amm-create --amount1 1000 --token1 XRP --amount2 1000 --token2 USD.rIssuer --trading-fee 500
 xrpl amm-info --asset XRP --asset2 USD.rIssuer
 
 # Query the order book
-xrpl book-offers --taker-pays XRP --taker-gets USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --limit 5
+xrpl book-offers XRP USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B --limit 5
 
 # Watch ledger events in real time
 xrpl subscribe --streams ledger transactions
