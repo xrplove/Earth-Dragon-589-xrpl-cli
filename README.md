@@ -1477,12 +1477,13 @@ Exactly one of `--to-iso` or `--to-ripple` is required.
 Validate and decode an XRPL address. Supports both classic r-addresses and X-addresses. Offline.
 
 ```bash
-xrpl address-info <address>
+xrpl address-info <address> [--from-hex]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `<address>` | `string` | required | Classic r-address or X-address to inspect |
+| `<address>` | `string` | required | Classic r-address, X-address, or 40-char hex account ID (with `--from-hex`) |
+| `--from-hex` | `boolean` | `false` | Treat input as a hex-encoded 20-byte account ID and encode it to an r-address |
 
 Outputs:
 
@@ -1490,12 +1491,14 @@ Outputs:
 - Address type: classic (`r...`) or X-address (`X...` / `T...`)
 - Account ID (hex)
 - For X-addresses: the embedded destination tag (if any) and whether it's mainnet or testnet
+- With `--from-hex`: the classic r-address and X-address derived from the hex account ID
 
 ```bash
-xrpl address-info rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+xrpl address-info rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 # Valid: true
 # Type: classic
-# Account ID: 2DECAB42559A4B0B0F9B2C4A3C7B8E1F5D6A7C9E
+# Account ID: 0A20B3C85F482532A9578DBB3950B85CA06594D1
+# X-Address: X7WZKEeNVS2p9Tire9DtNFkzWBZbFtJHWxDjN9fCrBGqVA4
 # Network: any
 
 xrpl address-info X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqh
@@ -1504,6 +1507,11 @@ xrpl address-info X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqh
 # Classic: rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
 # Tag: 12345
 # Network: mainnet
+
+xrpl address-info --from-hex 0A20B3C85F482532A9578DBB3950B85CA06594D1
+# Account ID: 0A20B3C85F482532A9578DBB3950B85CA06594D1
+# Classic: rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
+# X-Address: X7WZKEeNVS2p9Tire9DtNFkzWBZbFtJHWxDjN9fCrBGqVA4
 ```
 
 #### `to-hex`

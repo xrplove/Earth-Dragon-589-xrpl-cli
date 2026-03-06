@@ -2,12 +2,39 @@ import type { Command } from "commander";
 import {
 	classicAddressToXAddress,
 	decodeAccountID,
+	encodeAccountID,
 	isValidClassicAddress,
 	isValidXAddress,
 	xAddressToClassicAddress,
 } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
+
+async function inspectFromHex(hex: string, globalOpts: GlobalOptions) {
+	const bytes = Buffer.from(hex, "hex");
+	if (bytes.length !== 20) {
+		throw new Error("Account ID must be exactly 20 bytes (40 hex characters).");
+	}
+	const classicAddress = encodeAccountID(bytes);
+	const xAddress = classicAddressToXAddress(classicAddress, false, false);
+	const info = {
+		accountId: hex.toUpperCase(),
+		classic: classicAddress,
+		xAddress,
+	};
+	if (globalOpts.json) {
+		output(info, globalOpts);
+	} else {
+		output(
+			[
+				`Account ID: ${info.accountId}`,
+				`Classic: ${classicAddress}`,
+				`X-Address: ${xAddress}`,
+			].join("\n"),
+			globalOpts,
+		);
+	}
+}
 
 async function inspectAddress(address: string, globalOpts: GlobalOptions) {
 	if (isValidXAddress(address)) {
@@ -74,8 +101,15 @@ export function registerAddressInfo(program: Command) {
 	program
 		.command("address-info")
 		.description("Validate and decode an XRPL address")
-		.argument("<address>", "Classic r-address or X-address")
-		.action((address: string) =>
-			inspectAddress(address, program.opts() as GlobalOptions),
-		);
+		.argument(
+			"<address>",
+			"Classic r-address, X-address, or 40-char hex account ID with --from-hex",
+		)
+		.option("--from-hex", "Treat input as a hex-encoded 20-byte account ID")
+		.action((address: string, opts: { fromHex?: boolean }) => {
+			const globalOpts = program.opts() as GlobalOptions;
+			return opts.fromHex
+				? inspectFromHex(address, globalOpts)
+				: inspectAddress(address, globalOpts);
+		});
 }
