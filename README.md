@@ -1582,6 +1582,26 @@ xrpl decode-tx <tx-blob>
 |--------|------|---------|-------------|
 | `<tx-blob>` | `string` | required | Hex-encoded transaction blob |
 
+#### `encode-tx`
+
+Encode transaction JSON into a binary blob (hex). The reverse of `decode-tx`. Uses `ripple-binary-codec` under the hood. Offline.
+
+```bash
+xrpl encode-tx [<tx-json>] [--file <path>]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<tx-json>` | `json` | — | Transaction JSON as a string argument |
+| `--file` | `string` | — | Path to a JSON file containing the transaction |
+
+```bash
+xrpl encode-tx '{"TransactionType":"Payment","Account":"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B","Destination":"rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe","Amount":"1000000","Fee":"12","Sequence":1}'
+
+# Round-trip: decode and re-encode
+xrpl decode-tx <blob> | xrpl encode-tx
+```
+
 #### `rpc`
 
 Send a raw WebSocket API request. This is the escape hatch for any API method not covered by a dedicated command.

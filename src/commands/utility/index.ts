@@ -3,6 +3,7 @@ import { registerAddressInfo } from "./address-info.js";
 import { registerCompletions } from "./completions.js";
 import { registerDecodeTx } from "./decode-tx.js";
 import { registerDropsToXrp } from "./drops-to-xrp.js";
+import { registerEncodeTx } from "./encode-tx.js";
 import { registerFromHex } from "./from-hex.js";
 import { registerHash } from "./hash.js";
 import { registerRippleTime } from "./ripple-time.js";
@@ -18,5 +19,6 @@ export function registerUtilityCommands(program: Command) {
 	registerFromHex(program);
 	registerHash(program);
 	registerDecodeTx(program);
+	registerEncodeTx(program);
 	registerCompletions(program);
 }
