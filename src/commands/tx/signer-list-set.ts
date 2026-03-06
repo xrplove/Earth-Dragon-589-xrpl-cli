@@ -19,7 +19,7 @@ async function setSignerList(
 	opts: SignerListSetOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 	const signerEntries = opts.signer.map((s) => signerEntry.parse(s));
 
 	const tx: Omit<SignerListSet, "Account"> = {

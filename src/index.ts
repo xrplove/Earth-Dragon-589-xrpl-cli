@@ -55,6 +55,12 @@ const program = new Command()
 			"Path to a JSON keyfile containing the seed",
 		).conflicts("seed"),
 	)
+	.addOption(
+		new Option(
+			"-a, --account <name>",
+			"Use a wallet from the keystore (prompts for password)",
+		).conflicts(["seed", "keyfile"]),
+	)
 	.option("--json", "Output as JSON", false)
 	.option("-q, --quiet", "Suppress non-essential output", false)
 	.option("-y, --yes", "Skip confirmation prompts", false);

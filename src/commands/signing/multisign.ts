@@ -10,7 +10,7 @@ async function multisignTransaction(
 	opts: { file?: string; account: string },
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWallet(globalOpts);
+	const wallet = await loadWallet(globalOpts);
 	const tx = readTx(txJson, opts.file);
 
 	if (tx.SigningPubKey !== "") {

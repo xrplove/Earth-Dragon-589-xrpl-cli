@@ -37,7 +37,7 @@ interface AccountSetOpts extends TxOptions {
 }
 
 async function accountSet(opts: AccountSetOpts, globalOpts: GlobalOptions) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<AccountSet, "Account"> = {
 		TransactionType: "AccountSet",

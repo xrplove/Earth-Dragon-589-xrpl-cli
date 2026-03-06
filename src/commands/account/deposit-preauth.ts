@@ -38,7 +38,7 @@ async function depositPreauth(
 	opts: DepositPreauthOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<DepositPreauth, "Account"> = {
 		TransactionType: "DepositPreauth",

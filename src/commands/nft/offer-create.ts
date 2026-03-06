@@ -43,7 +43,7 @@ async function nftOfferCreate(
 	if (opts.destination) tx.Destination = resolve(opts.destination);
 	if (opts.sell) tx.Flags = NFTokenCreateOfferFlags.tfSellNFToken;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

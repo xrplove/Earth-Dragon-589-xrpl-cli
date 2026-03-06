@@ -17,7 +17,7 @@ async function setRegularKey(
 	opts: SetRegularKeyOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<SetRegularKey, "Account"> = {
 		TransactionType: "SetRegularKey",

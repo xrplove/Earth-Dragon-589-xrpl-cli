@@ -21,7 +21,7 @@ async function buildTransaction(
 
 	if (!fields.Account) {
 		try {
-			fields.Account = loadWallet(globalOpts).address;
+			fields.Account = (await loadWallet(globalOpts)).address;
 		} catch {
 			// Account must be in the fields
 		}

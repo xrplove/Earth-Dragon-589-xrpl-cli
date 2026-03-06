@@ -10,7 +10,7 @@ import {
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 
 async function deleteSignerList(opts: TxOptions, globalOpts: GlobalOptions) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<SignerListSet, "Account"> = {
 		TransactionType: "SignerListSet",

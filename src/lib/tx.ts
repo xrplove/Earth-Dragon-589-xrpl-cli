@@ -149,17 +149,17 @@ function confirm(question: string): Promise<boolean> {
 	});
 }
 
-export function loadWalletForTx(
+export async function loadWalletForTx(
 	txOpts: TxOptions,
 	globalOpts: GlobalOptions,
-): Wallet | null {
+): Promise<Wallet | null> {
 	if (txOpts.prepare || txOpts.signers != null) {
 		// Still load wallet to derive Account, but don't require it
 		try {
-			return loadWallet(globalOpts);
+			return await loadWallet(globalOpts);
 		} catch {
 			return null;
 		}
 	}
-	return loadWallet(globalOpts);
+	return await loadWallet(globalOpts);
 }

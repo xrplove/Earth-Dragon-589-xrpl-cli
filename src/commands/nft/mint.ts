@@ -57,7 +57,7 @@ async function nftMint(opts: NftMintOpts, globalOpts: GlobalOptions) {
 	if (opts.mutable) flags |= NFTokenMintFlags.tfMutable;
 	if (flags) tx.Flags = flags;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

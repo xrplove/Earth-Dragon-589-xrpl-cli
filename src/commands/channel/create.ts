@@ -37,7 +37,7 @@ async function channelCreate(
 	if (opts.cancelAfter != null) tx.CancelAfter = opts.cancelAfter;
 	if (opts.tag != null) tx.DestinationTag = opts.tag;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

@@ -77,6 +77,7 @@ These options apply to all commands that interact with the network:
 | `--rpc-url` | `string` | — | Custom WebSocket RPC URL (overrides `--network`) |
 | `--seed` | `string` | — | Wallet seed for signing (or set `XRPL_SEED` env var) |
 | `--keyfile` | `string` | — | Path to a JSON keyfile containing the seed |
+| `--account`, `-a` | `string` | — | Use a wallet from the encrypted keystore (prompts for password) |
 | `--json` | `boolean` | `false` | Output as JSON |
 | `--quiet` | `boolean` | `false` | Suppress non-essential output |
 | `--yes`, `-y` | `boolean` | `false` | Skip confirmation prompts |
@@ -1459,6 +1460,72 @@ xrpl wallet verify-message "I own this account" 48F3E8... ED01FA...
 # Valid
 ```
 
+#### `wallet import`
+
+Import a wallet into an encrypted local keystore. Supports seeds, BIP39 mnemonics (with optional passphrase and derivation path), and interactive input. Secrets are encrypted with scrypt + AES-128-CTR.
+
+```bash
+xrpl wallet import <name> [options]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<name>` | `string` | required | Account name for the keystore |
+| `-i, --interactive` | `boolean` | `false` | Prompt interactively for the seed |
+| `--private-key` | `string` | — | Seed (private key) to import |
+| `--mnemonic` | `string` | — | BIP39 mnemonic phrase or path to a mnemonic file |
+| `--mnemonic-passphrase` | `string` | — | BIP39 passphrase for the mnemonic |
+| `--mnemonic-derivation-path` | `string` | `m/44'/144'/0'/0/0` | Wallet derivation path |
+| `--mnemonic-index` | `number` | — | Derive at this index (replaces last segment of path) |
+| `--unsafe-password` | `string` | — | Password in cleartext (prefer interactive prompt) |
+| `-k, --keystore-dir` | `string` | `~/.config/xrpl/keystores` | Custom keystore directory |
+
+The seed can also be provided via `--seed` / `XRPL_SEED` global option.
+
+```bash
+# Interactive (prompts for seed and password)
+xrpl wallet import alice -i
+
+# From seed
+xrpl wallet import alice --private-key sEdV...
+
+# From BIP39 mnemonic
+xrpl wallet import alice --mnemonic "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+
+# From mnemonic with passphrase and custom derivation
+xrpl wallet import alice --mnemonic "abandon ..." --mnemonic-passphrase "secret" --mnemonic-index 1
+
+# From mnemonic file
+xrpl wallet import alice --mnemonic ./mnemonic.txt
+```
+
+#### `wallet list` (alias: `wallet ls`)
+
+List all wallets in the keystore.
+
+```bash
+xrpl wallet list [--keystore-dir <dir>]
+```
+
+```bash
+xrpl wallet list
+# alice  rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh
+# bob    r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59
+```
+
+#### `wallet remove` (alias: `wallet rm`)
+
+Remove a wallet from the keystore.
+
+```bash
+xrpl wallet remove <name> [--keystore-dir <dir>]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<name>` | `string` | required | Account name to remove |
+| `--keystore-dir` | `string` | `~/.config/xrpl/keystores` | Custom keystore directory |
+
 ### Conversion Commands
 
 #### `xrp-to-drops`
@@ -1948,7 +2015,6 @@ Contributions are welcome! Please:
 Features that aren't planned for the initial release but worth exploring later:
 
 - **`watch` mode** — poll a command at an interval and stream changes, e.g. `xrpl watch balance rAddr --interval 5s`. Useful for scripting and monitoring.
-- **Persistent wallet store** (`wallet import`, `wallet list`, `wallet remove`) — encrypted local keystore as an alternative to `--seed` / `XRPL_SEED` env var for frequent use.
 - **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device, as an alternative to providing a seed or keyfile.
 - **AI agent compatibility** — make the CLI easy for AI agents to use via an [MCP](https://modelcontextprotocol.io/) server and agent-facing files (`SKILL.md`, `CLAUDE.md`, etc.). The `--json` flag already makes output agent-friendly; MCP would add schema discovery and structured tool calls.

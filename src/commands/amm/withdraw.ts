@@ -78,7 +78,7 @@ async function ammWithdraw(opts: AmmWithdrawOpts, globalOpts: GlobalOptions) {
 	if (opts.limitLpToken) flags |= AMMWithdrawFlags.tfLimitLPToken;
 	if (flags) tx.Flags = flags;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

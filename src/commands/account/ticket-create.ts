@@ -17,7 +17,7 @@ async function ticketCreate(
 ) {
 	validateRange(count, 1, 250, "ticket count");
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<TicketCreate, "Account"> = {
 		TransactionType: "TicketCreate",

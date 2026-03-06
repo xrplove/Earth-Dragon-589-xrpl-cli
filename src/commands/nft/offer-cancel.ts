@@ -22,7 +22,7 @@ async function nftOfferCancel(
 		NFTokenOffers: offerIds,
 	};
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

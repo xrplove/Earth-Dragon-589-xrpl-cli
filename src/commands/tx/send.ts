@@ -62,7 +62,7 @@ async function sendPayment(opts: SendOpts, globalOpts: GlobalOptions) {
 	if (opts.limitQuality) flags |= PaymentFlags.tfLimitQuality;
 	if (flags) tx.Flags = flags;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

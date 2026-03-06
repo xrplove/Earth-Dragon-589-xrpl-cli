@@ -49,7 +49,7 @@ async function mptCreate(opts: MptCreateOpts, globalOpts: GlobalOptions) {
 	if (opts.canClawback) flags |= MPTokenIssuanceCreateFlags.tfMPTCanClawback;
 	if (flags) tx.Flags = flags;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

@@ -19,7 +19,7 @@ async function accountDelete(
 	opts: AccountDeleteOpts,
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	const tx: Omit<AccountDelete, "Account"> = {
 		TransactionType: "AccountDelete",

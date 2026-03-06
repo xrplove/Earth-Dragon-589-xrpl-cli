@@ -34,7 +34,7 @@ async function escrowFinish(
 	if (opts.condition) tx.Condition = opts.condition;
 	if (opts.fulfillment) tx.Fulfillment = opts.fulfillment;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

@@ -9,7 +9,7 @@ async function signTransaction(
 	opts: { file?: string; multisign?: string | true },
 	globalOpts: GlobalOptions,
 ) {
-	const wallet = loadWallet(globalOpts);
+	const wallet = await loadWallet(globalOpts);
 	const tx = readTx(txJson, opts.file);
 
 	const multisign = opts.multisign != null;

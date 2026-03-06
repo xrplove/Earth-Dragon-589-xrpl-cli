@@ -38,6 +38,8 @@
 		"node": ">=20"
 	},
 	"dependencies": {
+		"@scure/bip32": "^2.0.1",
+		"@scure/bip39": "^2.0.1",
 		"commander": "^14.0.3",
 		"ripple-keypairs": "^2.0.0",
 		"smol-toml": "^1.6.0",

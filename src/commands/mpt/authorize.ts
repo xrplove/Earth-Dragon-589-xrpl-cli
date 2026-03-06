@@ -31,7 +31,7 @@ async function mptAuthorize(
 	if (opts.holder) tx.Holder = resolve(opts.holder);
 	if (opts.unauthorize) tx.Flags = MPTokenAuthorizeFlags.tfMPTUnauthorize;
 
-	const wallet = loadWalletForTx(opts, globalOpts);
+	const wallet = await loadWalletForTx(opts, globalOpts);
 
 	await withClient(globalOpts, async (client) => {
 		const outcome = await submitOrPrepare(client, wallet, tx, opts, globalOpts);

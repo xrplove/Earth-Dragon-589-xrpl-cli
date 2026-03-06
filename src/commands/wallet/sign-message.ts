@@ -5,7 +5,7 @@ import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
 
 async function signMessage(message: string, globalOpts: GlobalOptions) {
-	const wallet = loadWallet(globalOpts);
+	const wallet = await loadWallet(globalOpts);
 	const msgHex = Buffer.from(message, "utf-8").toString("hex").toUpperCase();
 	const signature = sign(msgHex, wallet.privateKey);
 	if (globalOpts.json) {
