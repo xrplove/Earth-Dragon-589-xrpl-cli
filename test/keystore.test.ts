@@ -4,9 +4,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Wallet } from "xrpl";
 import {
-	decryptKeypair,
 	decryptSecret,
-	decryptSeed,
 	encryptKeypair,
 	encryptSeed,
 	listKeystores,
@@ -35,8 +33,9 @@ describe("keystore", () => {
 			wallet.classicAddress,
 			password,
 		);
-		const decrypted = decryptSeed(keystore, password);
-		expect(decrypted).toBe(wallet.seed);
+		const secret = decryptSecret(keystore, password);
+		expect(secret.type).toBe("seed");
+		expect(secret.data).toBe(wallet.seed);
 	});
 
 	it("encrypts and decrypts a keypair round-trip", () => {
@@ -49,7 +48,9 @@ describe("keystore", () => {
 			wallet.classicAddress,
 			password,
 		);
-		const { publicKey, privateKey } = decryptKeypair(keystore, password);
+		const secret = decryptSecret(keystore, password);
+		expect(secret.type).toBe("keypair");
+		const { publicKey, privateKey } = JSON.parse(secret.data);
 		expect(publicKey).toBe(wallet.publicKey);
 		expect(privateKey).toBe(wallet.privateKey);
 	});
@@ -85,7 +86,7 @@ describe("keystore", () => {
 			wallet.classicAddress,
 			"correct",
 		);
-		expect(() => decryptSeed(keystore, "wrong")).toThrow();
+		expect(() => decryptSecret(keystore, "wrong")).toThrow();
 	});
 
 	it("stores the correct address", () => {

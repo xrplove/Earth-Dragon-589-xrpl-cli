@@ -2,7 +2,6 @@ import {
 	hexString,
 	intRange,
 	mptIssuanceId,
-	nonNegativeInt,
 	positiveInt,
 	txHash,
 	xrpAmount,
@@ -12,7 +11,7 @@ function label(name: string, value: unknown): string {
 	return `Invalid ${name}: "${value}".`;
 }
 
-export function validateHex(value: string, length: number, name = "hex"): void {
+function validateHex(value: string, length: number, name = "hex"): void {
 	const r = hexString(length).safeParse(value);
 	if (!r.success)
 		throw new Error(`${label(name, value)} ${r.error.issues[0].message}`);
@@ -42,12 +41,6 @@ export function validateXrpAmount(value: string, name = "XRP amount"): void {
 
 export function validatePositiveInt(value: number, name = "value"): void {
 	const r = positiveInt.safeParse(value);
-	if (!r.success)
-		throw new Error(`${label(name, value)} ${r.error.issues[0].message}`);
-}
-
-export function validateNonNegativeInt(value: number, name = "value"): void {
-	const r = nonNegativeInt.safeParse(value);
 	if (!r.success)
 		throw new Error(`${label(name, value)} ${r.error.issues[0].message}`);
 }

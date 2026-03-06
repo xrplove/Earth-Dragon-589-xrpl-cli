@@ -38,7 +38,7 @@ export async function calcSignersFee(
  * Apply shared transaction options (--prepare, --signers, --memo, --ticket)
  * to a transaction object before signing/submitting.
  */
-export function applyTxOptions(tx: UnsignedTx, txOpts: TxOptions): UnsignedTx {
+function applyTxOptions(tx: UnsignedTx, txOpts: TxOptions): UnsignedTx {
 	if (txOpts.memo?.length) {
 		tx.Memos = parseMemos(txOpts.memo);
 	}

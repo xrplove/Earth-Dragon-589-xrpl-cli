@@ -46,7 +46,7 @@ const SCRYPT_R = 8;
 const SCRYPT_P = 1;
 const DKLEN = 32;
 
-export function getKeystoreDir(): string {
+function getKeystoreDir(): string {
 	const xdgConfig = process.env.XDG_CONFIG_HOME || join(homedir(), ".config");
 	return join(xdgConfig, "xrpl", "keystores");
 }
@@ -149,29 +149,6 @@ export function encryptKeypair(
 		type: "keypair",
 		...encrypt(secret, password),
 	};
-}
-
-export function decryptSeed(keystore: KeystoreFile, password: string): string {
-	if (keystore.type !== "seed" && keystore.type != null) {
-		throw new Error(
-			`Keystore "${keystore.name}" is not a seed-based keystore (type: ${keystore.type}).`,
-		);
-	}
-	return decrypt(keystore.crypto, password);
-}
-
-export function decryptKeypair(
-	keystore: KeystoreFile,
-	password: string,
-): { publicKey: string; privateKey: string } {
-	const raw = decrypt(keystore.crypto, password);
-	if (keystore.type === "keypair") {
-		return JSON.parse(raw) as { publicKey: string; privateKey: string };
-	}
-	// Legacy: type is "seed" or missing — return seed so caller can handle it
-	throw new Error(
-		`Keystore "${keystore.name}" is not a keypair-based keystore (type: ${keystore.type ?? "seed"}).`,
-	);
 }
 
 export function decryptSecret(

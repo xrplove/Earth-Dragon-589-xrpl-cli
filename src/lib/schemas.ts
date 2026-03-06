@@ -24,11 +24,6 @@ export const positiveInt = z
 	.int()
 	.min(1, "Must be a positive integer");
 
-export const nonNegativeInt = z
-	.number()
-	.int()
-	.min(0, "Must be a non-negative integer");
-
 export const intRange = (min: number, max: number) =>
 	z
 		.number()
@@ -97,13 +92,6 @@ export const signerEntry = z.string().transform((entry, ctx) => {
 	}
 	return { SignerEntry: { Account: address, SignerWeight: weight } };
 });
-
-export const memo = z
-	.string()
-	.regex(
-		/^(hex:)?[^:]+(hex:)?.+$/s,
-		'Invalid memo format. Expected "type:data" (e.g. "type:interchain_transfer").',
-	);
 
 export const tokenSpec = z
 	.string()

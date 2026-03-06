@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { type EscrowCreate, xrpToDrops } from "xrpl";
+import { type EscrowCreate, isoTimeToRippleTime, xrpToDrops } from "xrpl";
 import { withClient } from "../../lib/client.js";
 import { resolve } from "../../lib/config.js";
 import {
@@ -48,11 +48,7 @@ async function escrowCreate(opts: EscrowCreateOpts, globalOpts: GlobalOptions) {
 function toRippleTime(value: string): number {
 	const num = Number(value);
 	if (Number.isFinite(num) && num > 0) return num;
-	const ms = Date.parse(value);
-	if (Number.isNaN(ms))
-		throw new Error(`Invalid time "${value}". Use ISO 8601 or Ripple epoch.`);
-	// Ripple epoch starts 2000-01-01T00:00:00Z = 946684800 Unix
-	return Math.floor(ms / 1000) - 946684800;
+	return isoTimeToRippleTime(value);
 }
 
 export function registerEscrowCreate(program: Command) {

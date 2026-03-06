@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { parse } from "smol-toml";
 import { xrplAddress } from "./schemas.js";
 
-export interface Config {
+interface Config {
 	network?: string;
 	rpc_url?: string;
 	aliases: Record<string, string>;

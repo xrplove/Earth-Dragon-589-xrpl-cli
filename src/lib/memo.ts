@@ -1,7 +1,5 @@
 import type { Memo } from "xrpl";
 
-export type { Memo };
-
 const MEMO_RE = /^(hex:)?([^:]+):(hex:)?(.+)$/s;
 
 function encodeField(raw: string, isHex: boolean): string {
