@@ -1867,3 +1867,8 @@ Features that aren't planned for the initial release but worth exploring later:
 ## License
 
 MIT
+
+## Disclaimer
+
+> [!CAUTION]
+> This is an independent, community-built tool. It is **not** officially supported, endorsed, or maintained by Ripple, the XRP Ledger Foundation (XRPLF), or any affiliated organization. Use at your own risk.
