@@ -1,5 +1,5 @@
 {
-	"name": "xrpl-cli",
+	"name": "@commonprefix/xrpl-cli",
 	"version": "0.1.0",
 	"description": "A Swiss Army knife for interacting with the XRP Ledger from the command line",
 	"type": "module",

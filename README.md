@@ -41,7 +41,7 @@ xrpl --help
 ## Installation
 
 ```bash
-npm install -g xrpl-cli
+npm install -g @commonprefix/xrpl-cli
 ```
 
 Requires Node.js v20+.
