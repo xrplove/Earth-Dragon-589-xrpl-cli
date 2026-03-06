@@ -1476,6 +1476,30 @@ xrpl wallet verify-message "I own this account" 48F3E8... ED01FA...
 # Valid
 ```
 
+#### `wallet vanity`
+
+Generate a vanity address matching a prefix and/or suffix pattern. Uses brute-force search.
+
+> **WARNING:** Vanity addresses should NOT be used for mainnet accounts holding real value.
+
+```bash
+xrpl wallet vanity [--starts-with <pattern>] [--ends-with <pattern>] [--algorithm <ed25519|secp256k1>]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--starts-with` | `string` | — | Prefix pattern to match after the leading `r` (case-insensitive regex) |
+| `--ends-with` | `string` | — | Suffix pattern to match (case-insensitive regex) |
+| `--algorithm` | `string` | `"ed25519"` | Key algorithm: `ed25519` or `secp256k1` |
+
+At least one of `--starts-with` or `--ends-with` is required.
+
+```bash
+xrpl wallet vanity --starts-with Nick
+xrpl wallet vanity --ends-with XRP
+xrpl wallet vanity --starts-with N --ends-with XRP
+```
+
 #### `wallet import`
 
 Import a wallet into an encrypted local keystore. Supports seeds, BIP39 mnemonics (with optional passphrase and derivation path), and interactive input. Secrets are encrypted with scrypt + AES-128-CTR.
@@ -2046,7 +2070,6 @@ Contributions are welcome! Please:
 Features that aren't planned for the initial release but worth exploring later:
 
 - **`watch` mode** — poll a command at an interval and stream changes, e.g. `xrpl watch balance rAddr --interval 5s`. Useful for scripting and monitoring.
-- **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device, as an alternative to providing a seed or keyfile.
 - **`--private-key` option** — accept a raw hex private key directly for signing, in addition to seeds. Requires algorithm detection or an `--algorithm` flag to derive the public key.
 - **Niche developer utilities** — expose more from xrpl.js sub-packages: RFC1751 mnemonic encode/decode, seed encoding/decoding (`encodeSeed`/`decodeSeed`), raw keypair derivation (`deriveKeypair`), account ID encoding from hex public key, and low-level binary codec operations.

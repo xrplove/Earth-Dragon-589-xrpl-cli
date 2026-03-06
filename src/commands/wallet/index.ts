@@ -7,6 +7,7 @@ import { registerImport } from "./import.js";
 import { registerList } from "./list.js";
 import { registerRemove } from "./remove.js";
 import { registerSignMessage } from "./sign-message.js";
+import { registerVanity } from "./vanity.js";
 import { registerVerifyMessage } from "./verify-message.js";
 
 export function registerWalletCommands(program: Command) {
@@ -22,5 +23,6 @@ export function registerWalletCommands(program: Command) {
 	registerList(wallet, program);
 	registerRemove(wallet, program);
 	registerSignMessage(wallet, program);
+	registerVanity(wallet, program);
 	registerVerifyMessage(wallet, program);
 }
