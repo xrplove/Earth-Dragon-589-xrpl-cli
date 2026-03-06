@@ -2018,6 +2018,20 @@ test/
 - Tabs for indentation, double quotes
 - ESM-only (`"type": "module"`)
 
+### Releasing
+
+Releases are tag-triggered. Pushing a semver tag runs all CI checks, publishes to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), and creates a GitHub release with auto-generated notes.
+
+```bash
+# 1. Bump version
+pnpm version patch   # or minor / major
+
+# 2. Push commit and tag
+git push && git push --tags
+```
+
+CI handles the rest. Requires an `NPM_TOKEN` repository secret.
+
 ## Contributing
 
 Contributions are welcome! Please:
