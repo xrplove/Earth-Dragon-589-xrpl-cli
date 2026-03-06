@@ -70,6 +70,7 @@ async function fundWallet(opts: FundOpts, globalOpts: GlobalOptions) {
 export function registerFund(wallet: Command, program: Command) {
 	wallet
 		.command("fund")
+		.alias("faucet")
 		.description(
 			"Fund a wallet using the testnet/devnet faucet. Generates a new wallet if no account is given.",
 		)

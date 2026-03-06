@@ -1403,7 +1403,7 @@ xrpl wallet from-entropy <hex-entropy> [--algorithm <ed25519|secp256k1>]
 | `<hex-entropy>` | `string` | required | 32-character hex string (16 bytes of entropy) |
 | `--algorithm` | `string` | `"ed25519"` | Key algorithm: `ed25519` or `secp256k1` |
 
-#### `wallet fund`
+#### `wallet fund` (alias: `wallet faucet`)
 
 Fund a wallet using the testnet/devnet faucet. Only works on testnet and devnet. If no account is specified, generates a new wallet and funds it.
 
