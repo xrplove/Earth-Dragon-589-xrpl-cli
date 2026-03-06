@@ -9,9 +9,9 @@ describe("e2e: NFTs", () => {
 		// 1. Mint an NFT
 		const mintResult = await runJson(
 			...TESTNET_ARGS,
+			"nft-mint",
 			"-s",
 			minter.seed,
-			"nft-mint",
 			"--taxon",
 			"1",
 			"--uri",
@@ -33,9 +33,9 @@ describe("e2e: NFTs", () => {
 		// 3. Create sell offer for 1 XRP
 		const offerResult = await runJson(
 			...TESTNET_ARGS,
+			"nft-offer-create",
 			"-s",
 			minter.seed,
-			"nft-offer-create",
 			nftokenId,
 			"--amount",
 			"1",
@@ -50,9 +50,9 @@ describe("e2e: NFTs", () => {
 		// 4. Buyer accepts the sell offer
 		await runJson(
 			...TESTNET_ARGS,
+			"nft-offer-accept",
 			"-s",
 			buyer.seed,
-			"nft-offer-accept",
 			"--sell-offer",
 			offerId,
 		);
@@ -89,9 +89,9 @@ describe("e2e: AMMs", () => {
 		// Enable default ripple on issuer (required for AMM)
 		await runJson(
 			...TESTNET_ARGS,
+			"account-set",
 			"-s",
 			issuer.seed,
-			"account-set",
 			"--flag",
 			"asfDefaultRipple",
 		);
@@ -99,9 +99,9 @@ describe("e2e: AMMs", () => {
 		// Set up trust line and issue tokens
 		await runJson(
 			...TESTNET_ARGS,
+			"trust-set",
 			"-s",
 			account.seed,
-			"trust-set",
 			"USD",
 			issuer.address,
 			"--limit",
@@ -110,9 +110,9 @@ describe("e2e: AMMs", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"send",
 			"-s",
 			issuer.seed,
-			"send",
 			"--to",
 			account.address,
 			"--amount",
@@ -124,9 +124,9 @@ describe("e2e: AMMs", () => {
 		// Create AMM pool: 100 XRP / 50 USD
 		const createResult = await runJson(
 			...TESTNET_ARGS,
+			"amm-create",
 			"-s",
 			account.seed,
-			"amm-create",
 			"--amount1",
 			"100",
 			"--token1",

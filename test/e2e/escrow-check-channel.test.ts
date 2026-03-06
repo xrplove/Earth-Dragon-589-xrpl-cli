@@ -11,9 +11,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 
 		const createResult = await runJson(
 			...TESTNET_ARGS,
+			"escrow-create",
 			"-s",
 			sender.seed,
-			"escrow-create",
 			"--destination",
 			receiver.address,
 			"--amount",
@@ -37,9 +37,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 		// Finish the escrow
 		const finishResult = await runJson(
 			...TESTNET_ARGS,
+			"escrow-finish",
 			"-s",
 			receiver.seed,
-			"escrow-finish",
 			sender.address,
 			String(sequence),
 		);
@@ -53,9 +53,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 		// Create a check for 10 XRP
 		const createResult = await runJson(
 			...TESTNET_ARGS,
+			"check-create",
 			"-s",
 			sender.seed,
-			"check-create",
 			"--destination",
 			receiver.address,
 			"--send-max-amount",
@@ -84,9 +84,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 		// Cash the check
 		const cashResult = await runJson(
 			...TESTNET_ARGS,
+			"check-cash",
 			"-s",
 			receiver.seed,
-			"check-cash",
 			checkId,
 			"--amount",
 			"10",
@@ -107,9 +107,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 		// Create a payment channel
 		const createResult = await runJson(
 			...TESTNET_ARGS,
+			"channel-create",
 			"-s",
 			sender.seed,
-			"channel-create",
 			"--destination",
 			receiver.address,
 			"--amount",
@@ -134,9 +134,9 @@ describe("e2e: escrows, checks, payment channels", () => {
 		// Fund the channel with 5 more XRP
 		const fundResult = await runJson(
 			...TESTNET_ARGS,
+			"channel-fund",
 			"-s",
 			sender.seed,
-			"channel-fund",
 			channelId,
 			"--amount",
 			"5",

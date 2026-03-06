@@ -15,9 +15,9 @@ describe("e2e: payments & trust lines", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"send",
 			"-s",
 			sender.seed,
-			"send",
 			"--to",
 			receiver.address,
 			"--amount",
@@ -43,9 +43,9 @@ describe("e2e: payments & trust lines", () => {
 
 		const sendResult = await runJson(
 			...TESTNET_ARGS,
+			"send",
 			"-s",
 			sender.seed,
-			"send",
 			"--to",
 			receiver.address,
 			"--amount",
@@ -75,9 +75,9 @@ describe("e2e: payments & trust lines", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"trust-set",
 			"-s",
 			account.seed,
-			"trust-set",
 			"USD",
 			issuer.address,
 			"--limit",
@@ -104,9 +104,9 @@ describe("e2e: account management", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"account-set",
 			"-s",
 			account.seed,
-			"account-set",
 			"--domain",
 			"example.com",
 		);
@@ -127,7 +127,7 @@ describe("e2e: account management", () => {
 	it.concurrent("ticket-create and tickets round-trip", async () => {
 		const account = await fundWallet();
 
-		await runJson(...TESTNET_ARGS, "-s", account.seed, "ticket-create", "3");
+		await runJson(...TESTNET_ARGS, "ticket-create", "-s", account.seed, "3");
 
 		const tickets = await runJson(...TESTNET_ARGS, "tickets", account.address);
 		const ticketList = tickets as unknown as Array<Record<string, unknown>>;
@@ -140,9 +140,9 @@ describe("e2e: account management", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"set-regular-key",
 			"-s",
 			account.seed,
-			"set-regular-key",
 			"--key",
 			regularKey.address as string,
 		);

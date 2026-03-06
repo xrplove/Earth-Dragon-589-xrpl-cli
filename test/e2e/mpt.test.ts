@@ -15,9 +15,9 @@ describe("e2e: MPTs", () => {
 		// 1. Create MPT with can-transfer so holder can receive
 		const createResult = await runJson(
 			...DEVNET_ARGS,
+			"mpt-create",
 			"-s",
 			issuer.seed,
-			"mpt-create",
 			"--asset-scale",
 			"2",
 			"--max-amount",
@@ -33,14 +33,14 @@ describe("e2e: MPTs", () => {
 		expect(mptId).toHaveLength(48);
 
 		// 2. Holder self-authorizes (opts in to hold the token)
-		await runJson(...DEVNET_ARGS, "-s", holder.seed, "mpt-authorize", mptId);
+		await runJson(...DEVNET_ARGS, "mpt-authorize", "-s", holder.seed, mptId);
 
 		// 3. Send MPT from issuer to holder
 		await runJson(
 			...DEVNET_ARGS,
+			"send",
 			"-s",
 			issuer.seed,
-			"send",
 			"--to",
 			holder.address,
 			"--amount",
@@ -52,9 +52,9 @@ describe("e2e: MPTs", () => {
 		// 4. Send MPT back from holder to issuer (so balance is zero for destroy)
 		await runJson(
 			...DEVNET_ARGS,
+			"send",
 			"-s",
 			holder.seed,
-			"send",
 			"--to",
 			issuer.address,
 			"--amount",
@@ -66,9 +66,9 @@ describe("e2e: MPTs", () => {
 		// 5. Holder unauthorizes (opts out)
 		await runJson(
 			...DEVNET_ARGS,
+			"mpt-authorize",
 			"-s",
 			holder.seed,
-			"mpt-authorize",
 			mptId,
 			"--unauthorize",
 		);
@@ -76,9 +76,9 @@ describe("e2e: MPTs", () => {
 		// 6. Destroy MPT
 		const destroyResult = await runJson(
 			...DEVNET_ARGS,
+			"mpt-destroy",
 			"-s",
 			issuer.seed,
-			"mpt-destroy",
 			mptId,
 		);
 		expect(destroyResult).toBeDefined();

@@ -9,9 +9,9 @@ describe("e2e: DEX", () => {
 		// Create a trust line first (needed for IOU offers)
 		await runJson(
 			...TESTNET_ARGS,
+			"trust-set",
 			"-s",
 			account.seed,
-			"trust-set",
 			"USD",
 			issuer.address,
 			"--limit",
@@ -21,9 +21,9 @@ describe("e2e: DEX", () => {
 		// Create an offer: sell 10 XRP for 5 USD
 		const offerResult = await runJson(
 			...TESTNET_ARGS,
+			"offer-create",
 			"-s",
 			account.seed,
-			"offer-create",
 			"--taker-pays-amount",
 			"5",
 			"--taker-pays-token",
@@ -51,9 +51,9 @@ describe("e2e: DEX", () => {
 		// Cancel the offer
 		await runJson(
 			...TESTNET_ARGS,
+			"offer-cancel",
 			"-s",
 			account.seed,
-			"offer-cancel",
 			String(offerSeq),
 		);
 
@@ -76,9 +76,9 @@ describe("e2e: DEX", () => {
 		// Trust line + offer to populate the book
 		await runJson(
 			...TESTNET_ARGS,
+			"trust-set",
 			"-s",
 			account.seed,
-			"trust-set",
 			"USD",
 			issuer.address,
 			"--limit",
@@ -87,9 +87,9 @@ describe("e2e: DEX", () => {
 
 		await runJson(
 			...TESTNET_ARGS,
+			"offer-create",
 			"-s",
 			account.seed,
-			"offer-create",
 			"--taker-pays-amount",
 			"5",
 			"--taker-pays-token",

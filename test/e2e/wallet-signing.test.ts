@@ -57,9 +57,9 @@ describe("e2e: wallet & signing", () => {
 		// Build a Payment transaction
 		const built = await runJson(
 			...TESTNET_ARGS,
+			"build",
 			"-s",
 			sender.seed,
-			"build",
 			"Payment",
 			"--Destination",
 			receiver.address,
@@ -71,9 +71,9 @@ describe("e2e: wallet & signing", () => {
 
 		// Sign the transaction
 		const signed = await runJson(
+			"sign",
 			"-s",
 			sender.seed,
-			"sign",
 			JSON.stringify(built),
 		);
 		expect(signed.tx_blob).toBeTypeOf("string");
@@ -92,9 +92,9 @@ describe("e2e: wallet & signing", () => {
 		// Generate a wallet and sign a minimal tx to get a blob
 		const wallet = await runJson("wallet", "generate");
 		const signed = await runJson(
+			"sign",
 			"-s",
 			wallet.seed as string,
-			"sign",
 			JSON.stringify({
 				TransactionType: "Payment",
 				Account: wallet.address,

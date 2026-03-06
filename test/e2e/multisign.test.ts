@@ -13,9 +13,9 @@ describe("e2e: multi-signing", () => {
 		// Set up a 2-of-3 signer list (each signer has weight 1, quorum is 2)
 		const signerListResult = await runJson(
 			...TESTNET_ARGS,
+			"signer-list-set",
 			"-s",
 			multisig.seed,
-			"signer-list-set",
 			"--quorum",
 			"2",
 			"--signer",
@@ -30,9 +30,9 @@ describe("e2e: multi-signing", () => {
 		// Prepare an unsigned payment from the multisig account (--signers 2 sets the fee)
 		const unsigned = await runJson(
 			...TESTNET_ARGS,
+			"send",
 			"-s",
 			multisig.seed,
-			"send",
 			"--to",
 			receiver.address,
 			"--amount",
@@ -50,11 +50,11 @@ describe("e2e: multi-signing", () => {
 
 		// Sign with signer1
 		const sig1 = await runJson(
+			"multisign",
 			"-s",
 			signer1.seed,
-			"multisign",
 			unsignedJson,
-			"--account",
+			"--multisig-account",
 			multisig.address,
 		);
 		expect(sig1.Signers).toBeDefined();
@@ -63,11 +63,11 @@ describe("e2e: multi-signing", () => {
 
 		// Sign with signer2
 		const sig2 = await runJson(
+			"multisign",
 			"-s",
 			signer2.seed,
-			"multisign",
 			unsignedJson,
-			"--account",
+			"--multisig-account",
 			multisig.address,
 		);
 		expect(sig2.Signers).toBeDefined();
