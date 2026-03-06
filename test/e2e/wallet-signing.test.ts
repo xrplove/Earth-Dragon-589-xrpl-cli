@@ -70,7 +70,12 @@ describe("e2e: wallet & signing", () => {
 		expect(built.SigningPubKey).toBe("");
 
 		// Sign the transaction
-		const signed = await runJson("-s", sender.seed, "sign", JSON.stringify(built));
+		const signed = await runJson(
+			"-s",
+			sender.seed,
+			"sign",
+			JSON.stringify(built),
+		);
 		expect(signed.tx_blob).toBeTypeOf("string");
 		expect(signed.hash).toBeTypeOf("string");
 

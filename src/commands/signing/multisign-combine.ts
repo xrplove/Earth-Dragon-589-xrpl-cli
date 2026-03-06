@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import type { Command } from "commander";
-import { decodeAccountID } from "xrpl";
 import type { Signer } from "xrpl";
+import { decodeAccountID } from "xrpl";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
