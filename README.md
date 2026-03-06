@@ -1540,6 +1540,28 @@ xrpl from-hex 696E746572636861696E5F7472616E73666572
 # interchain_transfer
 ```
 
+#### `hash`
+
+Hash data using XRPL-relevant algorithms. Offline.
+
+```bash
+xrpl hash <algorithm> <data> [--hex]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<algorithm>` | `string` | required | Hash algorithm: `sha256`, `sha512`, `sha512half`, `ripemd160` |
+| `<data>` | `string` | required | Data to hash (UTF-8 string by default) |
+| `--hex` | `boolean` | `false` | Treat input as hex-encoded bytes instead of UTF-8 |
+
+`sha512half` returns the first 32 bytes of the SHA-512 digest — this is the hash function used internally by the XRP Ledger for transaction IDs, account IDs, and ledger object keys.
+
+```bash
+xrpl hash sha256 "hello world"
+xrpl hash sha512half "hello world"
+xrpl hash ripemd160 --hex 0123456789ABCDEF
+```
+
 #### `decode-tx`
 
 Decode a raw transaction blob into readable JSON. Uses `ripple-binary-codec` under the hood. Offline — does not require a network connection.
@@ -1857,7 +1879,6 @@ Contributions are welcome! Please:
 Features that aren't planned for the initial release but worth exploring later:
 
 - **`watch` mode** — poll a command at an interval and stream changes, e.g. `xrpl watch balance rAddr --interval 5s`. Useful for scripting and monitoring.
-- **`hash`** — offline SHA-256 / SHA-512Half utility. Useful for crypto-conditions, account ID derivation, and general scripting.
 - **`wallet sign-message` / `verify-message`** — sign and verify arbitrary data (not transactions). Useful for off-chain proof-of-ownership.
 - **Persistent wallet store** (`wallet import`, `wallet list`, `wallet remove`) — encrypted local keystore as an alternative to `--seed` / `XRPL_SEED` env var for frequent use.
 - **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
