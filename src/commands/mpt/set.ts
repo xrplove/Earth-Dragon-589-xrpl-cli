@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateMptId } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface MptSetOpts extends TxOptions {
 	holder?: string;
@@ -60,7 +61,8 @@ export function registerMptSet(program: Command) {
 				.default(false)
 				.conflicts("lock"),
 		);
-	withTxOptions(cmd).action((mptIssuanceId: string, opts: MptSetOpts) =>
-		mptSet(mptIssuanceId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(mptIssuanceId: string, opts: MptSetOpts) =>
+			mptSet(mptIssuanceId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

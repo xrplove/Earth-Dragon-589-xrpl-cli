@@ -87,17 +87,16 @@ These options apply to commands that require signing (transactions, offline sign
 |--------|------|---------|-------------|
 | `--seed`, `-s` | `string` | — | Wallet seed for signing (env: `XRPL_SEED`) |
 | `--keyfile` | `string` | — | Path to a JSON keyfile containing the seed |
-| `--account`, `-a` | `string` | — | Use a wallet from the keystore (env: `XRPL_ACCOUNT`) |
-| `--from`, `-f` | `string` | — | Alias for `--account` (env: `XRPL_FROM`) |
+| `--from`, `-f` | `string` | — | Use a wallet from the keystore (env: `XRPL_FROM`) |
 | `--interactive`, `-i` | `boolean` | `false` | Prompt interactively for the wallet seed |
 | `--mnemonic` | `string` | — | BIP39 mnemonic phrase or path to a mnemonic file |
 | `--mnemonic-passphrase` | `string` | — | BIP39 passphrase for the mnemonic |
 | `--mnemonic-derivation-path` | `string` | `m/44'/144'/0'/0/0` | Wallet derivation path |
 | `--mnemonic-index` | `number` | — | Derive at this mnemonic index |
-| `--password` | `string` | — | Keystore password (used with `--account`/`--from`) |
+| `--password` | `string` | — | Keystore password (used with `--from`) |
 | `--password-file` | `string` | — | Path to keystore password file (env: `XRPL_PASSWORD_FILE`) |
 
-All wallet options are mutually exclusive — only one of `--seed`, `--keyfile`, `--account`/`--from`, `--mnemonic`, or `--interactive` can be specified at a time.
+All wallet options are mutually exclusive — only one of `--seed`, `--keyfile`, `--from`, `--mnemonic`, or `--interactive` can be specified at a time.
 
 #### RPC URL
 
@@ -529,7 +528,7 @@ xrpl submit <tx-blob> [--fail-hard]
 
 #### `sign`
 
-Sign a transaction (from JSON) without submitting. Uses the wallet from `--seed` / `--keyfile` / `XRPL_SEED`.
+Sign a transaction (from JSON) without submitting. Uses the wallet from `--seed`, `--from`, `--keyfile`, `--mnemonic`, or `XRPL_SEED`.
 
 ```bash
 xrpl sign <tx-json> [--file <path>] [--multisign [<account>]]
@@ -1326,9 +1325,9 @@ The multi-signing workflow is:
 xrpl send --to rAddr --amount 10 --token XRP --prepare --signers 3 > unsigned.json
 
 # 2. Each signer signs independently
-XRPL_SEED=sSigner1... xrpl multisign --file unsigned.json --account rMultisig > sig1.json
-XRPL_SEED=sSigner2... xrpl multisign --file unsigned.json --account rMultisig > sig2.json
-XRPL_SEED=sSigner3... xrpl multisign --file unsigned.json --account rMultisig > sig3.json
+XRPL_SEED=sSigner1... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig1.json
+XRPL_SEED=sSigner2... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig2.json
+XRPL_SEED=sSigner3... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig3.json
 
 # 3. Combine and submit
 xrpl multisign-submit --files sig1.json sig2.json sig3.json
@@ -1339,14 +1338,14 @@ xrpl multisign-submit --files sig1.json sig2.json sig3.json
 Add a signer's signature to a transaction for multi-signing. The transaction must have `SigningPubKey: ""` (set automatically by `--prepare` and `build`). Uses `Wallet.sign(tx, multisign)` under the hood.
 
 ```bash
-xrpl multisign [<tx-json>] --account <multisig-account> [--file <path>]
+xrpl multisign [<tx-json>] --multisig-account <multisig-account> [--file <path>]
 ```
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `<tx-json>` | `json` | — | Transaction JSON as a string argument |
 | `--file` | `string` | — | Path to a JSON file containing the transaction (alternative to inline JSON) |
-| `--account` | `address` | required | The multisig account address this signature is for |
+| `--multisig-account` | `address` | required | The multisig account address this signature is for |
 
 Returns the transaction with this signer's entry added to the `Signers` array.
 
@@ -1448,7 +1447,7 @@ xrpl wallet sign-message <message>
 |--------|------|---------|-------------|
 | `<message>` | `string` | required | UTF-8 message to sign |
 
-Requires `--seed`, `--keyfile`, or `XRPL_SEED`. Outputs the hex-encoded signature (or with `--json`: message, publicKey, and signature).
+Requires a wallet option (`--seed`, `--from`, `--keyfile`, `--mnemonic`, or `-i`). Outputs the hex-encoded signature (or with `--json`: message, publicKey, and signature).
 
 ```bash
 xrpl -s sEdV... wallet sign-message "I own this account"
@@ -1489,7 +1488,7 @@ xrpl wallet import <name> [options]
 |--------|------|---------|-------------|
 | `<name>` | `string` | required | Account name for the keystore |
 | `-i, --interactive` | `boolean` | `false` | Prompt interactively for the seed |
-| `--private-key` | `string` | — | Seed (private key) to import |
+| `--seed`, `-s` | `string` | — | Seed to import |
 | `--mnemonic` | `string` | — | BIP39 mnemonic phrase or path to a mnemonic file |
 | `--mnemonic-passphrase` | `string` | — | BIP39 passphrase for the mnemonic |
 | `--mnemonic-derivation-path` | `string` | `m/44'/144'/0'/0/0` | Wallet derivation path |
@@ -1497,14 +1496,12 @@ xrpl wallet import <name> [options]
 | `--unsafe-password` | `string` | — | Password in cleartext (prefer interactive prompt) |
 | `-k, --keystore-dir` | `string` | `~/.config/xrpl/keystores` | Custom keystore directory |
 
-The seed can also be provided via `--seed` / `XRPL_SEED` global option.
-
 ```bash
 # Interactive (prompts for seed and password)
 xrpl wallet import alice -i
 
 # From seed
-xrpl wallet import alice --private-key sEdV...
+xrpl wallet import alice --seed sEdV...
 
 # From BIP39 mnemonic
 xrpl wallet import alice --mnemonic "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
@@ -1888,9 +1885,9 @@ xrpl account-set --flag asfDisableMaster
 
 # Multi-sign a payment from the multisig
 xrpl send --to rSomeAddr --amount 10 --token XRP --prepare --signers 3 > unsigned.json
-XRPL_SEED=sSigner1... xrpl multisign --file unsigned.json --account rMultisig > sig1.json
-XRPL_SEED=sSigner2... xrpl multisign --file unsigned.json --account rMultisig > sig2.json
-XRPL_SEED=sSigner3... xrpl multisign --file unsigned.json --account rMultisig > sig3.json
+XRPL_SEED=sSigner1... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig1.json
+XRPL_SEED=sSigner2... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig2.json
+XRPL_SEED=sSigner3... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig3.json
 xrpl multisign-submit --files sig1.json sig2.json sig3.json
 
 # Create 250 tickets for parallel multisig prover transactions

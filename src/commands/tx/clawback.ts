@@ -10,6 +10,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface ClawbackOpts extends TxOptions {
 	amount: string;
@@ -40,7 +41,7 @@ export function registerClawback(program: Command) {
 		.requiredOption("--amount <amount>", "Amount to claw back")
 		.requiredOption("--token <token>", "Token: <currency>.<issuer> or mpt:<id>")
 		.option("--holder <address>", "Holder account (for MPT clawback)");
-	withTxOptions(cmd).action((opts: ClawbackOpts) =>
-		clawback(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: ClawbackOpts) =>
+		clawback(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

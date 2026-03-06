@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface NftOfferAcceptOpts extends TxOptions {
 	sellOffer?: string;
@@ -54,7 +55,7 @@ export function registerNftOfferAccept(program: Command) {
 		.option("--buy-offer <id>", "Buy offer ID to accept")
 		.option("--broker-fee-amount <amount>", "Broker fee amount")
 		.option("--broker-fee-token <token>", "Token for broker fee");
-	withTxOptions(cmd).action((opts: NftOfferAcceptOpts) =>
-		nftOfferAccept(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: NftOfferAcceptOpts) =>
+		nftOfferAccept(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

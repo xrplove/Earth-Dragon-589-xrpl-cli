@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface NftBurnOpts extends TxOptions {
 	owner?: string;
@@ -43,7 +44,8 @@ export function registerNftBurn(program: Command) {
 		.description("Burn (destroy) an NFT")
 		.argument("<nftoken-id>", "NFToken ID (64-char hex)")
 		.option("--owner <address>", "Owner account (if burning on behalf of)");
-	withTxOptions(cmd).action((nftokenId: string, opts: NftBurnOpts) =>
-		nftBurn(nftokenId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(nftokenId: string, opts: NftBurnOpts) =>
+			nftBurn(nftokenId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

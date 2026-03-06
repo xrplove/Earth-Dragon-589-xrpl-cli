@@ -11,6 +11,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface SendOpts extends TxOptions {
 	to: string;
@@ -103,7 +104,7 @@ export function registerSendCommand(program: Command) {
 		.option("--partial", "Allow partial payments", false)
 		.option("--no-direct", "Only use explicit paths", false)
 		.option("--limit-quality", "Only take equal-quality paths", false);
-	withTxOptions(cmd).action((opts: SendOpts) =>
-		sendPayment(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: SendOpts) =>
+		sendPayment(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

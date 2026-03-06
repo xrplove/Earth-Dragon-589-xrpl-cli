@@ -15,6 +15,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AmmDepositOpts extends TxOptions {
 	asset: string;
@@ -111,7 +112,7 @@ export function registerAmmDeposit(program: Command) {
 		)
 		.option("--limit-lp-token", "Limit by LP token amount", false)
 		.option("--two-asset-if-empty", "Two-asset deposit for empty pool", false);
-	withTxOptions(cmd).action((opts: AmmDepositOpts) =>
-		ammDeposit(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AmmDepositOpts) =>
+		ammDeposit(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

@@ -6,6 +6,7 @@ import { parseFields } from "../../lib/parsing.js";
 import { calcSignersFee } from "../../lib/tx.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function buildTransaction(
 	txType: string,
@@ -42,7 +43,7 @@ async function buildTransaction(
 }
 
 export function registerBuild(program: Command) {
-	program
+	const cmd = program
 		.command("build")
 		.description(
 			"Build a transaction: autofill sequence/fee/ledger, output unsigned JSON",
@@ -50,8 +51,14 @@ export function registerBuild(program: Command) {
 		.argument("<TransactionType>", "XRPL transaction type (e.g. Payment)")
 		.option("--signers <n>", "Number of signers for multi-sign fee", Number)
 		.allowUnknownOption(true)
-		.allowExcessArguments(true)
-		.action((txType: string, opts: { signers?: number }, cmd: Command) =>
-			buildTransaction(txType, opts, cmd, program.opts() as GlobalOptions),
-		);
+		.allowExcessArguments(true);
+	withWalletOptions(cmd).action(
+		(txType: string, opts: { signers?: number }, actionCmd: Command) =>
+			buildTransaction(
+				txType,
+				opts,
+				actionCmd,
+				cmd.optsWithGlobals() as GlobalOptions,
+			),
+	);
 }

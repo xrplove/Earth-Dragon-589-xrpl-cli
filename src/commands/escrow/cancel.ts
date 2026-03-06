@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function escrowCancel(
 	owner: string,
@@ -40,8 +41,13 @@ export function registerEscrowCancel(program: Command) {
 			"Sequence number of the EscrowCreate",
 			Number,
 		);
-	withTxOptions(cmd).action(
+	withWalletOptions(withTxOptions(cmd)).action(
 		(owner: string, offerSequence: number, opts: TxOptions) =>
-			escrowCancel(owner, offerSequence, opts, program.opts() as GlobalOptions),
+			escrowCancel(
+				owner,
+				offerSequence,
+				opts,
+				cmd.optsWithGlobals() as GlobalOptions,
+			),
 	);
 }

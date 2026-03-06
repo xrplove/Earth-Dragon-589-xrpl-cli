@@ -22,8 +22,6 @@ import { registerWalletCommands } from "./commands/wallet/index.js";
 import { loadConfig } from "./lib/config.js";
 import { EXIT_CODES } from "./lib/types.js";
 
-const DEFAULT_DERIVATION_PATH = "m/44'/144'/0'/0/0";
-
 const config = loadConfig();
 
 const program = new Command()
@@ -45,69 +43,6 @@ const program = new Command()
 		)
 			.default(config.rpc_url)
 			.env("XRPL_RPC_URL"),
-	)
-	.addOption(
-		new Option("-s, --seed <seed>", "Wallet seed for signing")
-			.env("XRPL_SEED")
-			.conflicts(["keyfile", "account", "from", "mnemonic", "interactive"]),
-	)
-	.addOption(
-		new Option(
-			"--keyfile <path>",
-			"Path to a JSON keyfile containing the seed",
-		).conflicts(["seed", "account", "from", "mnemonic", "interactive"]),
-	)
-	.addOption(
-		new Option("-a, --account <name>", "Use a wallet from the keystore")
-			.env("XRPL_ACCOUNT")
-			.conflicts(["seed", "keyfile", "from", "mnemonic", "interactive"]),
-	)
-	.addOption(
-		new Option("-f, --from <name>", "Alias for --account")
-			.env("XRPL_FROM")
-			.conflicts(["seed", "keyfile", "account", "mnemonic", "interactive"])
-			.hideHelp(),
-	)
-	.addOption(
-		new Option(
-			"-i, --interactive",
-			"Prompt interactively for the wallet seed",
-		).conflicts(["seed", "keyfile", "account", "from", "mnemonic"]),
-	)
-	.addOption(
-		new Option(
-			"--mnemonic <mnemonic>",
-			"BIP39 mnemonic phrase or path to a mnemonic file",
-		).conflicts(["seed", "keyfile", "account", "from", "interactive"]),
-	)
-	.addOption(
-		new Option(
-			"--mnemonic-passphrase <passphrase>",
-			"BIP39 passphrase for the mnemonic",
-		),
-	)
-	.addOption(
-		new Option(
-			"--mnemonic-derivation-path <path>",
-			"Wallet derivation path",
-		).default(DEFAULT_DERIVATION_PATH),
-	)
-	.addOption(
-		new Option(
-			"--mnemonic-index <index>",
-			"Derive at this mnemonic index",
-		).argParser(Number),
-	)
-	.addOption(
-		new Option(
-			"--password <password>",
-			"Keystore password (used with --account/--from)",
-		).conflicts("passwordFile"),
-	)
-	.addOption(
-		new Option("--password-file <path>", "Path to keystore password file")
-			.env("XRPL_PASSWORD_FILE")
-			.conflicts("password"),
 	)
 	.option("--json", "Output as JSON", false)
 	.option("-q, --quiet", "Suppress non-essential output", false)

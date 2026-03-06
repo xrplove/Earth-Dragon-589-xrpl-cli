@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateMptId } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function mptDestroy(
 	mptIssuanceId: string,
@@ -35,7 +36,8 @@ export function registerMptDestroy(program: Command) {
 		.command("mpt-destroy")
 		.description("Destroy an MPT issuance (must have zero outstanding balance)")
 		.argument("<mpt-issuance-id>", "MPT issuance ID (48-char hex)");
-	withTxOptions(cmd).action((mptIssuanceId: string, opts: TxOptions) =>
-		mptDestroy(mptIssuanceId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(mptIssuanceId: string, opts: TxOptions) =>
+			mptDestroy(mptIssuanceId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

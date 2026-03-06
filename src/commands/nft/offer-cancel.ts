@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function nftOfferCancel(
 	offerIds: string[],
@@ -35,7 +36,8 @@ export function registerNftOfferCancel(program: Command) {
 		.command("nft-offer-cancel")
 		.description("Cancel one or more NFT offers")
 		.argument("<offer-ids...>", "Offer ID(s) to cancel");
-	withTxOptions(cmd).action((offerIds: string[], opts: TxOptions) =>
-		nftOfferCancel(offerIds, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(offerIds: string[], opts: TxOptions) =>
+			nftOfferCancel(offerIds, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

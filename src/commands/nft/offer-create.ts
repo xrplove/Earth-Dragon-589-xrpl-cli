@@ -15,6 +15,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface NftOfferCreateOpts extends TxOptions {
 	amount: string;
@@ -66,7 +67,8 @@ export function registerNftOfferCreate(program: Command) {
 		)
 		.option("--destination <address>", "Only this account can accept the offer")
 		.option("--sell", "Create a sell offer (default is buy)", false);
-	withTxOptions(cmd).action((nftokenId: string, opts: NftOfferCreateOpts) =>
-		nftOfferCreate(nftokenId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(nftokenId: string, opts: NftOfferCreateOpts) =>
+			nftOfferCreate(nftokenId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

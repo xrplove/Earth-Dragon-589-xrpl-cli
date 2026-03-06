@@ -8,6 +8,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 const ASF_FLAGS: Record<string, number> = {};
 for (const [name, value] of Object.entries(AccountSetAsfFlags)) {
@@ -88,7 +89,7 @@ export function registerAccountSet(program: Command) {
 			"--nftoken-minter <address>",
 			"Allow this account to mint NFTs on your behalf",
 		);
-	withTxOptions(cmd).action((opts: AccountSetOpts) =>
-		accountSet(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AccountSetOpts) =>
+		accountSet(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

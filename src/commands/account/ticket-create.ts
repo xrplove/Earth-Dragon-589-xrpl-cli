@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateRange } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function ticketCreate(
 	count: number,
@@ -35,7 +36,8 @@ export function registerTicketCreate(program: Command) {
 		.command("ticket-create")
 		.description("Create tickets for later use")
 		.argument("<count>", "Number of tickets to create (1-250)", Number);
-	withTxOptions(cmd).action((count: number, opts: TxOptions) =>
-		ticketCreate(count, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(count: number, opts: TxOptions) =>
+			ticketCreate(count, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

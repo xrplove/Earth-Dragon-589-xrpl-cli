@@ -11,6 +11,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface CheckCreateOpts extends TxOptions {
 	destination: string;
@@ -64,7 +65,7 @@ export function registerCheckCreate(program: Command) {
 		)
 		.option("--invoice-id <hex>", "256-bit invoice ID (64-char hex)")
 		.option("--tag <tag>", "Destination tag", Number);
-	withTxOptions(cmd).action((opts: CheckCreateOpts) =>
-		checkCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: CheckCreateOpts) =>
+		checkCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

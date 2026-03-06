@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function checkCancel(
 	checkId: string,
@@ -35,7 +36,8 @@ export function registerCheckCancel(program: Command) {
 		.command("check-cancel")
 		.description("Cancel a check")
 		.argument("<check-id>", "Check ID (64-char hex)");
-	withTxOptions(cmd).action((checkId: string, opts: TxOptions) =>
-		checkCancel(checkId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(checkId: string, opts: TxOptions) =>
+			checkCancel(checkId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

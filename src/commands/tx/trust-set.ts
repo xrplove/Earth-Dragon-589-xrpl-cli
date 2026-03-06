@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface TrustSetOpts extends TxOptions {
 	limit: string;
@@ -99,8 +100,13 @@ export function registerTrustSetCommand(program: Command) {
 			),
 		)
 		.option("--auth", "Authorize counterparty to hold currency", false);
-	withTxOptions(cmd).action(
+	withWalletOptions(withTxOptions(cmd)).action(
 		(currency: string, issuer: string, opts: TrustSetOpts) =>
-			setTrustLine(currency, issuer, opts, program.opts() as GlobalOptions),
+			setTrustLine(
+				currency,
+				issuer,
+				opts,
+				cmd.optsWithGlobals() as GlobalOptions,
+			),
 	);
 }

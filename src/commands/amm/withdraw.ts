@@ -15,6 +15,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AmmWithdrawOpts extends TxOptions {
 	asset: string;
@@ -114,7 +115,7 @@ export function registerAmmWithdraw(program: Command) {
 			false,
 		)
 		.option("--limit-lp-token", "Limit by LP token amount", false);
-	withTxOptions(cmd).action((opts: AmmWithdrawOpts) =>
-		ammWithdraw(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AmmWithdrawOpts) =>
+		ammWithdraw(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

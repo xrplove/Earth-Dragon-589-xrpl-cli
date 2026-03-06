@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64, validateXrpAmount } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface ChannelFundOpts extends TxOptions {
 	amount: string;
@@ -50,7 +51,8 @@ export function registerChannelFund(program: Command) {
 			"New expiration (Ripple epoch)",
 			Number,
 		);
-	withTxOptions(cmd).action((channelId: string, opts: ChannelFundOpts) =>
-		channelFund(channelId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(channelId: string, opts: ChannelFundOpts) =>
+			channelFund(channelId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

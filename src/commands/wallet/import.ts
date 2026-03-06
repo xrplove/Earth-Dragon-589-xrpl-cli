@@ -19,7 +19,7 @@ interface ImportOpts {
 	keystoreDir?: string;
 	unsafePassword?: string;
 	interactive?: boolean;
-	privateKey?: string;
+	seed?: string;
 	mnemonic?: string;
 	mnemonicPassphrase?: string;
 	mnemonicDerivationPath?: string;
@@ -40,7 +40,6 @@ function walletFromMnemonic(
 
 	let derivationPath = opts.mnemonicDerivationPath ?? DEFAULT_DERIVATION_PATH;
 	if (opts.mnemonicIndex != null) {
-		// Replace the last segment with the specified index
 		const parts = derivationPath.split("/");
 		parts[parts.length - 1] = String(opts.mnemonicIndex);
 		derivationPath = parts.join("/");
@@ -65,20 +64,15 @@ async function importWallet(
 	opts: ImportOpts,
 	globalOpts: GlobalOptions,
 ) {
-	// Determine the source of the secret
 	const hasMnemonic = opts.mnemonic != null;
-	const hasPrivateKey = opts.privateKey != null;
-	const hasSeed = globalOpts.seed != null;
+	const hasSeed = opts.seed != null;
 	const hasInteractive = opts.interactive === true;
 
 	const sourceCount =
-		Number(hasMnemonic) +
-		Number(hasPrivateKey) +
-		Number(hasSeed) +
-		Number(hasInteractive);
+		Number(hasMnemonic) + Number(hasSeed) + Number(hasInteractive);
 	if (sourceCount > 1) {
 		throw new Error(
-			"Specify only one of --private-key, --seed, --mnemonic, or --interactive.",
+			"Specify only one of --seed, --mnemonic, or --interactive.",
 		);
 	}
 
@@ -88,7 +82,6 @@ async function importWallet(
 
 	if (hasMnemonic) {
 		const mnemonicInput = opts.mnemonic!;
-		// Support file path or inline mnemonic
 		const mnemonic = existsSync(mnemonicInput)
 			? readFileSync(mnemonicInput, "utf-8").trim()
 			: mnemonicInput;
@@ -105,14 +98,10 @@ async function importWallet(
 			password,
 		);
 	} else {
-		// Seed-based import (--private-key, --seed, or interactive)
 		let seed: string;
-		if (hasPrivateKey) {
-			seed = opts.privateKey!;
-		} else if (hasSeed) {
-			seed = globalOpts.seed!;
+		if (hasSeed) {
+			seed = opts.seed!;
 		} else {
-			// Interactive or default: prompt for seed
 			seed = await prompt("Enter seed: ", true);
 		}
 
@@ -154,11 +143,11 @@ async function getPassword(opts: ImportOpts): Promise<string> {
 	return password;
 }
 
-export function registerImport(wallet: Command, program: Command) {
-	wallet
+export function registerImport(wallet: Command, _program: Command) {
+	const cmd = wallet
 		.command("import")
 		.description(
-			"Import a wallet into an encrypted keystore (from seed, private key, or mnemonic)",
+			"Import a wallet into an encrypted keystore (from seed or mnemonic)",
 		)
 		.argument("<name>", "Account name for the keystore")
 		.option("-k, --keystore-dir <dir>", "Custom keystore directory")
@@ -167,7 +156,7 @@ export function registerImport(wallet: Command, program: Command) {
 			"Password in cleartext (unsafe, prefer interactive prompt)",
 		)
 		.option("-i, --interactive", "Prompt interactively for the seed")
-		.option("--private-key <seed>", "Seed (private key) to import")
+		.option("-s, --seed <seed>", "Seed to import")
 		.option(
 			"--mnemonic <mnemonic>",
 			"BIP39 mnemonic phrase or path to a mnemonic file",
@@ -187,6 +176,6 @@ export function registerImport(wallet: Command, program: Command) {
 			Number,
 		)
 		.action((name: string, opts: ImportOpts) =>
-			importWallet(name, opts, program.opts() as GlobalOptions),
+			importWallet(name, opts, cmd.optsWithGlobals() as GlobalOptions),
 		);
 }

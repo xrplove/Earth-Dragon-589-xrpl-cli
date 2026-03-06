@@ -8,7 +8,11 @@ import { prompt } from "./prompt.js";
 import type { GlobalOptions } from "./types.js";
 
 export async function loadWallet(opts: GlobalOptions): Promise<Wallet> {
-	const accountName = opts.account ?? opts.from;
+	if ((opts.password || opts.passwordFile) && !opts.from) {
+		throw new Error("--password/--password-file can only be used with --from.");
+	}
+
+	const accountName = opts.from;
 
 	if (accountName) {
 		return await loadFromKeystore(accountName, opts);

@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateRange } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AmmCreateOpts extends TxOptions {
 	amount1: string;
@@ -56,7 +57,7 @@ export function registerAmmCreate(program: Command) {
 			"Trading fee (0-1000, in 1/100000ths)",
 			Number,
 		);
-	withTxOptions(cmd).action((opts: AmmCreateOpts) =>
-		ammCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AmmCreateOpts) =>
+		ammCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

@@ -12,6 +12,7 @@ import {
 	validateOptionalHex,
 	validateOptionalRange,
 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface MptCreateOpts extends TxOptions {
 	assetScale?: number;
@@ -75,7 +76,7 @@ export function registerMptCreate(program: Command) {
 		.option("--can-trade", "Allow tokens on the DEX", false)
 		.option("--can-transfer", "Allow transfers between holders", false)
 		.option("--can-clawback", "Allow issuer to clawback tokens", false);
-	withTxOptions(cmd).action((opts: MptCreateOpts) =>
-		mptCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: MptCreateOpts) =>
+		mptCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

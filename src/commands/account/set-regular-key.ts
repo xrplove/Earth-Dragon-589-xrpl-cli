@@ -8,6 +8,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface SetRegularKeyOpts extends TxOptions {
 	key?: string;
@@ -39,7 +40,7 @@ export function registerSetRegularKey(program: Command) {
 			"--key <address>",
 			"Regular key address to assign (omit to remove)",
 		);
-	withTxOptions(cmd).action((opts: SetRegularKeyOpts) =>
-		setRegularKey(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: SetRegularKeyOpts) =>
+		setRegularKey(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

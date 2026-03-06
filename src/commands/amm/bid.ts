@@ -11,6 +11,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AmmBidOpts extends TxOptions {
 	asset: string;
@@ -72,7 +73,7 @@ export function registerAmmBid(program: Command) {
 			"--auth-accounts <addresses...>",
 			"Authorized accounts for discounted trading",
 		);
-	withTxOptions(cmd).action((opts: AmmBidOpts) =>
-		ammBid(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AmmBidOpts) =>
+		ammBid(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

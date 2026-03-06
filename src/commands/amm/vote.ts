@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateRange } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AmmVoteOpts extends TxOptions {
 	asset: string;
@@ -49,7 +50,7 @@ export function registerAmmVote(program: Command) {
 			"Proposed trading fee (0-1000)",
 			Number,
 		);
-	withTxOptions(cmd).action((opts: AmmVoteOpts) =>
-		ammVote(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AmmVoteOpts) =>
+		ammVote(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

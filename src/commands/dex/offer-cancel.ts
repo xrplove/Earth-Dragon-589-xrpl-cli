@@ -9,6 +9,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validatePositiveInt } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface OfferCancelOpts extends TxOptions {}
 
@@ -41,7 +42,8 @@ export function registerOfferCancel(program: Command) {
 			"Sequence number of the offer to cancel",
 			Number,
 		);
-	withTxOptions(cmd).action((offerSequence: number, opts: OfferCancelOpts) =>
-		offerCancel(offerSequence, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(offerSequence: number, opts: OfferCancelOpts) =>
+			offerCancel(offerSequence, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

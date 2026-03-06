@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface DepositPreauthOpts extends TxOptions {
 	authorize?: string;
@@ -93,7 +94,7 @@ export function registerDepositPreauth(program: Command) {
 				"Revoke credential-based preauthorization",
 			).conflicts(["authorize", "unauthorize", "authorizeCredentials"]),
 		);
-	withTxOptions(cmd).action((opts: DepositPreauthOpts) =>
-		depositPreauth(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: DepositPreauthOpts) =>
+		depositPreauth(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

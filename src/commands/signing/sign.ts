@@ -3,6 +3,7 @@ import { output } from "../../lib/output.js";
 import { readTx } from "../../lib/tx-input.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function signTransaction(
 	txJson: string | undefined,
@@ -25,7 +26,7 @@ async function signTransaction(
 }
 
 export function registerSign(program: Command) {
-	program
+	const cmd = program
 		.command("sign")
 		.description("Sign a transaction (from JSON) without submitting")
 		.argument("[tx-json]", "Transaction JSON as a string argument")
@@ -33,11 +34,11 @@ export function registerSign(program: Command) {
 		.option(
 			"--multisign [account]",
 			"Sign for multi-signing, optionally specify the multisig account",
-		)
-		.action(
-			(
-				txJson: string | undefined,
-				opts: { file?: string; multisign?: string | true },
-			) => signTransaction(txJson, opts, program.opts() as GlobalOptions),
 		);
+	withWalletOptions(cmd).action(
+		(
+			txJson: string | undefined,
+			opts: { file?: string; multisign?: string | true },
+		) => signTransaction(txJson, opts, cmd.optsWithGlobals() as GlobalOptions),
+	);
 }

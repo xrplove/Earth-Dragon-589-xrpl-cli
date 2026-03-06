@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface DelegateSetOpts extends TxOptions {
 	permission: string[];
@@ -44,7 +45,8 @@ export function registerDelegateSet(program: Command) {
 			"--permission <value...>",
 			"Permission value(s) to grant (repeatable)",
 		);
-	withTxOptions(cmd).action((authorize: string, opts: DelegateSetOpts) =>
-		delegateSet(authorize, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(authorize: string, opts: DelegateSetOpts) =>
+			delegateSet(authorize, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface SignerListSetOpts extends TxOptions {
 	quorum: number;
@@ -45,7 +46,7 @@ export function registerSignerListSet(program: Command) {
 			(val: string, prev: string[]) => [...prev, val],
 			[] as string[],
 		);
-	withTxOptions(cmd).action((opts: SignerListSetOpts) =>
-		setSignerList(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: SignerListSetOpts) =>
+		setSignerList(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

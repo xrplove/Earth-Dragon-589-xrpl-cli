@@ -5,7 +5,6 @@ export interface GlobalOptions {
 	rpcUrl?: string;
 	seed?: string;
 	keyfile?: string;
-	account?: string;
 	from?: string;
 	interactive?: boolean;
 	mnemonic?: string;

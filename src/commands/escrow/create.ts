@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateOptionalHex, validateXrpAmount } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface EscrowCreateOpts extends TxOptions {
 	destination: string;
@@ -67,7 +68,7 @@ export function registerEscrowCreate(program: Command) {
 		)
 		.option("--condition <hex>", "Crypto-condition (hex)")
 		.option("--tag <tag>", "Destination tag", Number);
-	withTxOptions(cmd).action((opts: EscrowCreateOpts) =>
-		escrowCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: EscrowCreateOpts) =>
+		escrowCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

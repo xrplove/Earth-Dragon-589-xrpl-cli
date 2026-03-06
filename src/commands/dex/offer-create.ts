@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface OfferCreateOpts extends TxOptions {
 	takerPaysAmount: string;
@@ -88,7 +89,7 @@ export function registerOfferCreate(program: Command) {
 				.conflicts("immediateOrCancel"),
 		)
 		.option("--sell", "Sell the full TakerGets amount", false);
-	withTxOptions(cmd).action((opts: OfferCreateOpts) =>
-		offerCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: OfferCreateOpts) =>
+		offerCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

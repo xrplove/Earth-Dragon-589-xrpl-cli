@@ -11,6 +11,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateOptionalRange } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface NftMintOpts extends TxOptions {
 	taxon: number;
@@ -90,7 +91,7 @@ export function registerNftMint(program: Command) {
 			false,
 		)
 		.option("--mutable", "Allow issuer to modify the URI", false);
-	withTxOptions(cmd).action((opts: NftMintOpts) =>
-		nftMint(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: NftMintOpts) =>
+		nftMint(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

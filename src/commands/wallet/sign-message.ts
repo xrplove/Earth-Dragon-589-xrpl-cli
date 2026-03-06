@@ -3,6 +3,7 @@ import { sign } from "ripple-keypairs";
 import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 import { loadWallet } from "../../lib/wallet.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function signMessage(message: string, globalOpts: GlobalOptions) {
 	const wallet = await loadWallet(globalOpts);
@@ -22,14 +23,14 @@ async function signMessage(message: string, globalOpts: GlobalOptions) {
 	}
 }
 
-export function registerSignMessage(wallet: Command, program: Command) {
-	wallet
+export function registerSignMessage(wallet: Command, _program: Command) {
+	const cmd = wallet
 		.command("sign-message")
 		.description(
 			"Sign an arbitrary message with your wallet's private key. Offline",
 		)
-		.argument("<message>", "UTF-8 message to sign")
-		.action((message: string) =>
-			signMessage(message, program.opts() as GlobalOptions),
-		);
+		.argument("<message>", "UTF-8 message to sign");
+	withWalletOptions(cmd).action((message: string) =>
+		signMessage(message, cmd.optsWithGlobals() as GlobalOptions),
+	);
 }

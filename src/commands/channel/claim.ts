@@ -13,6 +13,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64, validateOptionalHex } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface ChannelClaimOpts extends TxOptions {
 	balance?: string;
@@ -68,7 +69,8 @@ export function registerChannelClaim(program: Command) {
 			new Option("--renew", "Reset the channel's settle delay").default(false),
 		)
 		.addOption(new Option("--close", "Request channel closure").default(false));
-	withTxOptions(cmd).action((channelId: string, opts: ChannelClaimOpts) =>
-		channelClaim(channelId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(channelId: string, opts: ChannelClaimOpts) =>
+			channelClaim(channelId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateHex64 } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface CheckCashOpts extends TxOptions {
 	amount?: string;
@@ -75,7 +76,8 @@ export function registerCheckCash(program: Command) {
 				"Token for --deliver-min-amount",
 			).conflicts("token"),
 		);
-	withTxOptions(cmd).action((checkId: string, opts: CheckCashOpts) =>
-		checkCash(checkId, opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action(
+		(checkId: string, opts: CheckCashOpts) =>
+			checkCash(checkId, opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

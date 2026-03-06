@@ -9,6 +9,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface AccountDeleteOpts extends TxOptions {
 	to: string;
@@ -43,7 +44,7 @@ export function registerAccountDelete(program: Command) {
 			"Destination account to receive remaining XRP",
 		)
 		.option("--tag <tag>", "Destination tag", Number);
-	withTxOptions(cmd).action((opts: AccountDeleteOpts) =>
-		accountDelete(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: AccountDeleteOpts) =>
+		accountDelete(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

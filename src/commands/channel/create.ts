@@ -10,6 +10,7 @@ import {
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
 import { validateXrpAmount } from "../../lib/validate.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 interface ChannelCreateOpts extends TxOptions {
 	destination: string;
@@ -63,7 +64,7 @@ export function registerChannelCreate(program: Command) {
 			Number,
 		)
 		.option("--tag <tag>", "Destination tag", Number);
-	withTxOptions(cmd).action((opts: ChannelCreateOpts) =>
-		channelCreate(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: ChannelCreateOpts) =>
+		channelCreate(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }

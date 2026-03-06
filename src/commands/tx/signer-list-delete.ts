@@ -8,6 +8,7 @@ import {
 	withTxOptions,
 } from "../../lib/tx.js";
 import type { GlobalOptions, TxOptions } from "../../lib/types.js";
+import { withWalletOptions } from "../../lib/wallet-options.js";
 
 async function deleteSignerList(opts: TxOptions, globalOpts: GlobalOptions) {
 	const wallet = await loadWalletForTx(opts, globalOpts);
@@ -28,7 +29,7 @@ export function registerSignerListDelete(program: Command) {
 	const cmd = program
 		.command("signer-list-delete")
 		.description("Remove the signer list from an account");
-	withTxOptions(cmd).action((opts: TxOptions) =>
-		deleteSignerList(opts, program.opts() as GlobalOptions),
+	withWalletOptions(withTxOptions(cmd)).action((opts: TxOptions) =>
+		deleteSignerList(opts, cmd.optsWithGlobals() as GlobalOptions),
 	);
 }
