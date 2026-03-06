@@ -4,11 +4,11 @@ import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface ListOpts {
-	dir?: string;
+	keystoreDir?: string;
 }
 
 async function listWallets(opts: ListOpts, globalOpts: GlobalOptions) {
-	const keystores = listKeystores(opts.dir);
+	const keystores = listKeystores(opts.keystoreDir);
 
 	if (keystores.length === 0) {
 		if (!globalOpts.json) {
@@ -35,7 +35,7 @@ export function registerList(wallet: Command, program: Command) {
 		.command("list")
 		.alias("ls")
 		.description("List all wallets in the keystore")
-		.option("--dir <dir>", "Custom keystore directory")
+		.option("--keystore-dir <dir>", "Custom keystore directory")
 		.action((opts: ListOpts) =>
 			listWallets(opts, program.opts() as GlobalOptions),
 		);

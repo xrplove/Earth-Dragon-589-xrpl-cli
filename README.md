@@ -1796,11 +1796,14 @@ Restart your shell or source the file for completions to take effect.
 
 ### Environment Variables
 
-| Variable       | Description                                      |
-|----------------|--------------------------------------------------|
-| `XRPL_SEED`    | Default wallet seed for signing                  |
-| `XRPL_NETWORK` | Default network (`mainnet`, `testnet`, `devnet`) |
-| `XRPL_RPC_URL` | Default WebSocket RPC URL                        |
+| Variable             | Description                                      |
+|----------------------|--------------------------------------------------|
+| `XRPL_SEED`          | Default wallet seed for signing                  |
+| `XRPL_KEYFILE`       | Default path to a JSON keyfile containing the seed |
+| `XRPL_FROM`          | Default keystore wallet name (used with `--from`) |
+| `XRPL_PASSWORD_FILE` | Path to keystore password file                   |
+| `XRPL_NETWORK`       | Default network (`mainnet`, `testnet`, `devnet`) |
+| `XRPL_RPC_URL`       | Default WebSocket RPC URL                        |
 
 ### Configuration File
 

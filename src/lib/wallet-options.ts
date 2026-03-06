@@ -18,7 +18,9 @@ export function withWalletOptions(cmd: Command): Command {
 			new Option(
 				"--keyfile <path>",
 				"Path to a JSON keyfile containing the seed",
-			).conflicts(["seed", "from", "mnemonic", "interactive"]),
+			)
+				.env("XRPL_KEYFILE")
+				.conflicts(["seed", "from", "mnemonic", "interactive"]),
 		)
 		.addOption(
 			new Option("-f, --from <name>", "Use a wallet from the keystore")
