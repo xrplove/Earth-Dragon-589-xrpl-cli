@@ -1,5 +1,6 @@
+import { sign } from "ripple-keypairs";
 import { describe, expect, it } from "vitest";
-import { Wallet } from "xrpl";
+import { ECDSA, verifyKeypairSignature, Wallet } from "xrpl";
 import { formatWallet, parseAlgorithm } from "../src/commands/wallet/shared.js";
 import { algorithm, entropy } from "../src/lib/schemas.js";
 
@@ -65,5 +66,37 @@ describe("entropy schema", () => {
 
 	it("rejects non-hex characters", () => {
 		expect(() => entropy.parse("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")).toThrow();
+	});
+});
+
+describe("sign-message / verify-message", () => {
+	it("ed25519 sign + verify round-trip", () => {
+		const w = Wallet.generate();
+		const msgHex = Buffer.from("hello world").toString("hex").toUpperCase();
+		const sig = sign(msgHex, w.privateKey);
+		expect(verifyKeypairSignature(msgHex, sig, w.publicKey)).toBe(true);
+	});
+
+	it("secp256k1 sign + verify round-trip", () => {
+		const w = Wallet.generate(ECDSA.secp256k1);
+		const msgHex = Buffer.from("hello world").toString("hex").toUpperCase();
+		const sig = sign(msgHex, w.privateKey);
+		expect(verifyKeypairSignature(msgHex, sig, w.publicKey)).toBe(true);
+	});
+
+	it("rejects wrong public key", () => {
+		const w1 = Wallet.generate();
+		const w2 = Wallet.generate();
+		const msgHex = Buffer.from("test").toString("hex").toUpperCase();
+		const sig = sign(msgHex, w1.privateKey);
+		expect(verifyKeypairSignature(msgHex, sig, w2.publicKey)).toBe(false);
+	});
+
+	it("rejects tampered message", () => {
+		const w = Wallet.generate();
+		const msgHex = Buffer.from("original").toString("hex").toUpperCase();
+		const sig = sign(msgHex, w.privateKey);
+		const tamperedHex = Buffer.from("tampered").toString("hex").toUpperCase();
+		expect(verifyKeypairSignature(tamperedHex, sig, w.publicKey)).toBe(false);
 	});
 });

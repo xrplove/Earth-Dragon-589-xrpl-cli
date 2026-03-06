@@ -1418,6 +1418,47 @@ xrpl wallet fund [--account <account>] [--amount <amount>] [--faucet-host <host>
 | `--faucet-host` | `string` | per network | Custom faucet hostname (overrides default for the network) |
 | `--faucet-path` | `string` | per network | Custom faucet API path |
 
+#### `wallet sign-message`
+
+Sign an arbitrary message with your wallet's private key. Useful for off-chain proof-of-ownership. Works with both ed25519 and secp256k1 keys. Offline.
+
+```bash
+xrpl wallet sign-message <message>
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<message>` | `string` | required | UTF-8 message to sign |
+
+Requires `--seed`, `--keyfile`, or `XRPL_SEED`. Outputs the hex-encoded signature (or with `--json`: message, publicKey, and signature).
+
+```bash
+xrpl -s sEdV... wallet sign-message "I own this account"
+# 48F3E8111BD0FC...
+
+xrpl --json -s sEdV... wallet sign-message "I own this account"
+# { "message": "I own this account", "publicKey": "ED01FA...", "signature": "48F3E8..." }
+```
+
+#### `wallet verify-message`
+
+Verify a signed message against a public key. Offline.
+
+```bash
+xrpl wallet verify-message <message> <signature> <public-key>
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `<message>` | `string` | required | Original UTF-8 message |
+| `<signature>` | `string` | required | Hex-encoded signature |
+| `<public-key>` | `string` | required | Hex-encoded public key |
+
+```bash
+xrpl wallet verify-message "I own this account" 48F3E8... ED01FA...
+# Valid
+```
+
 ### Conversion Commands
 
 #### `xrp-to-drops`
@@ -1907,7 +1948,6 @@ Contributions are welcome! Please:
 Features that aren't planned for the initial release but worth exploring later:
 
 - **`watch` mode** — poll a command at an interval and stream changes, e.g. `xrpl watch balance rAddr --interval 5s`. Useful for scripting and monitoring.
-- **`wallet sign-message` / `verify-message`** — sign and verify arbitrary data (not transactions). Useful for off-chain proof-of-ownership.
 - **Persistent wallet store** (`wallet import`, `wallet list`, `wallet remove`) — encrypted local keystore as an alternative to `--seed` / `XRPL_SEED` env var for frequent use.
 - **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device, as an alternative to providing a seed or keyfile.
