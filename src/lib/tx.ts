@@ -151,7 +151,7 @@ function confirm(question: string): Promise<boolean> {
 
 export async function loadWalletForTx(
 	txOpts: TxOptions,
-	globalOpts: GlobalOptions,
+	globalOpts: SigningOptions,
 ): Promise<Wallet | null> {
 	if (txOpts.prepare || txOpts.signers != null) {
 		// Still load wallet to derive Account, but don't require it

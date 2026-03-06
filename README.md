@@ -69,18 +69,35 @@ xrpl wallet generate
 
 ### Global Options
 
-These options apply to all commands that interact with the network:
+These options are available on all commands:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--network` | `string` | `mainnet` | Network to connect to: `mainnet`, `testnet`, `devnet` |
+| `--network`, `-n` | `string` | `mainnet` | Network to connect to: `mainnet`, `testnet`, `devnet` |
 | `--rpc-url` | `string` | — | Custom WebSocket RPC URL (overrides `--network`) |
-| `--seed` | `string` | — | Wallet seed for signing (or set `XRPL_SEED` env var) |
-| `--keyfile` | `string` | — | Path to a JSON keyfile containing the seed |
-| `--account`, `-a` | `string` | — | Use a wallet from the encrypted keystore (prompts for password) |
 | `--json` | `boolean` | `false` | Output as JSON |
-| `--quiet` | `boolean` | `false` | Suppress non-essential output |
+| `--quiet`, `-q` | `boolean` | `false` | Suppress non-essential output |
 | `--yes`, `-y` | `boolean` | `false` | Skip confirmation prompts |
+
+#### Wallet Options
+
+These options apply to commands that require signing (transactions, offline signing, etc.):
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--seed`, `-s` | `string` | — | Wallet seed for signing (env: `XRPL_SEED`) |
+| `--keyfile` | `string` | — | Path to a JSON keyfile containing the seed |
+| `--account`, `-a` | `string` | — | Use a wallet from the keystore (env: `XRPL_ACCOUNT`) |
+| `--from`, `-f` | `string` | — | Alias for `--account` (env: `XRPL_FROM`) |
+| `--interactive`, `-i` | `boolean` | `false` | Prompt interactively for the wallet seed |
+| `--mnemonic` | `string` | — | BIP39 mnemonic phrase or path to a mnemonic file |
+| `--mnemonic-passphrase` | `string` | — | BIP39 passphrase for the mnemonic |
+| `--mnemonic-derivation-path` | `string` | `m/44'/144'/0'/0/0` | Wallet derivation path |
+| `--mnemonic-index` | `number` | — | Derive at this mnemonic index |
+| `--password` | `string` | — | Keystore password (used with `--account`/`--from`) |
+| `--password-file` | `string` | — | Path to keystore password file (env: `XRPL_PASSWORD_FILE`) |
+
+All wallet options are mutually exclusive — only one of `--seed`, `--keyfile`, `--account`/`--from`, `--mnemonic`, or `--interactive` can be specified at a time.
 
 #### RPC URL
 
@@ -2017,6 +2034,8 @@ Features that aren't planned for the initial release but worth exploring later:
 - **`watch` mode** — poll a command at an interval and stream changes, e.g. `xrpl watch balance rAddr --interval 5s`. Useful for scripting and monitoring.
 - **`wallet vanity`** — generate a vanity address matching a prefix/suffix pattern (e.g. `xrpl wallet vanity --starts-with rXRP`).
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device, as an alternative to providing a seed or keyfile.
+- **`--private-key` option** — accept a raw hex private key directly for signing, in addition to seeds. Requires algorithm detection or an `--algorithm` flag to derive the public key.
+- **Niche developer utilities** — expose more from xrpl.js sub-packages: RFC1751 mnemonic encode/decode, seed encoding/decoding (`encodeSeed`/`decodeSeed`), raw keypair derivation (`deriveKeypair`), account ID encoding from hex public key, and low-level binary codec operations.
 - **AI agent compatibility** — make the CLI easy for AI agents to use via an [MCP](https://modelcontextprotocol.io/) server and agent-facing files (`SKILL.md`, `CLAUDE.md`, etc.). The `--json` flag already makes output agent-friendly; MCP would add schema discovery and structured tool calls.
 
 ## License

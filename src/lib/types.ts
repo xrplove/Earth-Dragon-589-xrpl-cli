@@ -6,6 +6,14 @@ export interface GlobalOptions {
 	seed?: string;
 	keyfile?: string;
 	account?: string;
+	from?: string;
+	interactive?: boolean;
+	mnemonic?: string;
+	mnemonicPassphrase?: string;
+	mnemonicDerivationPath: string;
+	mnemonicIndex?: number;
+	password?: string;
+	passwordFile?: string;
 	json: boolean;
 	quiet: boolean;
 	yes: boolean;
