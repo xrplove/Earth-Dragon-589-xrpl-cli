@@ -30,6 +30,12 @@ A Swiss Army knife for interacting with the XRP Ledger from the command line.
 npm install -g @commonprefix/xrpl-cli
 ```
 
+Or run directly without installing:
+
+```bash
+npx @commonprefix/xrpl-cli --help
+```
+
 Requires Node.js v20+.
 
 ## Quick Start
@@ -59,42 +65,179 @@ xrpl subscribe --streams ledger
 
 ## Commands
 
+### Account Query
+
 | Command | Description |
 |---------|-------------|
-| `balance` | Get XRP or token balance for an account |
-| `account-info` | Get full account info (sequence, flags, balance, etc.) |
-| `account-objects` | Get objects owned by an account (offers, trust lines, escrows, etc.) |
-| `account-lines` | Get trust lines for an account |
-| `account-tx` | Get transaction history for an account |
-| `nonce` | Get the current sequence number |
-| `ledger` | Get ledger info |
-| `ledger-index` | Get latest validated ledger index |
-| `fee` | Get current transaction fee |
-| `server-info` | Get server status |
-| `feature` | List protocol amendments and their status |
-| `tx` | Look up a transaction by hash |
-| `send` | Send a payment (XRP, IOU, or MPT) |
-| `trust-set` | Create or modify a trust line |
-| `offer-create` | Create a DEX offer |
-| `book-offers` | Get the order book for a currency pair |
-| `mpt-create` | Create a Multi-Purpose Token issuance |
-| `amm-create` | Create an AMM for a token pair |
-| `escrow-create` | Create a time/condition-based escrow |
-| `nft-mint` | Mint an NFT |
-| `clawback` | Claw back tokens from a holder |
-| `account-set` | Modify account properties |
-| `signer-list-set` | Set up multi-signing |
-| `multisign` | Sign a transaction for multi-signing |
-| `wallet generate` | Generate a new random keypair |
-| `wallet vanity` | Generate a vanity address |
-| `wallet fund` | Fund a wallet via testnet/devnet faucet |
-| `wallet import` | Import a wallet into encrypted keystore |
-| `wallet sign-message` | Sign an arbitrary message |
-| `sign` | Sign a transaction without submitting |
-| `build` | Build any transaction type (escape hatch) |
-| `rpc` | Send a raw API request (escape hatch) |
-| `subscribe` | Subscribe to ledger events |
-| ... | [Full command reference →](docs/cli-reference.md) |
+| [`balance`](docs/cli-reference.md#balance) | Get XRP or token balance for an account |
+| [`account-info`](docs/cli-reference.md#account-info-alias-info) | Get full account info (sequence, flags, balance, etc.) |
+| [`account-objects`](docs/cli-reference.md#account-objects-alias-objects) | Get objects owned by an account (offers, trust lines, escrows, etc.) |
+| [`account-lines`](docs/cli-reference.md#account-lines-alias-lines) | Get trust lines for an account |
+| [`account-channels`](docs/cli-reference.md#account-channels-alias-channels) | Get payment channels for an account |
+| [`account-currencies`](docs/cli-reference.md#account-currencies-alias-currencies) | Get currencies an account can send or receive |
+| [`account-nfts`](docs/cli-reference.md#account-nfts-alias-nfts) | Get NFTs owned by an account |
+| [`account-offers`](docs/cli-reference.md#account-offers-alias-offers) | Get open DEX offers for an account |
+| [`account-tx`](docs/cli-reference.md#account-tx) | Get transaction history for an account |
+| [`gateway-balances`](docs/cli-reference.md#gateway-balances) | Get total issued token balances |
+| [`noripple-check`](docs/cli-reference.md#noripple-check) | Check account rippling settings |
+| [`sequence-number`](docs/cli-reference.md#sequence-number-alias-nonce) | Get the current sequence number |
+
+### Ledger
+
+| Command | Description |
+|---------|-------------|
+| [`ledger`](docs/cli-reference.md#ledger) | Get ledger info |
+| [`ledger-index`](docs/cli-reference.md#ledger-index) | Get latest validated ledger index |
+| [`ledger-data`](docs/cli-reference.md#ledger-data) | Get raw ledger contents |
+| [`ledger-entry`](docs/cli-reference.md#ledger-entry) | Get a single ledger entry by index |
+| [`fee`](docs/cli-reference.md#fee) | Get current transaction fee |
+| [`server-info`](docs/cli-reference.md#server-info) | Get server status |
+| [`server-state`](docs/cli-reference.md#server-state) | Get machine-readable server status |
+| [`feature`](docs/cli-reference.md#feature-alias-amendment) | List protocol amendments and their status |
+
+### Transactions
+
+| Command | Description |
+|---------|-------------|
+| [`tx`](docs/cli-reference.md#tx) | Look up a transaction by hash |
+| [`send`](docs/cli-reference.md#send-aliases-pay-payment) | Send a payment (XRP, IOU, or MPT) |
+| [`submit`](docs/cli-reference.md#submit) | Submit a raw signed transaction blob |
+| [`sign`](docs/cli-reference.md#sign) | Sign a transaction without submitting |
+| [`build`](docs/cli-reference.md#build) | Build any transaction type (escape hatch) |
+
+### Trust Lines & Tokens
+
+| Command | Description |
+|---------|-------------|
+| [`trust-set`](docs/cli-reference.md#trust-set) | Create or modify a trust line |
+| [`mpt-create`](docs/cli-reference.md#mpt-create) | Create a Multi-Purpose Token issuance |
+| [`mpt-authorize`](docs/cli-reference.md#mpt-authorize) | Authorize an account for an MPT |
+| [`mpt-set`](docs/cli-reference.md#mpt-set) | Lock/unlock an MPT issuance or holder |
+| [`mpt-destroy`](docs/cli-reference.md#mpt-destroy) | Destroy an MPT issuance |
+| [`clawback`](docs/cli-reference.md#clawback) | Claw back tokens from a holder |
+
+### Account Configuration
+
+| Command | Description |
+|---------|-------------|
+| [`account-set`](docs/cli-reference.md#account-set) | Modify account properties |
+| [`account-delete`](docs/cli-reference.md#account-delete) | Delete an account |
+| [`set-regular-key`](docs/cli-reference.md#set-regular-key) | Set or remove a regular key |
+| [`deposit-preauth`](docs/cli-reference.md#deposit-preauth) | Preauthorize an account for deposits |
+| [`signer-list-set`](docs/cli-reference.md#signer-list-set) | Set up multi-signing |
+| [`signer-list-delete`](docs/cli-reference.md#signer-list-delete) | Remove the signer list |
+| [`delegate-set`](docs/cli-reference.md#delegate-set) | Grant transaction delegation |
+
+### Tickets
+
+| Command | Description |
+|---------|-------------|
+| [`ticket-create`](docs/cli-reference.md#ticket-create) | Create tickets for later use |
+| [`tickets`](docs/cli-reference.md#tickets) | List available tickets for an account |
+
+### DEX
+
+| Command | Description |
+|---------|-------------|
+| [`offer-create`](docs/cli-reference.md#offer-create-alias-offer) | Create a DEX offer |
+| [`offer-cancel`](docs/cli-reference.md#offer-cancel) | Cancel a DEX offer |
+| [`book-offers`](docs/cli-reference.md#book-offers-alias-order-book) | Get the order book for a currency pair |
+| [`deposit-authorized`](docs/cli-reference.md#deposit-authorized) | Check deposit authorization between accounts |
+| [`path-find`](docs/cli-reference.md#path-find-alias-paths) | Find a payment path between accounts |
+
+### AMM
+
+| Command | Description |
+|---------|-------------|
+| [`amm-info`](docs/cli-reference.md#amm-info) | Get info about an AMM instance |
+| [`amm-create`](docs/cli-reference.md#amm-create) | Create an AMM for a token pair |
+| [`amm-deposit`](docs/cli-reference.md#amm-deposit) | Deposit funds into an AMM |
+| [`amm-withdraw`](docs/cli-reference.md#amm-withdraw) | Withdraw funds from an AMM |
+| [`amm-vote`](docs/cli-reference.md#amm-vote) | Vote on AMM trading fee |
+| [`amm-bid`](docs/cli-reference.md#amm-bid) | Bid on AMM auction slot |
+
+### Checks
+
+| Command | Description |
+|---------|-------------|
+| [`check-create`](docs/cli-reference.md#check-create) | Create a check |
+| [`check-cash`](docs/cli-reference.md#check-cash) | Redeem a check |
+| [`check-cancel`](docs/cli-reference.md#check-cancel) | Cancel a check |
+
+### Escrow
+
+| Command | Description |
+|---------|-------------|
+| [`escrow-create`](docs/cli-reference.md#escrow-create) | Create a time/condition-based escrow |
+| [`escrow-finish`](docs/cli-reference.md#escrow-finish) | Complete an escrow |
+| [`escrow-cancel`](docs/cli-reference.md#escrow-cancel) | Cancel an expired escrow |
+
+### Payment Channels
+
+| Command | Description |
+|---------|-------------|
+| [`channel-create`](docs/cli-reference.md#channel-create) | Create a payment channel |
+| [`channel-fund`](docs/cli-reference.md#channel-fund) | Fund a payment channel |
+| [`channel-claim`](docs/cli-reference.md#channel-claim) | Claim from a payment channel |
+| [`channel-verify`](docs/cli-reference.md#channel-verify) | Verify a channel claim signature |
+
+### NFTs
+
+| Command | Description |
+|---------|-------------|
+| [`nft-mint`](docs/cli-reference.md#nft-mint) | Mint an NFT |
+| [`nft-burn`](docs/cli-reference.md#nft-burn) | Burn an NFT |
+| [`nft-offer-create`](docs/cli-reference.md#nft-offer-create) | Create an offer to buy or sell an NFT |
+| [`nft-offer-accept`](docs/cli-reference.md#nft-offer-accept) | Accept an NFT offer |
+| [`nft-offer-cancel`](docs/cli-reference.md#nft-offer-cancel) | Cancel an NFT offer |
+| [`nft-buy-offers`](docs/cli-reference.md#nft-buy-offers) | Get buy offers for an NFT |
+| [`nft-sell-offers`](docs/cli-reference.md#nft-sell-offers) | Get sell offers for an NFT |
+
+### Multi-Signing
+
+| Command | Description |
+|---------|-------------|
+| [`multisign`](docs/cli-reference.md#multisign) | Sign a transaction for multi-signing |
+| [`multisign-combine`](docs/cli-reference.md#multisign-combine) | Combine multi-signed transactions |
+| [`multisign-submit`](docs/cli-reference.md#multisign-submit) | Combine and submit multi-signed transactions |
+
+### Wallet
+
+| Command | Description |
+|---------|-------------|
+| [`wallet generate`](docs/cli-reference.md#wallet-generate) | Generate a new random keypair |
+| [`wallet from-seed`](docs/cli-reference.md#wallet-from-seed) | Derive wallet from an existing seed |
+| [`wallet from-entropy`](docs/cli-reference.md#wallet-from-entropy) | Derive wallet from raw entropy |
+| [`wallet vanity`](docs/cli-reference.md#wallet-vanity) | Generate a vanity address |
+| [`wallet fund`](docs/cli-reference.md#wallet-fund-alias-wallet-faucet) | Fund a wallet via testnet/devnet faucet |
+| [`wallet sign-message`](docs/cli-reference.md#wallet-sign-message) | Sign an arbitrary message |
+| [`wallet verify-message`](docs/cli-reference.md#wallet-verify-message) | Verify a signed message |
+| [`wallet import`](docs/cli-reference.md#wallet-import) | Import a wallet into encrypted keystore |
+| [`wallet list`](docs/cli-reference.md#wallet-list-alias-wallet-ls) | List keystore wallets |
+| [`wallet remove`](docs/cli-reference.md#wallet-remove-alias-wallet-rm) | Remove a wallet from keystore |
+
+### Conversion
+
+| Command | Description |
+|---------|-------------|
+| [`xrp-to-drops`](docs/cli-reference.md#xrp-to-drops) | Convert XRP to drops |
+| [`drops-to-xrp`](docs/cli-reference.md#drops-to-xrp) | Convert drops to XRP |
+| [`ripple-time`](docs/cli-reference.md#ripple-time) | Convert between XRPL epoch and ISO 8601 |
+
+### Utility
+
+| Command | Description |
+|---------|-------------|
+| [`address-info`](docs/cli-reference.md#address-info) | Validate and decode an XRPL address |
+| [`to-hex`](docs/cli-reference.md#to-hex) | Convert UTF-8 string to hex |
+| [`from-hex`](docs/cli-reference.md#from-hex) | Convert hex to UTF-8 string |
+| [`hash`](docs/cli-reference.md#hash) | Hash data with XRPL-relevant algorithms |
+| [`decode-tx`](docs/cli-reference.md#decode-tx) | Decode a transaction blob to JSON |
+| [`encode-tx`](docs/cli-reference.md#encode-tx) | Encode transaction JSON to binary |
+| [`rpc`](docs/cli-reference.md#rpc) | Send a raw API request (escape hatch) |
+| [`subscribe`](docs/cli-reference.md#subscribe) | Subscribe to ledger events |
+| [`ping`](docs/cli-reference.md#ping) | Confirm server connectivity |
+| [`completions`](docs/cli-reference.md#completions) | Generate shell completion scripts |
 
 Global options: `--network` (`-n`), `--rpc-url`, `--json`, `--quiet` (`-q`), `--yes` (`-y`)
 
