@@ -18,6 +18,7 @@
 		"test:e2e": "vitest run --config vitest.config.e2e.ts",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
+		"ci": "pnpm lint && pnpm lint:md && tsc --noEmit && pnpm test && pnpm build && pnpm test:e2e",
 		"prepublishOnly": "pnpm build"
 	},
 	"keywords": [
