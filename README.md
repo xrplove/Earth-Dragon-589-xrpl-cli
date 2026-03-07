@@ -256,10 +256,6 @@ Full command reference with all options and flags: **[docs/cli-reference.md](doc
 | `4` | Transaction rejected |
 | `5` | Transaction expired |
 
-## Requirements
-
-- Node.js >= 20
-
 ## Development
 
 ```bash
