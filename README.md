@@ -51,8 +51,8 @@ xrpl ledger-index
 # Look up a transaction
 xrpl tx DF9BC86D9C36852A6BCAE5A616B137B97FCBD3892DCFEFBD170AA600FD14DDCD
 
-# Send 10 XRP
-xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP
+# Send 10 XRP (interactive seed prompt)
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP -i
 
 # Generate a new wallet
 xrpl wallet generate
