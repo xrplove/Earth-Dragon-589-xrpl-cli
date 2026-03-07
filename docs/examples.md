@@ -27,8 +27,6 @@ XRPL_SEED=sSigner2... xrpl multisign --file unsigned.json --multisig-account rMu
 XRPL_SEED=sSigner3... xrpl multisign --file unsigned.json --multisig-account rMultisig > sig3.json
 xrpl multisign-submit --files sig1.json sig2.json sig3.json
 
-# Create 250 tickets for parallel multisig prover transactions
-xrpl ticket-create 250
 ```
 
 ## Trust Lines and IOUs
@@ -91,7 +89,7 @@ xrpl rpc server_state
 ## Cross-Chain Memos
 
 ```bash
-# Send with memos (e.g. for Axelar interchain transfers)
+# Send with memos
 xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 1 --token XRP \
   --memo "type:interchain_transfer" \
   --memo "destination_chain:ethereum" \
