@@ -58,7 +58,7 @@ xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP -i
 xrpl wallet generate
 
 # Generate a vanity address
-xrpl wallet vanity --starts-with Nick
+xrpl wallet vanity --starts-with XRP
 
 # Watch ledger events in real time
 xrpl subscribe --streams ledger
