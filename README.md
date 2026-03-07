@@ -5,7 +5,7 @@
 [![CI][ci-badge]][ci-link]
 [![License][license-badge]][license-link]
 
-A Swiss Army knife for interacting with the XRP Ledger from the command line. Built for both humans and [AI agents](SKILL.md).
+A Swiss Army knife for interacting with the XRP Ledger from the command line. Built for both humans and [AI agents](skills/xrpl-cli/SKILL.md).
 
 `xrpl-cli` wraps [xrpl.js](https://js.xrpl.org/) and exposes the full breadth of XRPL functionality through a flat, composable command interface — inspired by Foundry's [`cast`](https://www.getfoundry.sh/reference/cast/cast) for EVM chains.
 
@@ -301,7 +301,7 @@ npx skills add commonprefix/xrpl-cli
 
 | File | Description |
 |------|-------------|
-| [SKILL.md](SKILL.md) | Agent skill — how to use `xrpl-cli` as a tool |
+| [SKILL.md](skills/xrpl-cli/SKILL.md) | Agent skill — how to use `xrpl-cli` as a tool |
 | [AGENTS.md](AGENTS.md) | Coding agent guide — how to work on the codebase |
 
 ## Releasing

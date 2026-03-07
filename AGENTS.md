@@ -6,7 +6,7 @@ description: AI coding agent guide for the xrpl-cli codebase
 # AGENTS.md
 
 Instructions for AI coding agents working on the `xrpl-cli` codebase.
-For using the CLI as a tool, see [SKILL.md](SKILL.md).
+For using the CLI as a tool, see [SKILL.md](skills/xrpl-cli/SKILL.md).
 
 ## Project Overview
 

@@ -6,7 +6,7 @@ description: CLI tool for querying, transacting, and managing accounts on the XR
 # SKILL.md
 
 Instructions for AI agents that want to **use** `xrpl-cli` as a tool.
-For contributing to the codebase, see [AGENTS.md](AGENTS.md).
+For contributing to the codebase, see [AGENTS.md](../../AGENTS.md).
 
 ## Overview
 
