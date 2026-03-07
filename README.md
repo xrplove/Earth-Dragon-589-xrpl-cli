@@ -21,6 +21,7 @@ A Swiss Army knife for interacting with the XRP Ledger from the command line. Bu
 - [Development](#development)
 - [Docs](#docs)
 - [Contributing](#contributing)
+- [AI Agents](#ai-agents)
 - [Roadmap](#roadmap)
 - [License](#license)
 
@@ -288,6 +289,21 @@ xrpl completions fish > ~/.config/fish/completions/xrpl.fish
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, project structure, and code style.
 
+## AI Agents
+
+`xrpl-cli` is designed for AI agent use — structured JSON output (`--json`), non-interactive mode (`--yes --quiet`), and meaningful exit codes.
+
+Install the agent skill:
+
+```bash
+npx skills add commonprefix/xrpl-cli
+```
+
+| File | Description |
+|------|-------------|
+| [SKILL.md](SKILL.md) | Agent skill — how to use `xrpl-cli` as a tool |
+| [AGENTS.md](AGENTS.md) | Coding agent guide — how to work on the codebase |
+
 ## Releasing
 
 Releases are tag-triggered. Pushing a semver tag runs all CI checks, publishes to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), and creates a GitHub release with auto-generated notes.
@@ -308,7 +324,7 @@ Features worth exploring later:
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device
 - **`--private-key` option** — accept a raw hex private key directly for signing
 - **Niche developer utilities** — RFC1751 mnemonic encode/decode, seed encoding/decoding, raw keypair derivation, etc.
-- **AI agent compatibility** — MCP server, Agent Skills (`SKILL.md`), and agent-facing documentation
+- **MCP server** — expose commands as an MCP server for direct agent integration
 
 ## License
 
