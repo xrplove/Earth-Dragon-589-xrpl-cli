@@ -63,6 +63,32 @@ registerSigningCommands(program);
 registerSubmitCommands(program);
 registerUtilityCommands(program);
 
+function classifyError(err: unknown): number {
+	if (err instanceof ZodError) return EXIT_CODES.INVALID_ARGUMENTS;
+
+	const message = err instanceof Error ? err.message : String(err);
+
+	if (
+		message.includes("ECONNREFUSED") ||
+		message.includes("ENOTFOUND") ||
+		message.includes("ETIMEDOUT") ||
+		message.includes("WebSocket") ||
+		message.includes("connect EHOSTUNREACH") ||
+		message.includes("disconnected")
+	) {
+		return EXIT_CODES.NETWORK_ERROR;
+	}
+
+	if (
+		message.includes("LastLedgerSequence") ||
+		message.includes("Transaction has not been applied")
+	) {
+		return EXIT_CODES.TX_EXPIRED;
+	}
+
+	return EXIT_CODES.GENERAL_ERROR;
+}
+
 async function main() {
 	try {
 		await program.parseAsync(process.argv);
@@ -75,7 +101,7 @@ async function main() {
 			const message = err instanceof Error ? err.message : String(err);
 			console.error(`Error: ${message}`);
 		}
-		process.exit(EXIT_CODES.GENERAL_ERROR);
+		process.exit(classifyError(err));
 	}
 }
 
