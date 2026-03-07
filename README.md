@@ -43,7 +43,7 @@ Requires Node.js v20+.
 
 ```bash
 # Check an account's XRP balance
-xrpl balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+xrpl balance ra5nK24KXen9AHvsdFTKHSANinZseWnPcX
 
 # Get current ledger index
 xrpl ledger-index
@@ -52,7 +52,7 @@ xrpl ledger-index
 xrpl tx 9B2D2B0E8E3E24C2D07B714A38B8E547B3C5B05D8E3B0E5E6E8F3B8C5D7E9F1A
 
 # Send 10 XRP
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 10 --token XRP
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP
 
 # Generate a new wallet
 xrpl wallet generate
@@ -324,7 +324,6 @@ Features worth exploring later:
 - **Ledger hardware wallet signing** — sign transactions using a connected Ledger device
 - **`--private-key` option** — accept a raw hex private key directly for signing
 - **Niche developer utilities** — RFC1751 mnemonic encode/decode, seed encoding/decoding, raw keypair derivation, etc.
-- **MCP server** — expose commands as an MCP server for direct agent integration
 
 ## License
 

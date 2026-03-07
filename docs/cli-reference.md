@@ -96,13 +96,13 @@ xrpl balance <account> [--token <token>]
 | `--token` | `token` | `XRP` | Token to query: `XRP`, `<currency>.<issuer>`, or `mpt:<issuance-id>` |
 
 ```bash
-xrpl balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+xrpl balance ra5nK24KXen9AHvsdFTKHSANinZseWnPcX
 # 48.5 XRP
 
-xrpl balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY --token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
+xrpl balance ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 # 1250.00 USD
 
-xrpl balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
+xrpl balance ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
 # 500 mpt:00064D1C...
 ```
 
@@ -419,13 +419,13 @@ xrpl send --to <destination> --amount <amount> --token <token> [--tag <destinati
 
 ```bash
 # Send 10 XRP
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 10 --token XRP
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP
 
 # Send 100 USD IOU
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 100 --token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 100 --token USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 
 # Send MPT
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 50 --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 50 --token mpt:00064D1C63CEBEB49FC20032206CE0F203138BFC59F1AC578
 
 # Cross-currency: send USD, pay up to 110 USD from source
 xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --send-max-amount 110 --send-max-token USD.rIssuer
@@ -434,13 +434,13 @@ xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --send-max-amount 110 -
 xrpl send --to rPT1Sjq2 --amount 100 --token USD.rIssuer --partial --deliver-min-amount 90 --deliver-min-token USD.rIssuer
 
 # Send with memos
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 1 --token XRP \
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 1 --token XRP \
   --memo "type:interchain_transfer" \
   --memo "destination_chain:ethereum" \
   --memo "destination_address:0x0A90c0Af1B07f6AC34f3520348Dbfae73BDa358E"
 
 # Prepare for multi-signing (3 signers)
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 10 --token XRP \
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 10 --token XRP \
   --prepare --signers 3 > unsigned.json
 ```
 
@@ -1573,7 +1573,7 @@ xrpl address-info rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B
 xrpl address-info X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqh
 # Valid: true
 # Type: x-address
-# Classic: rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+# Classic: ra5nK24KXen9AHvsdFTKHSANinZseWnPcX
 # Tag: 12345
 # Network: mainnet
 
@@ -1665,7 +1665,7 @@ xrpl encode-tx [<tx-json>] [--file <path>]
 | `--file` | `string` | — | Path to a JSON file containing the transaction |
 
 ```bash
-xrpl encode-tx '{"TransactionType":"Payment","Account":"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B","Destination":"rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe","Amount":"1000000","Fee":"12","Sequence":1}'
+xrpl encode-tx '{"TransactionType":"Payment","Account":"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B","Destination":"ra5nK24KXen9AHvsdFTKHSANinZseWnPcX","Amount":"1000000","Fee":"12","Sequence":1}'
 
 # Round-trip: decode and re-encode
 xrpl decode-tx <blob> | xrpl encode-tx
@@ -1685,7 +1685,7 @@ xrpl rpc <method> [<params>]
 | `[params]` | `json` | `{}` | JSON object of method parameters |
 
 ```bash
-xrpl rpc account_info '{"account": "rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY", "ledger_index": "validated"}'
+xrpl rpc account_info '{"account": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX", "ledger_index": "validated"}'
 xrpl rpc vault_info '{"vault_id": "..."}'
 ```
 
@@ -1707,7 +1707,7 @@ xrpl subscribe [--streams <stream>...] [--accounts <address>...]
 xrpl subscribe --streams ledger
 
 # Watch transactions for a specific account
-xrpl subscribe --accounts rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+xrpl subscribe --accounts ra5nK24KXen9AHvsdFTKHSANinZseWnPcX
 ```
 
 ### `ping`

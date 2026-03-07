@@ -23,7 +23,7 @@ network = "testnet"
 rpc_url = "wss://s.altnet.rippletest.net:51233"
 
 [aliases]
-myaccount = "rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY"
+myaccount = "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX"
 gateway = "rGAbJZEzU6WaYv5y1LfyN7LBBcQJ3TxsKC"
 ```
 

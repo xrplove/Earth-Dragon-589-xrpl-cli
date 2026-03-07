@@ -31,7 +31,7 @@ Always pass these flags when calling `xrpl` programmatically:
 Example:
 
 ```bash
-xrpl --json --yes --quiet balance rN7n3473SaZBCG4dFL83w7p1W9cgPBKraY
+xrpl --json --yes --quiet balance ra5nK24KXen9AHvsdFTKHSANinZseWnPcX
 ```
 
 ## Output Conventions

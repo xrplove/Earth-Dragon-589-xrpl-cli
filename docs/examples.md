@@ -9,7 +9,7 @@ Real-world usage examples for common XRPL workflows.
 xrpl wallet generate
 export XRPL_SEED=sEdV...
 xrpl wallet fund --network testnet
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 25 --token XRP --network testnet
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 25 --token XRP --network testnet
 ```
 
 ## Multi-Signing
@@ -92,7 +92,7 @@ xrpl rpc server_state
 
 ```bash
 # Send with memos (e.g. for Axelar interchain transfers)
-xrpl send --to rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe --amount 1 --token XRP \
+xrpl send --to ra5nK24KXen9AHvsdFTKHSANinZseWnPcX --amount 1 --token XRP \
   --memo "type:interchain_transfer" \
   --memo "destination_chain:ethereum" \
   --memo "destination_address:0x0A90c0Af1B07f6AC34f3520348Dbfae73BDa358E"
