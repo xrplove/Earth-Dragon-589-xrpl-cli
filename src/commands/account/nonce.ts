@@ -22,7 +22,8 @@ async function fetchNonce(account: string, globalOpts: GlobalOptions) {
 
 export function registerNonce(program: Command) {
 	program
-		.command("nonce")
+		.command("sequence-number")
+		.alias("nonce")
 		.description("Get the current sequence number for an account")
 		.argument("<account>", "Account address or alias")
 		.action((account: string) =>

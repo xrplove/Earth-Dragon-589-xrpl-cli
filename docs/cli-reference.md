@@ -261,12 +261,12 @@ xrpl noripple-check <account> [--role <gateway|user>] [--transactions] [--limit 
 | `--limit` | `number` | `300` | Max trust line problems to include |
 | `--ledger-index` | `string` | `"validated"` | Ledger version: integer, `validated`, `closed`, or `current` |
 
-### `nonce`
+### `sequence-number` (alias: `nonce`)
 
 Get the current sequence number for an account. Derived from `account_info`.
 
 ```bash
-xrpl nonce <account>
+xrpl sequence-number <account>
 ```
 
 | Option | Type | Default | Description |
