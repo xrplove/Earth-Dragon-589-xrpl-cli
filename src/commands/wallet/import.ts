@@ -44,9 +44,9 @@ async function importWallet(
 
 	const password = await getPassword(opts);
 
-	if (hasMnemonic) {
+	if (hasMnemonic && opts.mnemonic) {
 		const { wallet, publicKey, privateKey } = walletFromMnemonic(
-			opts.mnemonic!,
+			opts.mnemonic,
 			opts,
 		);
 		keystore = encryptKeypair(
@@ -58,8 +58,8 @@ async function importWallet(
 		);
 	} else {
 		let seed: string;
-		if (hasSeed) {
-			seed = opts.seed!;
+		if (hasSeed && opts.seed) {
+			seed = opts.seed;
 		} else {
 			seed = await prompt("Enter seed: ", true);
 		}

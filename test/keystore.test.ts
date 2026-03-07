@@ -13,6 +13,15 @@ import {
 	saveKeystore,
 } from "../src/lib/keystore.js";
 
+function generateSeed(): { seed: string; address: string; wallet: Wallet } {
+	const wallet = Wallet.generate();
+	return {
+		seed: wallet.seed as string,
+		address: wallet.classicAddress,
+		wallet,
+	};
+}
+
 describe("keystore", () => {
 	let dir: string;
 
@@ -25,14 +34,9 @@ describe("keystore", () => {
 	});
 
 	it("encrypts and decrypts a seed round-trip", () => {
-		const wallet = Wallet.generate();
+		const { seed, address, wallet } = generateSeed();
 		const password = "test-password-123";
-		const keystore = encryptSeed(
-			"alice",
-			wallet.seed!,
-			wallet.classicAddress,
-			password,
-		);
+		const keystore = encryptSeed("alice", seed, address, password);
 		const secret = decryptSecret(keystore, password);
 		expect(secret.type).toBe("seed");
 		expect(secret.data).toBe(wallet.seed);
@@ -56,10 +60,10 @@ describe("keystore", () => {
 	});
 
 	it("decryptSecret handles both types", () => {
-		const wallet = Wallet.generate();
+		const { seed, address, wallet } = generateSeed();
 		const pw = "pw";
 
-		const seedKs = encryptSeed("s", wallet.seed!, wallet.classicAddress, pw);
+		const seedKs = encryptSeed("s", seed, address, pw);
 		const kpKs = encryptKeypair(
 			"k",
 			wallet.publicKey,
@@ -79,39 +83,24 @@ describe("keystore", () => {
 	});
 
 	it("fails to decrypt with wrong password", () => {
-		const wallet = Wallet.generate();
-		const keystore = encryptSeed(
-			"bob",
-			wallet.seed!,
-			wallet.classicAddress,
-			"correct",
-		);
+		const { seed, address } = generateSeed();
+		const keystore = encryptSeed("bob", seed, address, "correct");
 		expect(() => decryptSecret(keystore, "wrong")).toThrow();
 	});
 
 	it("stores the correct address", () => {
-		const wallet = Wallet.generate();
-		const keystore = encryptSeed(
-			"charlie",
-			wallet.seed!,
-			wallet.classicAddress,
-			"pw",
-		);
-		expect(keystore.address).toBe(wallet.classicAddress);
+		const { seed, address } = generateSeed();
+		const keystore = encryptSeed("charlie", seed, address, "pw");
+		expect(keystore.address).toBe(address);
 	});
 
 	it("saves, loads, lists, and removes keystores", () => {
-		const wallet = Wallet.generate();
-		const keystore = encryptSeed(
-			"dave",
-			wallet.seed!,
-			wallet.classicAddress,
-			"pw",
-		);
+		const { seed, address } = generateSeed();
+		const keystore = encryptSeed("dave", seed, address, "pw");
 
 		saveKeystore(keystore, dir);
 		const loaded = loadKeystore("dave", dir);
-		expect(loaded.address).toBe(wallet.classicAddress);
+		expect(loaded.address).toBe(address);
 
 		const list = listKeystores(dir);
 		expect(list).toHaveLength(1);
@@ -126,13 +115,8 @@ describe("keystore", () => {
 	});
 
 	it("throws when saving a duplicate name", () => {
-		const wallet = Wallet.generate();
-		const keystore = encryptSeed(
-			"dup",
-			wallet.seed!,
-			wallet.classicAddress,
-			"pw",
-		);
+		const { seed, address } = generateSeed();
+		const keystore = encryptSeed("dup", seed, address, "pw");
 		saveKeystore(keystore, dir);
 		expect(() => saveKeystore(keystore, dir)).toThrow(/already exists/);
 	});
