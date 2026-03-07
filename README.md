@@ -65,6 +65,12 @@ xrpl subscribe --streams ledger
 
 ## Commands
 
+Global options: `--network` (`-n`), `--rpc-url`, `--json`, `--quiet` (`-q`), `--yes` (`-y`)
+
+Wallet options (for signing): `--seed` (`-s`), `--from` (`-f`), `--keyfile`, `--mnemonic`, `--interactive` (`-i`)
+
+Full command reference with all options and flags: **[docs/cli-reference.md](docs/cli-reference.md)**
+
 ### Account Query
 
 | Command | Description |
@@ -239,12 +245,6 @@ xrpl subscribe --streams ledger
 | [`ping`](docs/cli-reference.md#ping) | Confirm server connectivity |
 | [`completions`](docs/cli-reference.md#completions) | Generate shell completion scripts |
 
-Global options: `--network` (`-n`), `--rpc-url`, `--json`, `--quiet` (`-q`), `--yes` (`-y`)
-
-Wallet options (for signing): `--seed` (`-s`), `--from` (`-f`), `--keyfile`, `--mnemonic`, `--interactive` (`-i`)
-
-Full command reference with all options and flags: **[docs/cli-reference.md](docs/cli-reference.md)**
-
 ## Exit Codes
 
 | Code | Meaning |
@@ -266,6 +266,14 @@ pnpm test                # Run unit tests
 pnpm test:e2e            # Run E2E tests against testnet
 pnpm lint                # Check with Biome
 pnpm format              # Format with Biome
+```
+
+## Shell Completions
+
+```bash
+xrpl completions bash > ~/.local/share/bash-completion/completions/xrpl
+xrpl completions zsh > ~/.zfunc/_xrpl
+xrpl completions fish > ~/.config/fish/completions/xrpl.fish
 ```
 
 ## Docs
