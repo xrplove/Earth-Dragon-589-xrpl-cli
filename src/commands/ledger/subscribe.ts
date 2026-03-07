@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { Client, type SubscribeRequest } from "xrpl";
 import { getRpcUrl } from "../../lib/client.js";
+import { output } from "../../lib/output.js";
 import type { GlobalOptions } from "../../lib/types.js";
 
 interface SubscribeOpts {
@@ -22,11 +23,11 @@ async function subscribe(opts: SubscribeOpts, globalOpts: GlobalOptions) {
 	await client.request(req);
 
 	client.on("transaction", (tx) => {
-		console.log(JSON.stringify(tx, null, 2));
+		output(tx, globalOpts);
 	});
 
 	client.on("ledgerClosed", (ledger) => {
-		console.log(JSON.stringify(ledger, null, 2));
+		output(ledger, globalOpts);
 	});
 
 	// Keep running until interrupted
